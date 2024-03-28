@@ -1,1 +1,0 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" Service="PLL.WS.SAP.SD128" CodeBehind="SD128.svc.cs" %>
