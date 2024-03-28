@@ -25,30 +25,48 @@ bld/
 #ArtworkIgnore
 ADData/obj/Debug/
 ADData/bin/Debug/
+ADData/obj/Debug/*
+ADData/bin/Debug/*
 
 ADDSOTMP/obj/Debug/
 ADDSOTMP/bin/Debug/
+ADDSOTMP/obj/Debug/*
+ADDSOTMP/bin/Debug/*
 
 BLL/obj/Debug/
 BLL/bin/Debug/
+BLL/obj/Debug/*
+BLL/bin/Debug/*
 
 BLLTests/obj/Debug/
 BLLTests/bin/Debug/
+BLLTests/obj/Debug/*
+BLLTests/bin/Debug/*
 
 Dieline/obj/Debug/
 Dieline/bin/Debug/
+Dieline/obj/Debug/*
+Dieline/bin/Debug/*
 
 EmailOverdue/obj/Debug/
 EmailOverdue/bin/Debug/
+EmailOverdue/obj/Debug/*
+EmailOverdue/bin/Debug/*
 
 PLL/obj/Debug/
 PLL/bin/Debug/
+PLL/obj/Debug/*
+PLL/bin/Debug/*
 
 XECMData/obj/Debug/
 XECMData/bin/Debug/
+XECMData/obj/Debug/*
+XECMData/bin/Debug/*
 
 z.SentToCSV/obj/Debug/
 z.SentToCSV/bin/Debug/
+z.SentToCSV/obj/Debug/*
+z.SentToCSV/bin/Debug/*
 
 # Visual Studio 2015 cache/options directory
 .vs/
