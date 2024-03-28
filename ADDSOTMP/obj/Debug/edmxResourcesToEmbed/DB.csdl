@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ARTWORK_DEVModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="SAP_M_PO_COMPLETE_SO_HEADER_TMP">
+    <Key>
+      <PropertyRef Name="PO_COMPLETE_SO_HEADER_ID" />
+    </Key>
+    <Property Name="PO_COMPLETE_SO_HEADER_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SALES_ORDER_NO" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="SOLD_TO" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="SOLD_TO_NAME" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+    <Property Name="LAST_SHIPMENT_DATE" Type="Decimal" Precision="14" Scale="0" />
+    <Property Name="DATE_1_2" Type="Decimal" Precision="14" Scale="0" />
+    <Property Name="CREATE_ON" Type="DateTime" Precision="0" />
+    <Property Name="RDD" Type="DateTime" Precision="0" />
+    <Property Name="PAYMENT_TERM" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Name="LC_NO" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="EXPIRED_DATE" Type="Decimal" Precision="14" Scale="0" />
+    <Property Name="SHIP_TO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="SHIP_TO_NAME" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+    <Property Name="SOLD_TO_PO" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="SHIP_TO_PO" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="SALES_GROUP" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+    <Property Name="MARKETING_CO" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="MARKETING_CO_NAME" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="MARKETING" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="MARKETING_NAME" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="MARKETING_ORDER_SAP" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="MARKETING_ORDER_SAP_NAME" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="SALES_ORG" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="DISTRIBUTION_CHANNEL" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Name="DIVITION" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Name="SALES_ORDER_TYPE" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="HEADER_CUSTOM_1" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="HEADER_CUSTOM_2" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="HEADER_CUSTOM_3" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Name="IS_MIGRATION" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="IS_ASSIGN" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="CREATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CREATE_BY" Type="Int32" Nullable="false" />
+    <Property Name="UPDATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UPDATE_BY" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT_TMP">
+    <Key>
+      <PropertyRef Name="PO_COMPLETE_SO_ITEM_COMPONENT_ID" />
+    </Key>
+    <Property Name="PO_COMPLETE_SO_ITEM_COMPONENT_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PO_COMPLETE_SO_ITEM_ID" Type="Int32" Nullable="false" />
+    <Property Name="COMPONENT_ITEM" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="COMPONENT_MATERIAL" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="DECRIPTION" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="QUANTITY" Type="Decimal" Precision="13" Scale="3" />
+    <Property Name="UNIT" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+    <Property Name="STOCK" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="BOM_ITEM_CUSTOM_1" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Name="BOM_ITEM_CUSTOM_2" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="BOM_ITEM_CUSTOM_3" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Name="IS_ACTIVE" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="IS_ASSIGN" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="CREATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CREATE_BY" Type="Int32" Nullable="false" />
+    <Property Name="UPDATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UPDATE_BY" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SAP_M_PO_COMPLETE_SO_ITEM_TMP">
+    <Key>
+      <PropertyRef Name="PO_COMPLETE_SO_ITEM_ID" />
+    </Key>
+    <Property Name="PO_COMPLETE_SO_ITEM_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PO_COMPLETE_SO_HEADER_ID" Type="Int32" Nullable="false" />
+    <Property Name="ITEM" Type="Decimal" Precision="6" Scale="0" />
+    <Property Name="PRODUCT_CODE" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="MATERIAL_DESCRIPTION" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="NET_WEIGHT" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+    <Property Name="ORDER_QTY" Type="Decimal" Precision="15" Scale="3" />
+    <Property Name="ORDER_UNIT" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+    <Property Name="ETD_DATE_FROM" Type="DateTime" Precision="0" />
+    <Property Name="ETD_DATE_TO" Type="DateTime" Precision="0" />
+    <Property Name="PLANT" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="OLD_MATERIAL_CODE" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="PACK_SIZE" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+    <Property Name="VALUME_PER_UNIT" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Name="VALUME_UNIT" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+    <Property Name="SIZE_DRAIN_WT" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <Property Name="PROD_INSP_MEMO" Type="String" MaxLength="18" FixedLength="false" Unicode="true" />
+    <Property Name="REJECTION_CODE" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Name="REJECTION_DESCRIPTION" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="PORT" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="VIA" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+    <Property Name="IN_TRANSIT_TO" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="BRAND_ID" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+    <Property Name="BRAND_DESCRIPTION" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+    <Property Name="ADDITIONAL_BRAND_ID" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+    <Property Name="ADDITIONAL_BRAND_DESCRIPTION" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+    <Property Name="PRODUCTION_PLANT" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="ZONE" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+    <Property Name="COUNTRY" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Name="PRODUCTION_HIERARCHY" Type="String" MaxLength="18" FixedLength="false" Unicode="true" />
+    <Property Name="MRP_CONTROLLER" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+    <Property Name="STOCK" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="ITEM_CUSTOM_1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ITEM_CUSTOM_2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ITEM_CUSTOM_3" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="IS_ACTIVE" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="IS_ASSIGN" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="CREATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CREATE_BY" Type="Int32" Nullable="false" />
+    <Property Name="UPDATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UPDATE_BY" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="ARTWORKEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="SAP_M_PO_COMPLETE_SO_HEADER_TMP" EntityType="Self.SAP_M_PO_COMPLETE_SO_HEADER_TMP" />
+    <EntitySet Name="SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT_TMP" EntityType="Self.SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT_TMP" />
+    <EntitySet Name="SAP_M_PO_COMPLETE_SO_ITEM_TMP" EntityType="Self.SAP_M_PO_COMPLETE_SO_ITEM_TMP" />
+    <EntitySet Name="SAP_M_PO_COMPLETE_SO_HEADER" EntityType="ARTWORK_DEVModel.SAP_M_PO_COMPLETE_SO_HEADER" />
+    <EntitySet Name="SAP_M_PO_COMPLETE_SO_ITEM" EntityType="ARTWORK_DEVModel.SAP_M_PO_COMPLETE_SO_ITEM" />
+    <EntitySet Name="SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT" EntityType="ARTWORK_DEVModel.SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT" />
+    <EntitySet Name="ART_WF_ARTWORK_PROCESS_SO_DETAIL" EntityType="ARTWORK_DEVModel.ART_WF_ARTWORK_PROCESS_SO_DETAIL" />
+    <EntitySet Name="ART_SYS_LOG" EntityType="ARTWORK_DEVModel.ART_SYS_LOG" />
+  </EntityContainer>
+  <EntityType Name="SAP_M_PO_COMPLETE_SO_HEADER">
+    <Key>
+      <PropertyRef Name="PO_COMPLETE_SO_HEADER_ID" />
+    </Key>
+    <Property Name="PO_COMPLETE_SO_HEADER_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SALES_ORDER_NO" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="SOLD_TO" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="SOLD_TO_NAME" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+    <Property Name="LAST_SHIPMENT_DATE" Type="Decimal" Precision="14" Scale="0" />
+    <Property Name="DATE_1_2" Type="Decimal" Precision="14" Scale="0" />
+    <Property Name="CREATE_ON" Type="DateTime" Precision="0" />
+    <Property Name="RDD" Type="DateTime" Precision="0" />
+    <Property Name="PAYMENT_TERM" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Name="LC_NO" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="EXPIRED_DATE" Type="Decimal" Precision="14" Scale="0" />
+    <Property Name="SHIP_TO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="SHIP_TO_NAME" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+    <Property Name="SOLD_TO_PO" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="SHIP_TO_PO" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="SALES_GROUP" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+    <Property Name="MARKETING_CO" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="MARKETING_CO_NAME" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="MARKETING" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="MARKETING_NAME" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="MARKETING_ORDER_SAP" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="MARKETING_ORDER_SAP_NAME" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="SALES_ORG" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="DISTRIBUTION_CHANNEL" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Name="DIVITION" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Name="SALES_ORDER_TYPE" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="HEADER_CUSTOM_1" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="HEADER_CUSTOM_2" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="HEADER_CUSTOM_3" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Name="IS_MIGRATION" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="IS_ASSIGN" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="CREATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CREATE_BY" Type="Int32" Nullable="false" />
+    <Property Name="UPDATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UPDATE_BY" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SAP_M_PO_COMPLETE_SO_ITEM">
+    <Key>
+      <PropertyRef Name="PO_COMPLETE_SO_ITEM_ID" />
+    </Key>
+    <Property Name="PO_COMPLETE_SO_ITEM_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PO_COMPLETE_SO_HEADER_ID" Type="Int32" Nullable="false" />
+    <Property Name="ITEM" Type="Decimal" Precision="6" Scale="0" />
+    <Property Name="PRODUCT_CODE" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="MATERIAL_DESCRIPTION" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="NET_WEIGHT" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+    <Property Name="ORDER_QTY" Type="Decimal" Precision="15" Scale="3" />
+    <Property Name="ORDER_UNIT" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+    <Property Name="ETD_DATE_FROM" Type="DateTime" Precision="0" />
+    <Property Name="ETD_DATE_TO" Type="DateTime" Precision="0" />
+    <Property Name="PLANT" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="OLD_MATERIAL_CODE" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="PACK_SIZE" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+    <Property Name="VALUME_PER_UNIT" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Name="VALUME_UNIT" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+    <Property Name="SIZE_DRAIN_WT" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <Property Name="PROD_INSP_MEMO" Type="String" MaxLength="18" FixedLength="false" Unicode="true" />
+    <Property Name="REJECTION_CODE" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Name="REJECTION_DESCRIPTION" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="PORT" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="VIA" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+    <Property Name="IN_TRANSIT_TO" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="BRAND_ID" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+    <Property Name="BRAND_DESCRIPTION" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+    <Property Name="ADDITIONAL_BRAND_ID" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+    <Property Name="ADDITIONAL_BRAND_DESCRIPTION" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+    <Property Name="PRODUCTION_PLANT" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="ZONE" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+    <Property Name="COUNTRY" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Name="PRODUCTION_HIERARCHY" Type="String" MaxLength="18" FixedLength="false" Unicode="true" />
+    <Property Name="MRP_CONTROLLER" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+    <Property Name="STOCK" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="ITEM_CUSTOM_1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ITEM_CUSTOM_2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ITEM_CUSTOM_3" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="IS_ACTIVE" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="IS_ASSIGN" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="CREATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CREATE_BY" Type="Int32" Nullable="false" />
+    <Property Name="UPDATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UPDATE_BY" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT">
+    <Key>
+      <PropertyRef Name="PO_COMPLETE_SO_ITEM_COMPONENT_ID" />
+    </Key>
+    <Property Name="PO_COMPLETE_SO_ITEM_COMPONENT_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PO_COMPLETE_SO_ITEM_ID" Type="Int32" Nullable="false" />
+    <Property Name="COMPONENT_ITEM" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="COMPONENT_MATERIAL" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="DECRIPTION" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="QUANTITY" Type="Decimal" Precision="13" Scale="3" />
+    <Property Name="UNIT" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+    <Property Name="STOCK" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="BOM_ITEM_CUSTOM_1" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Name="BOM_ITEM_CUSTOM_2" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="BOM_ITEM_CUSTOM_3" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Name="IS_ACTIVE" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="IS_ASSIGN" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="CREATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CREATE_BY" Type="Int32" Nullable="false" />
+    <Property Name="UPDATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UPDATE_BY" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ART_WF_ARTWORK_PROCESS_SO_DETAIL">
+    <Key>
+      <PropertyRef Name="ARTWORK_PROCESS_SO_ID" />
+    </Key>
+    <Property Name="ARTWORK_PROCESS_SO_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ARTWORK_REQUEST_ID" Type="Int32" Nullable="false" />
+    <Property Name="ARTWORK_SUB_ID" Type="Int32" Nullable="false" />
+    <Property Name="SALES_ORDER_NO" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="SALES_ORDER_ITEM" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="MATERIAL_NO" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="BOM_NO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="BOM_ID" Type="Int32" />
+    <Property Name="CREATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CREATE_BY" Type="Int32" Nullable="false" />
+    <Property Name="UPDATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UPDATE_BY" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ART_SYS_LOG">
+    <Key>
+      <PropertyRef Name="LOG_ID" />
+    </Key>
+    <Property Name="LOG_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TABLE_NAME" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="ACTION" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="NEW_VALUE" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+    <Property Name="OLD_VALUE" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+    <Property Name="ERROR_MSG" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+    <Property Name="CREATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CREATE_BY" Type="Int32" Nullable="false" />
+    <Property Name="UPDATE_DATE" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UPDATE_BY" Type="Int32" Nullable="false" />
+  </EntityType>
+</Schema>

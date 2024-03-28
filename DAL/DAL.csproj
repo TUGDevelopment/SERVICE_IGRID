@@ -1,0 +1,886 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DF907F88-7270-4B91-95C1-032CC9C7D5AC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DAL</RootNamespace>
+    <AssemblyName>DAL</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ClosedXML, Version=0.87.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.87.1\lib\net40\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\netstandard2.0\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.0.1\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Packaging, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Packaging.4.0.0\lib\net46\System.IO.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Async, Version=4.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Async.4.0.0\lib\net461\System.Linq.Async.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.0\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ART_M_CONFIGURATION.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_CONSTANT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_DECISION_REASON.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_DECISION_REASON_CONFIG.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_EMAIL_TEMPLATE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_MESSAGE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_PERMISSION.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_PIC.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_POSITION.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_POSITION_ROLE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_PRINTING_STYLE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_RECEIVE_EMAIL_NEW_CUSTOMER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_ROLE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_STEP_ARTWORK.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_STEP_MOCKUP.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_TEMPLATE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_USER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_USER_COMPANY.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_USER_CUSTOMER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_USER_ROLE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_USER_TYPE_OF_PRODUCT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_USER_UPPER_LEVEL.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_USER_VENDOR.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_M_VENDOR_MATGROUP.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_SYS_ACTION.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_SYS_LOG.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_SYS_LOG_EMAIL.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_SYS_LOG_INTERFACE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_SYS_RUNNING_NO.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_TEMP_CONTAIN.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_ATTACHMENT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_MAPPING_PO.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_MATERIAL_LOCK.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_MATERIAL_LOCK_DETAIL.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_MATERIAL_LOCK_LOG.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_GM_MK.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_GM_MK_BY_MK.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_GM_QC.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_GM_QC_BY_QC.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_MK.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_MK_BY_QC.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_PA.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_PA_BY_MK.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_QC.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_QC_BY_MK.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_ASSIGN_SO_HEADER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_ASSIGN_SO_ITEM.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_ASSIGN_SO_ITEM_COMPONENT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_ASSIGN_SO_LONG_TEXT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_CUSTOMER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_CUSTOMER_BY_PA.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_MARKETING.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_MARKETING_BY_PA.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_PA.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_PA_CATCHING_AREA.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_PA_CATCHING_METHOD.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_PA_FAO_ZONE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_PA_PLANT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_PA_PRODUCT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_PA_PRODUCT_OTHER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_PA_SYMBOL.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_PG.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_PG_BY_PA.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_PLANNING.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_PLANNING_BY_PA.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_PP.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_PP_BY_PA.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_QC.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_QC_BY_PA.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_RD.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_RD_BY_QC.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_SO_DETAIL.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_VENDOR.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_VENDOR_BY_PA.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_VENDOR_BY_PP.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_VENDOR_PO.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_WH.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_PROCESS_WH_BY_PA.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_REQUEST.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_REQUEST_COUNTRY.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_REQUEST_CUSTOMER_OTHER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_REQUEST_ITEM.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_REQUEST_PRODUCT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_REQUEST_PRODUCTION_PLANT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_REQUEST_RECIPIENT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_REQUEST_REFERENCE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_REQUEST_SALES_ORDER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_ARTWORK_REQUEST_SALES_ORDER_REPEAT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_DELEGATE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_LOG_CHANGE_OWNER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_LOG_DELEGATE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_LOG_REASSIGN.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_LOG_REOPEN.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_ATTACHMENT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_CHECK_LIST.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_CHECK_LIST_COUNTRY.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_CHECK_LIST_CUSTOMER_OTHER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_CHECK_LIST_ITEM.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_CHECK_LIST_PG.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_CHECK_LIST_PRODUCT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_CHECK_LIST_PRODUCTION_PLANT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_CHECK_LIST_REFERENCE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_APPROVE_MATCHBOARD.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_CUSTOMER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_CUSTOMER_BY_PG.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_PG.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_PG_PRICE_TEMPLATE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_PG_PRICE_TEMPLATE_BY_PG.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_PG_PRICE_TEMPLATE_BY_PG_SUP.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_PG_PRICE_TEMPLATE_BY_VENDOR.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_PG_SELECT_VENDOR.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_PLANNING.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_PLANNING_BY_PG.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_RD.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_RD_BY_PG.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_VENDOR.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_VENDOR_BY_PG.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_WAREHOUSE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_MOCKUP_PROCESS_WAREHOUSE_BY_PG.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ART_WF_REMARK_REASON_OTHER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DB.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DB.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="IGRIDEntities.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IGRIDEntities.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IGRIDEntities.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IGRIDEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IGRIDEntities.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IGRIDEntities.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="IGRID_M_OUTBOUND_HEADER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IGRID_M_OUTBOUND_ITEM.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_MAPPING_PO.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_MATERIAL_LOCK_LOG.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_MATERIAL_LOCK_DETAIL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_GM_QC_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_GM_MK_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_GM_QC_BY_QC_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_GM_MK_BY_MK_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_MK_BY_QC_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_MK_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_PA_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_PA_BY_MK_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_QC_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_AFTER_CUSTOMER_QC_BY_MK_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_ASSIGN_SO_LONG_TEXT_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_ASSIGN_SO_ITEM_COMPONENT_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_ASSIGN_SO_ITEM_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_MARKETING_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_MATERIAL_LOCK.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_PA_CATCHING_AREA_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_PA_CATCHING_METHOD_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_PA_FAO_ZONE_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_PA_PRODUCT_OTHER_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_PA_SYMBOL_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_PA_PLANT_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_PG_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_CUSTOMER_BY_PA_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_PP_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_VENDOR_BY_PP_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_VENDOR_BY_PA_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_CUSTOMER_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_VENDOR_PO_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_VENDOR_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_RD_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_QC_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_RD_BY_QC_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_ASSIGN_SO_HEADER_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_WH_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_PLANNING_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_SO_DETAIL_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_PG_BY_PA_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_PLANNING_BY_PA_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_PP_BY_PA_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_QC_BY_PA_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_MARKETING_BY_PA_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_WH_BY_PA_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_PA_PRODUCT_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_PROCESS_PA_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_REQUEST_CUSTOMER_OTHER_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_REQUEST_LISTOF_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_REQUEST_SALES_ORDER_REPEAT_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_REQUEST_PRODUCTION_PLANT_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_REQUEST_REFERENCE_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_REQUEST_PRODUCT_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_REQUEST_COUNTRY_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_REQUEST_SALES_ORDER_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_REQUEST_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_REQUEST_MARKETING_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_REQUEST_ITEM_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_ATTACHMENT_MODEL.cs" />
+    <Compile Include="Model\Common\CN_LOV_MODEL.cs" />
+    <Compile Include="Model\Common\CN_VAP_MODEL.cs" />
+    <Compile Include="Model\Common\V_ART_ASSIGNED_SO_MODEL.cs" />
+    <Compile Include="Model\Common\V_ART_WF_DASHBOARD_ARTWORK_MODEL.cs" />
+    <Compile Include="Model\Common\V_ART_WAREHOUSE_REPORT_MODEL.cs" />
+    <Compile Include="Model\Common\V_SAP_SALES_ORDER_ALL_MODEL.cs" />
+    <Compile Include="Model\Common\V_SAP_SALES_ORDER_MODEL.cs" />
+    <Compile Include="Model\IGRID\AppObject_MODEL.cs" />
+    <Compile Include="Model\IGRID\TblFiles_MODEL.cs" />
+    <Compile Include="Model\IGRID\Attachment_MODEL.cs" />
+    <Compile Include="Model\IGRID\Brand_MODEL.cs" />
+    <Compile Include="Model\IGRID\CatchingArea_MODEL.cs" />
+    <Compile Include="Model\IGRID\CatchingMethod_MODE.cs" />
+    <Compile Include="Model\IGRID\CatchingPeriod_MODEL.cs" />
+    <Compile Include="Model\IGRID\CompanyAddress_MODEL.cs" />
+    <Compile Include="Model\IGRID\Condition_MODEL.cs" />
+    <Compile Include="Model\IGRID\Direction_MODEL.cs" />
+    <Compile Include="Model\IGRID\FAOZone_MODEL.cs" />
+    <Compile Include="Model\IGRID\Flute_MODEL.cs" />
+    <Compile Include="Model\IGRID\Gradeof_MODEL.cs" />
+    <Compile Include="Model\IGRID\History_MODEL.cs" />
+    <Compile Include="Model\IGRID\IGRID_AUTHROLIZE_CHANGE.cs" />
+    <Compile Include="Model\IGRID\MasterObject_MODEL.cs" />
+    <Compile Include="Model\IGRID\MaterialClass_MODEL.cs" />
+    <Compile Include="Model\IGRID\PackStyle_MODEL.cs" />
+    <Compile Include="Model\IGRID\PlantRegistered_MODEL.cs" />
+    <Compile Include="Model\IGRID\Plant_MODEL.cs" />
+    <Compile Include="Model\IGRID\PMSColour_MODEL.cs" />
+    <Compile Include="Model\IGRID\PrimarySize_MODEL.cs" />
+    <Compile Include="Model\IGRID\PrimaryType_MODEL.cs" />
+    <Compile Include="Model\IGRID\PrintingSystem_MODEL.cs" />
+    <Compile Include="Model\IGRID\ProcessColour_MODEL.cs" />
+    <Compile Include="Model\IGRID\ProductGroup_MODEL.cs" />
+    <Compile Include="Model\IGRID\RollSheet_MODEL.cs" />
+    <Compile Include="Model\IGRID\RSCDICUT_MODEL.cs" />
+    <Compile Include="Model\IGRID\ScientificName_MODE.cs" />
+    <Compile Include="Model\IGRID\SelectMaster_MODEL.cs" />
+    <Compile Include="Model\IGRID\Specie_MODEL.cs" />
+    <Compile Include="Model\IGRID\StyleofPrinting_MODEL.cs" />
+    <Compile Include="Model\IGRID\SustainCertSourcing_MODEL.cs" />
+    <Compile Include="Model\IGRID\SustainMaterial_MODEL.cs" />
+    <Compile Include="Model\IGRID\SustainPlastic_MODEL.cs" />
+    <Compile Include="Model\IGRID\Symbol_MODEL.cs" />
+    <Compile Include="Model\IGRID\TotalColour_MODEL.cs" />
+    <Compile Include="Model\IGRID\TransApprove_Model.cs" />
+    <Compile Include="Model\IGRID\TypeofPrimary_MODEL.cs" />
+    <Compile Include="Model\IGRID\TypeOf_MODEL.cs" />
+    <Compile Include="Model\IGRID\Assign_MODEL.cs" />
+    <Compile Include="Model\IGRID\ulogin_MODEL.cs" />
+    <Compile Include="Model\IGRID\Vendor_MODEL.cs" />
+    <Compile Include="Model\IGRID\WHManagement_MODEL.cs" />
+    <Compile Include="Model\IGRID\ProductCode_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_RECEIVE_EMAIL_NEW_CUSTOMER_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_EMAIL_TEMPLATE_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_DECISION_REASON_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_PIC_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_POSITION_ROLE_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_VENDOR_MATGROUP_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_PRINTING_STYLE_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_STEP_ARTWORK_MODEL.cs" />
+    <Compile Include="Model\Master\IGRID_M_OUTBOUND_HEADER_MODEL.cs" />
+    <Compile Include="Model\Master\IGRID_M_OUTBOUND_ITEM_MODEL.cs" />
+    <Compile Include="Model\Master\SAP_M_MATERIAL_CONVERSION.cs" />
+    <Compile Include="Model\Master\SAP_M_ORDER_BOM_MODEL.cs" />
+    <Compile Include="Model\Master\SAP_M_PO_IDOC_ITEM_MODEL.cs" />
+    <Compile Include="Model\Master\SAP_M_PO_IDOC_MODEL.cs" />
+    <Compile Include="Model\Master\XECM_M_PRODUCT5_MODEL.cs" />
+    <Compile Include="Model\Other\IGRID_MODEL.cs" />
+    <Compile Include="Model\Other\MM65_MODEL.cs" />
+    <Compile Include="Model\Other\IDOC_MODEL.cs" />
+    <Compile Include="Model\Other\REMARK_REASON_MODEL.cs" />
+    <Compile Include="Model\Other\PP_VENDOR_MODEL.cs" />
+    <Compile Include="Model\Other\SALES_ORDER_REQUEST_MODEL.cs" />
+    <Compile Include="Model\Other\SALES_ORDER_CHANGE_MODEL.cs" />
+    <Compile Include="Model\Common\V_ART_WF_ALL_PROCESS_MODEL.cs" />
+    <Compile Include="Model\Other\SapMaterial_MODEL.cs" />
+    <Compile Include="Model\Report\IGRID_OVERALL_MASTER_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\ImpactedMatDesc_MODEL.cs" />
+    <Compile Include="Model\Report\IGridSummary_MODEL.cs" />
+    <Compile Include="Model\Report\KPILog_Summarize_MODEL.cs" />
+    <Compile Include="Model\Report\HISTORY_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\IGRID_MASTER_DATA_CHANGE_LOG_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\IGRID_MATSTATUS_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\KPI_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\MATERIAL_LOCK_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\OVERVIEW_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\SUMMARY_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\CHARTTRACKINGIGRID_MODEL.cs" />
+    <Compile Include="Model\Report\TRACKINGIGRID_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\TU_TRACKING_WF_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\VENDOR_MOCKUP_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\VENDOR_ARTWORK_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\CUST_MOCKUP_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\CUST_ARTWORK_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\V_ART_SEARCH_DIELINE.cs" />
+    <Compile Include="Model\Report\END_TO_END_REPORT_MODEL.cs" />
+    <Compile Include="Model\Report\V_ART_ENDTOEND_REPORT_MODEL.cs" />
+    <Compile Include="Model\WFSetting\ART_WF_DELEGATE_MODEL.cs" />
+    <Compile Include="Model\Other\CHECK_SALES_ORDER_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_POSITION.cs" />
+    <Compile Include="Model\Master\ART_M_PERMISSION_MODEL.cs" />
+    <Compile Include="Model\Common\WORK_FLOW_STEP_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_USER_COMPANY_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_USER_CUSTOMER_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_USER_ROLE_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_USER_TYPE_OF_PRODUCT_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_USER_UPPER_LEVEL_MODEL.cs" />
+    <Compile Include="Model\Master\SAP_M_PO_COMPLETE_SO_HEADER_MODEL.cs" />
+    <Compile Include="Model\Master\SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT_MODEL.cs" />
+    <Compile Include="Model\Master\SAP_M_PO_COMPLETE_SO_ITEM_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_CHECK_LIST_CUSTOMER_OTHER_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_CHECK_LIST_PG_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_APPROVE_MATCHBOARD_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_PG_SELECT_VENDOR_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_TEMPLATE_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_MESSAGE_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_STEP_MOCKUP_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_USER_VENDOR_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_CHECK_LIST_LISTOF_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_ATTACHMENT_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_PG_PRICE_TEMPLATE_VENDOR_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_PG_PRICE_TEMPLATE_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_CUSTOMER_BY_PG_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_PLANNING_BY_PG_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_RD_BY_PG_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_VENDOR_BY_PG_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_CUSTOMER_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_WAREHOUSE_BY_PG_MODEL.cs" />
+    <Compile Include="Model\Other\SEARCH_DIE_LINE_MODEL.cs" />
+    <Compile Include="Model\Other\PP_MODEL.cs" />
+    <Compile Include="Model\Other\SEARCH_REQUEST_FORM_MODEL.cs" />
+    <Compile Include="Model\Report\TRACKING_REPORT_MODEL.cs" />
+    <Compile Include="Model\Other\PROCESS_CUSTOMER_MODEL.cs" />
+    <Compile Include="Model\Other\PROCESS_VENDOR_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_VENDOR_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_WAREHOUSE_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_PLANNING_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_RD_MODEL.cs" />
+    <Compile Include="Model\Common\DASHBOARD_GRAPH_MODEL.cs" />
+    <Compile Include="Model\Master\XECM_M_REFERENCE_MODEL.cs" />
+    <Compile Include="Model\Master\XECM_M_PRODUCT_MODEL.cs" />
+    <Compile Include="Model\Master\SAP_M_2P_MODEL.cs" />
+    <Compile Include="Model\Master\SAP_M_3P_MODEL.cs" />
+    <Compile Include="Model\Master\XECM_M_VENDOR_MODEL.cs" />
+    <Compile Include="Model\Common\V_ART_WF_DASHBOARD_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_CHECK_LIST_ITEM_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_CHECK_LIST_REFERENCE_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_CHECK_LIST_PRODUCT_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_CHECK_LIST_PRODUCTION_PLANT_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_CHECK_LIST_COUNTRY_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_CHECK_LIST_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_PG_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_PROCESS_MODEL.cs" />
+    <Compile Include="Model\Mockup\ART_WF_MOCKUP_CHECK_LIST_ITEM_CHARACTERISTIC_MODEL.cs" />
+    <Compile Include="Model\Master\SAP_M_CHARACTERISTIC_MODEL.cs" />
+    <Compile Include="Model\Master\XECM_M_CUSTOMER_MODEL.cs" />
+    <Compile Include="Model\Master\SAP_M_COMPANY_MODEL.cs" />
+    <Compile Include="Model\Master\SAP_M_COUNTRY_MODEL.cs" />
+    <Compile Include="Model\Master\SAP_M_PLANT_MODEL.cs" />
+    <Compile Include="Model\Master\SAP_M_TYPE_OF_PRODUCT_MODEL.cs" />
+    <Compile Include="Model\Artwork\ART_WF_ARTWORK_FILE_MODEL.cs" />
+    <Compile Include="Model\Common\CN_MODEL.cs" />
+    <Compile Include="Model\Master\ART_M_USER_MODEL.cs" />
+    <Compile Include="Model\Master\SAP_M_BRAND_MODEL.cs" />
+    <Compile Include="Model\System\ART_SYS_LOG_MODEL.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SAP_M_2P.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_3P.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_BRAND.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_CHARACTERISTIC.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_CHARACTERISTIC_ITEM.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_COMPANY.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_COUNTRY.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_LONG_TEXT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_MATERIAL_CONVERSION.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_ORDER_BOM.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_PLANT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_PO_COMPLETE_SO_HEADER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_PO_COMPLETE_SO_HEADER_TMP.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_PO_COMPLETE_SO_ITEM.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT_TMP.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_PO_COMPLETE_SO_ITEM_TMP.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_PO_IDOC.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_PO_IDOC_ITEM.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAP_M_TYPE_OF_PRODUCT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Template1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Template1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="V_ART_ASSIGNED_SO.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="V_ART_ENDTOEND_REPORT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="V_ART_SEARCH_DIELINE.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="V_ART_WAREHOUSE_REPORT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="V_ART_WF_ALL_PROCESS.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="V_ART_WF_DASHBOARD.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="V_ART_WF_DASHBOARD_ARTWORK.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="V_SAP_M_ORDER_BOM.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="V_SAP_SALES_ORDER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="V_SAP_SALES_ORDER2.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="V_SAP_SALES_ORDER_ALL.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="XECM_M_CONSTANT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="XECM_M_CUSTOMER.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="XECM_M_PRODUCT.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="XECM_M_PRODUCT5.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="XECM_M_VENDOR.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="DB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="DB.edmx.diagram">
+      <DependentUpon>DB.edmx</DependentUpon>
+    </None>
+    <EntityDeploy Include="IGRIDEntities.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>IGRIDEntities.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="IGRIDEntities.edmx.diagram">
+      <DependentUpon>IGRIDEntities.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DB.Context.cs</LastGenOutput>
+      <DependentUpon>DB.edmx</DependentUpon>
+    </Content>
+    <Content Include="DB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DB.edmx</DependentUpon>
+      <LastGenOutput>DB.cs</LastGenOutput>
+    </Content>
+    <Content Include="IGRIDEntities.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>IGRIDEntities.edmx</DependentUpon>
+      <LastGenOutput>IGRIDEntities.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="IGRIDEntities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>IGRIDEntities.edmx</DependentUpon>
+      <LastGenOutput>IGRIDEntities.cs</LastGenOutput>
+    </Content>
+    <Content Include="Template1.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Template1.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

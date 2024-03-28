@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="ab82b646-4bec-4ef5-9580-2aac00e91fd9" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://idc-app-dv3-114.thaiunion.co.th:8081/cws/services/MemberService?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="MemberService.xsd" MetadataType="Schema" ID="eeb404be-e94a-428e-8b49-7e38c964f5f1" SourceId="1" SourceUrl="http://idc-app-dv3-114.thaiunion.co.th:8081/cws/services/MemberService?xsd=1" />
+    <MetadataFile FileName="MemberService1.xsd" MetadataType="Schema" ID="babdd58a-52fe-491a-b89e-228e773aa041" SourceId="1" SourceUrl="http://idc-app-dv3-114.thaiunion.co.th:8081/cws/services/MemberService?xsd=3" />
+    <MetadataFile FileName="MemberService2.xsd" MetadataType="Schema" ID="905287b2-1c73-4252-88e5-77171f062120" SourceId="1" SourceUrl="http://idc-app-dv3-114.thaiunion.co.th:8081/cws/services/MemberService?xsd=2" />
+    <MetadataFile FileName="MemberService.wsdl" MetadataType="Wsdl" ID="88494e69-ef87-4b13-aed1-cbdc12f13657" SourceId="1" SourceUrl="http://idc-app-dv3-114.thaiunion.co.th:8081/cws/services/MemberService?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

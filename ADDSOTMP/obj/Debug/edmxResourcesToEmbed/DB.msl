@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ARTWORK_DEVModelStoreContainer" CdmEntityContainer="ARTWORKEntities">
+    <EntitySetMapping Name="SAP_M_PO_COMPLETE_SO_HEADER_TMP">
+      <EntityTypeMapping TypeName="ARTWORK_DEVModel.SAP_M_PO_COMPLETE_SO_HEADER_TMP">
+        <MappingFragment StoreEntitySet="SAP_M_PO_COMPLETE_SO_HEADER_TMP">
+          <ScalarProperty Name="PO_COMPLETE_SO_HEADER_ID" ColumnName="PO_COMPLETE_SO_HEADER_ID" />
+          <ScalarProperty Name="SALES_ORDER_NO" ColumnName="SALES_ORDER_NO" />
+          <ScalarProperty Name="SOLD_TO" ColumnName="SOLD_TO" />
+          <ScalarProperty Name="SOLD_TO_NAME" ColumnName="SOLD_TO_NAME" />
+          <ScalarProperty Name="LAST_SHIPMENT_DATE" ColumnName="LAST_SHIPMENT_DATE" />
+          <ScalarProperty Name="DATE_1_2" ColumnName="DATE_1_2" />
+          <ScalarProperty Name="CREATE_ON" ColumnName="CREATE_ON" />
+          <ScalarProperty Name="RDD" ColumnName="RDD" />
+          <ScalarProperty Name="PAYMENT_TERM" ColumnName="PAYMENT_TERM" />
+          <ScalarProperty Name="LC_NO" ColumnName="LC_NO" />
+          <ScalarProperty Name="EXPIRED_DATE" ColumnName="EXPIRED_DATE" />
+          <ScalarProperty Name="SHIP_TO" ColumnName="SHIP_TO" />
+          <ScalarProperty Name="SHIP_TO_NAME" ColumnName="SHIP_TO_NAME" />
+          <ScalarProperty Name="SOLD_TO_PO" ColumnName="SOLD_TO_PO" />
+          <ScalarProperty Name="SHIP_TO_PO" ColumnName="SHIP_TO_PO" />
+          <ScalarProperty Name="SALES_GROUP" ColumnName="SALES_GROUP" />
+          <ScalarProperty Name="MARKETING_CO" ColumnName="MARKETING_CO" />
+          <ScalarProperty Name="MARKETING_CO_NAME" ColumnName="MARKETING_CO_NAME" />
+          <ScalarProperty Name="MARKETING" ColumnName="MARKETING" />
+          <ScalarProperty Name="MARKETING_NAME" ColumnName="MARKETING_NAME" />
+          <ScalarProperty Name="MARKETING_ORDER_SAP" ColumnName="MARKETING_ORDER_SAP" />
+          <ScalarProperty Name="MARKETING_ORDER_SAP_NAME" ColumnName="MARKETING_ORDER_SAP_NAME" />
+          <ScalarProperty Name="SALES_ORG" ColumnName="SALES_ORG" />
+          <ScalarProperty Name="DISTRIBUTION_CHANNEL" ColumnName="DISTRIBUTION_CHANNEL" />
+          <ScalarProperty Name="DIVITION" ColumnName="DIVITION" />
+          <ScalarProperty Name="SALES_ORDER_TYPE" ColumnName="SALES_ORDER_TYPE" />
+          <ScalarProperty Name="HEADER_CUSTOM_1" ColumnName="HEADER_CUSTOM_1" />
+          <ScalarProperty Name="HEADER_CUSTOM_2" ColumnName="HEADER_CUSTOM_2" />
+          <ScalarProperty Name="HEADER_CUSTOM_3" ColumnName="HEADER_CUSTOM_3" />
+          <ScalarProperty Name="IS_MIGRATION" ColumnName="IS_MIGRATION" />
+          <ScalarProperty Name="IS_ASSIGN" ColumnName="IS_ASSIGN" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT_TMP">
+      <EntityTypeMapping TypeName="ARTWORK_DEVModel.SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT_TMP">
+        <MappingFragment StoreEntitySet="SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT_TMP">
+          <ScalarProperty Name="PO_COMPLETE_SO_ITEM_COMPONENT_ID" ColumnName="PO_COMPLETE_SO_ITEM_COMPONENT_ID" />
+          <ScalarProperty Name="PO_COMPLETE_SO_ITEM_ID" ColumnName="PO_COMPLETE_SO_ITEM_ID" />
+          <ScalarProperty Name="COMPONENT_ITEM" ColumnName="COMPONENT_ITEM" />
+          <ScalarProperty Name="COMPONENT_MATERIAL" ColumnName="COMPONENT_MATERIAL" />
+          <ScalarProperty Name="DECRIPTION" ColumnName="DECRIPTION" />
+          <ScalarProperty Name="QUANTITY" ColumnName="QUANTITY" />
+          <ScalarProperty Name="UNIT" ColumnName="UNIT" />
+          <ScalarProperty Name="STOCK" ColumnName="STOCK" />
+          <ScalarProperty Name="BOM_ITEM_CUSTOM_1" ColumnName="BOM_ITEM_CUSTOM_1" />
+          <ScalarProperty Name="BOM_ITEM_CUSTOM_2" ColumnName="BOM_ITEM_CUSTOM_2" />
+          <ScalarProperty Name="BOM_ITEM_CUSTOM_3" ColumnName="BOM_ITEM_CUSTOM_3" />
+          <ScalarProperty Name="IS_ACTIVE" ColumnName="IS_ACTIVE" />
+          <ScalarProperty Name="IS_ASSIGN" ColumnName="IS_ASSIGN" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SAP_M_PO_COMPLETE_SO_ITEM_TMP">
+      <EntityTypeMapping TypeName="ARTWORK_DEVModel.SAP_M_PO_COMPLETE_SO_ITEM_TMP">
+        <MappingFragment StoreEntitySet="SAP_M_PO_COMPLETE_SO_ITEM_TMP">
+          <ScalarProperty Name="PO_COMPLETE_SO_ITEM_ID" ColumnName="PO_COMPLETE_SO_ITEM_ID" />
+          <ScalarProperty Name="PO_COMPLETE_SO_HEADER_ID" ColumnName="PO_COMPLETE_SO_HEADER_ID" />
+          <ScalarProperty Name="ITEM" ColumnName="ITEM" />
+          <ScalarProperty Name="PRODUCT_CODE" ColumnName="PRODUCT_CODE" />
+          <ScalarProperty Name="MATERIAL_DESCRIPTION" ColumnName="MATERIAL_DESCRIPTION" />
+          <ScalarProperty Name="NET_WEIGHT" ColumnName="NET_WEIGHT" />
+          <ScalarProperty Name="ORDER_QTY" ColumnName="ORDER_QTY" />
+          <ScalarProperty Name="ORDER_UNIT" ColumnName="ORDER_UNIT" />
+          <ScalarProperty Name="ETD_DATE_FROM" ColumnName="ETD_DATE_FROM" />
+          <ScalarProperty Name="ETD_DATE_TO" ColumnName="ETD_DATE_TO" />
+          <ScalarProperty Name="PLANT" ColumnName="PLANT" />
+          <ScalarProperty Name="OLD_MATERIAL_CODE" ColumnName="OLD_MATERIAL_CODE" />
+          <ScalarProperty Name="PACK_SIZE" ColumnName="PACK_SIZE" />
+          <ScalarProperty Name="VALUME_PER_UNIT" ColumnName="VALUME_PER_UNIT" />
+          <ScalarProperty Name="VALUME_UNIT" ColumnName="VALUME_UNIT" />
+          <ScalarProperty Name="SIZE_DRAIN_WT" ColumnName="SIZE_DRAIN_WT" />
+          <ScalarProperty Name="PROD_INSP_MEMO" ColumnName="PROD_INSP_MEMO" />
+          <ScalarProperty Name="REJECTION_CODE" ColumnName="REJECTION_CODE" />
+          <ScalarProperty Name="REJECTION_DESCRIPTION" ColumnName="REJECTION_DESCRIPTION" />
+          <ScalarProperty Name="PORT" ColumnName="PORT" />
+          <ScalarProperty Name="VIA" ColumnName="VIA" />
+          <ScalarProperty Name="IN_TRANSIT_TO" ColumnName="IN_TRANSIT_TO" />
+          <ScalarProperty Name="BRAND_ID" ColumnName="BRAND_ID" />
+          <ScalarProperty Name="BRAND_DESCRIPTION" ColumnName="BRAND_DESCRIPTION" />
+          <ScalarProperty Name="ADDITIONAL_BRAND_ID" ColumnName="ADDITIONAL_BRAND_ID" />
+          <ScalarProperty Name="ADDITIONAL_BRAND_DESCRIPTION" ColumnName="ADDITIONAL_BRAND_DESCRIPTION" />
+          <ScalarProperty Name="PRODUCTION_PLANT" ColumnName="PRODUCTION_PLANT" />
+          <ScalarProperty Name="ZONE" ColumnName="ZONE" />
+          <ScalarProperty Name="COUNTRY" ColumnName="COUNTRY" />
+          <ScalarProperty Name="PRODUCTION_HIERARCHY" ColumnName="PRODUCTION_HIERARCHY" />
+          <ScalarProperty Name="MRP_CONTROLLER" ColumnName="MRP_CONTROLLER" />
+          <ScalarProperty Name="STOCK" ColumnName="STOCK" />
+          <ScalarProperty Name="ITEM_CUSTOM_1" ColumnName="ITEM_CUSTOM_1" />
+          <ScalarProperty Name="ITEM_CUSTOM_2" ColumnName="ITEM_CUSTOM_2" />
+          <ScalarProperty Name="ITEM_CUSTOM_3" ColumnName="ITEM_CUSTOM_3" />
+          <ScalarProperty Name="IS_ACTIVE" ColumnName="IS_ACTIVE" />
+          <ScalarProperty Name="IS_ASSIGN" ColumnName="IS_ASSIGN" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SAP_M_PO_COMPLETE_SO_HEADER">
+      <EntityTypeMapping TypeName="ARTWORK_DEVModel.SAP_M_PO_COMPLETE_SO_HEADER">
+        <MappingFragment StoreEntitySet="SAP_M_PO_COMPLETE_SO_HEADER">
+          <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="IS_ASSIGN" ColumnName="IS_ASSIGN" />
+          <ScalarProperty Name="IS_MIGRATION" ColumnName="IS_MIGRATION" />
+          <ScalarProperty Name="HEADER_CUSTOM_3" ColumnName="HEADER_CUSTOM_3" />
+          <ScalarProperty Name="HEADER_CUSTOM_2" ColumnName="HEADER_CUSTOM_2" />
+          <ScalarProperty Name="HEADER_CUSTOM_1" ColumnName="HEADER_CUSTOM_1" />
+          <ScalarProperty Name="SALES_ORDER_TYPE" ColumnName="SALES_ORDER_TYPE" />
+          <ScalarProperty Name="DIVITION" ColumnName="DIVITION" />
+          <ScalarProperty Name="DISTRIBUTION_CHANNEL" ColumnName="DISTRIBUTION_CHANNEL" />
+          <ScalarProperty Name="SALES_ORG" ColumnName="SALES_ORG" />
+          <ScalarProperty Name="MARKETING_ORDER_SAP_NAME" ColumnName="MARKETING_ORDER_SAP_NAME" />
+          <ScalarProperty Name="MARKETING_ORDER_SAP" ColumnName="MARKETING_ORDER_SAP" />
+          <ScalarProperty Name="MARKETING_NAME" ColumnName="MARKETING_NAME" />
+          <ScalarProperty Name="MARKETING" ColumnName="MARKETING" />
+          <ScalarProperty Name="MARKETING_CO_NAME" ColumnName="MARKETING_CO_NAME" />
+          <ScalarProperty Name="MARKETING_CO" ColumnName="MARKETING_CO" />
+          <ScalarProperty Name="SALES_GROUP" ColumnName="SALES_GROUP" />
+          <ScalarProperty Name="SHIP_TO_PO" ColumnName="SHIP_TO_PO" />
+          <ScalarProperty Name="SOLD_TO_PO" ColumnName="SOLD_TO_PO" />
+          <ScalarProperty Name="SHIP_TO_NAME" ColumnName="SHIP_TO_NAME" />
+          <ScalarProperty Name="SHIP_TO" ColumnName="SHIP_TO" />
+          <ScalarProperty Name="EXPIRED_DATE" ColumnName="EXPIRED_DATE" />
+          <ScalarProperty Name="LC_NO" ColumnName="LC_NO" />
+          <ScalarProperty Name="PAYMENT_TERM" ColumnName="PAYMENT_TERM" />
+          <ScalarProperty Name="RDD" ColumnName="RDD" />
+          <ScalarProperty Name="CREATE_ON" ColumnName="CREATE_ON" />
+          <ScalarProperty Name="DATE_1_2" ColumnName="DATE_1_2" />
+          <ScalarProperty Name="LAST_SHIPMENT_DATE" ColumnName="LAST_SHIPMENT_DATE" />
+          <ScalarProperty Name="SOLD_TO_NAME" ColumnName="SOLD_TO_NAME" />
+          <ScalarProperty Name="SOLD_TO" ColumnName="SOLD_TO" />
+          <ScalarProperty Name="SALES_ORDER_NO" ColumnName="SALES_ORDER_NO" />
+          <ScalarProperty Name="PO_COMPLETE_SO_HEADER_ID" ColumnName="PO_COMPLETE_SO_HEADER_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SAP_M_PO_COMPLETE_SO_ITEM">
+      <EntityTypeMapping TypeName="ARTWORK_DEVModel.SAP_M_PO_COMPLETE_SO_ITEM">
+        <MappingFragment StoreEntitySet="SAP_M_PO_COMPLETE_SO_ITEM">
+          <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="IS_ASSIGN" ColumnName="IS_ASSIGN" />
+          <ScalarProperty Name="IS_ACTIVE" ColumnName="IS_ACTIVE" />
+          <ScalarProperty Name="ITEM_CUSTOM_3" ColumnName="ITEM_CUSTOM_3" />
+          <ScalarProperty Name="ITEM_CUSTOM_2" ColumnName="ITEM_CUSTOM_2" />
+          <ScalarProperty Name="ITEM_CUSTOM_1" ColumnName="ITEM_CUSTOM_1" />
+          <ScalarProperty Name="STOCK" ColumnName="STOCK" />
+          <ScalarProperty Name="MRP_CONTROLLER" ColumnName="MRP_CONTROLLER" />
+          <ScalarProperty Name="PRODUCTION_HIERARCHY" ColumnName="PRODUCTION_HIERARCHY" />
+          <ScalarProperty Name="COUNTRY" ColumnName="COUNTRY" />
+          <ScalarProperty Name="ZONE" ColumnName="ZONE" />
+          <ScalarProperty Name="PRODUCTION_PLANT" ColumnName="PRODUCTION_PLANT" />
+          <ScalarProperty Name="ADDITIONAL_BRAND_DESCRIPTION" ColumnName="ADDITIONAL_BRAND_DESCRIPTION" />
+          <ScalarProperty Name="ADDITIONAL_BRAND_ID" ColumnName="ADDITIONAL_BRAND_ID" />
+          <ScalarProperty Name="BRAND_DESCRIPTION" ColumnName="BRAND_DESCRIPTION" />
+          <ScalarProperty Name="BRAND_ID" ColumnName="BRAND_ID" />
+          <ScalarProperty Name="IN_TRANSIT_TO" ColumnName="IN_TRANSIT_TO" />
+          <ScalarProperty Name="VIA" ColumnName="VIA" />
+          <ScalarProperty Name="PORT" ColumnName="PORT" />
+          <ScalarProperty Name="REJECTION_DESCRIPTION" ColumnName="REJECTION_DESCRIPTION" />
+          <ScalarProperty Name="REJECTION_CODE" ColumnName="REJECTION_CODE" />
+          <ScalarProperty Name="PROD_INSP_MEMO" ColumnName="PROD_INSP_MEMO" />
+          <ScalarProperty Name="SIZE_DRAIN_WT" ColumnName="SIZE_DRAIN_WT" />
+          <ScalarProperty Name="VALUME_UNIT" ColumnName="VALUME_UNIT" />
+          <ScalarProperty Name="VALUME_PER_UNIT" ColumnName="VALUME_PER_UNIT" />
+          <ScalarProperty Name="PACK_SIZE" ColumnName="PACK_SIZE" />
+          <ScalarProperty Name="OLD_MATERIAL_CODE" ColumnName="OLD_MATERIAL_CODE" />
+          <ScalarProperty Name="PLANT" ColumnName="PLANT" />
+          <ScalarProperty Name="ETD_DATE_TO" ColumnName="ETD_DATE_TO" />
+          <ScalarProperty Name="ETD_DATE_FROM" ColumnName="ETD_DATE_FROM" />
+          <ScalarProperty Name="ORDER_UNIT" ColumnName="ORDER_UNIT" />
+          <ScalarProperty Name="ORDER_QTY" ColumnName="ORDER_QTY" />
+          <ScalarProperty Name="NET_WEIGHT" ColumnName="NET_WEIGHT" />
+          <ScalarProperty Name="MATERIAL_DESCRIPTION" ColumnName="MATERIAL_DESCRIPTION" />
+          <ScalarProperty Name="PRODUCT_CODE" ColumnName="PRODUCT_CODE" />
+          <ScalarProperty Name="ITEM" ColumnName="ITEM" />
+          <ScalarProperty Name="PO_COMPLETE_SO_HEADER_ID" ColumnName="PO_COMPLETE_SO_HEADER_ID" />
+          <ScalarProperty Name="PO_COMPLETE_SO_ITEM_ID" ColumnName="PO_COMPLETE_SO_ITEM_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT">
+      <EntityTypeMapping TypeName="ARTWORK_DEVModel.SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT">
+        <MappingFragment StoreEntitySet="SAP_M_PO_COMPLETE_SO_ITEM_COMPONENT">
+          <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="IS_ASSIGN" ColumnName="IS_ASSIGN" />
+          <ScalarProperty Name="IS_ACTIVE" ColumnName="IS_ACTIVE" />
+          <ScalarProperty Name="BOM_ITEM_CUSTOM_3" ColumnName="BOM_ITEM_CUSTOM_3" />
+          <ScalarProperty Name="BOM_ITEM_CUSTOM_2" ColumnName="BOM_ITEM_CUSTOM_2" />
+          <ScalarProperty Name="BOM_ITEM_CUSTOM_1" ColumnName="BOM_ITEM_CUSTOM_1" />
+          <ScalarProperty Name="STOCK" ColumnName="STOCK" />
+          <ScalarProperty Name="UNIT" ColumnName="UNIT" />
+          <ScalarProperty Name="QUANTITY" ColumnName="QUANTITY" />
+          <ScalarProperty Name="DECRIPTION" ColumnName="DECRIPTION" />
+          <ScalarProperty Name="COMPONENT_MATERIAL" ColumnName="COMPONENT_MATERIAL" />
+          <ScalarProperty Name="COMPONENT_ITEM" ColumnName="COMPONENT_ITEM" />
+          <ScalarProperty Name="PO_COMPLETE_SO_ITEM_ID" ColumnName="PO_COMPLETE_SO_ITEM_ID" />
+          <ScalarProperty Name="PO_COMPLETE_SO_ITEM_COMPONENT_ID" ColumnName="PO_COMPLETE_SO_ITEM_COMPONENT_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ART_WF_ARTWORK_PROCESS_SO_DETAIL">
+      <EntityTypeMapping TypeName="ARTWORK_DEVModel.ART_WF_ARTWORK_PROCESS_SO_DETAIL">
+        <MappingFragment StoreEntitySet="ART_WF_ARTWORK_PROCESS_SO_DETAIL">
+          <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="BOM_ID" ColumnName="BOM_ID" />
+          <ScalarProperty Name="BOM_NO" ColumnName="BOM_NO" />
+          <ScalarProperty Name="MATERIAL_NO" ColumnName="MATERIAL_NO" />
+          <ScalarProperty Name="SALES_ORDER_ITEM" ColumnName="SALES_ORDER_ITEM" />
+          <ScalarProperty Name="SALES_ORDER_NO" ColumnName="SALES_ORDER_NO" />
+          <ScalarProperty Name="ARTWORK_SUB_ID" ColumnName="ARTWORK_SUB_ID" />
+          <ScalarProperty Name="ARTWORK_REQUEST_ID" ColumnName="ARTWORK_REQUEST_ID" />
+          <ScalarProperty Name="ARTWORK_PROCESS_SO_ID" ColumnName="ARTWORK_PROCESS_SO_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ART_SYS_LOG">
+      <EntityTypeMapping TypeName="ARTWORK_DEVModel.ART_SYS_LOG">
+        <MappingFragment StoreEntitySet="ART_SYS_LOG">
+          <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="ERROR_MSG" ColumnName="ERROR_MSG" />
+          <ScalarProperty Name="OLD_VALUE" ColumnName="OLD_VALUE" />
+          <ScalarProperty Name="NEW_VALUE" ColumnName="NEW_VALUE" />
+          <ScalarProperty Name="ACTION" ColumnName="ACTION" />
+          <ScalarProperty Name="TABLE_NAME" ColumnName="TABLE_NAME" />
+          <ScalarProperty Name="LOG_ID" ColumnName="LOG_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

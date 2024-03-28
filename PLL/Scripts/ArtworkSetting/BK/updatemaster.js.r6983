@@ -1,0 +1,1149 @@
+﻿//const { bind } = require("angular");
+var str_table = "";
+var str_charname = "";
+var str_old_description = "";
+var str_Description = "";
+var str_matgroup = "";
+var str_oldgroup = "";
+var str_mattype = "";
+var str_descriptiontext = "";
+var Value = "";
+var Max_Item = 0;
+var Max_Id = 0;
+var str_item = "";
+var str_PrimaryCode = "";
+var str_GroupStyle = "";
+var str_PackingStyle = "";
+var str_RefStyle = "";
+var str_Packsize = "";
+var str_old_Packsize = "";
+var str_BaseUnit = "";
+var str_TypeofPrimary = "";
+var str_old_id = "";
+var str_id = "";
+var str_old_Can = "";
+var str_Can = "";
+var str_old_LidType = "";
+var str_LidType = "";
+var str_old_ContainerType = "";
+var str_ContainerType = "";
+var str_DescriptionType = "";
+var str_username = "";
+var str_fn = "";
+var str_FirstName = "";
+var str_LastName = "";
+var str_Email = "";
+var str_RegisteredNo = "";
+var str_Address = "";
+var str_Plant = "";
+var str_old_vendorcode = "";
+var str_Authorize_ChangeMaster = "";
+var str_Product_Group = "";
+var str_Product_GroupDesc = "";
+var str_PRD_Plant = "";
+var str_WHNumber = "";
+var str_StorageType = "";
+var str_LE_Qty = "";
+var str_Storage_UnitType = "";
+var Action = "";
+var columns, url, CurrentUser, Active, Changed_Reason, sUser;
+$(document).ready(function () {
+    //$("input.select-checkbox").change(function () {
+    //    var isSelected = this.checked;
+    //    alert("Checkbox changed");
+
+    //});
+    //$('#table_catchingarea_view').click(function (e) {
+
+    //    $('#modal_igrid_popup').modal({ backdrop: 'static', keyboard: true });
+    //})
+    cleardata();
+    $('.cls_igrid_btn_Remove').click(function (e) {
+        Action = "Inactive"
+
+    });
+
+    $('.cls_igrid_btn_Insert').click(function (e) {
+        Action = "Insert";
+        var selections = $('.cls_lov_master_name').select2('data');
+        switch (selections[0].DISPLAY_TXT) {
+            case "ulogin":
+                for (let i = 0; i <= 7; i++) {
+                    $('.cls_container_igrid_master .Text_M' + i + '_2').val("");
+                }
+                break;
+            default:
+                $('.cls_container_igrid_master .Text_M2_2').val("");
+                break;
+        }
+    });
+    $('.cls_igrid_btn_Copy').click(function (e) {
+        switch ($('.cls_lov_master_name').text()) {
+            case "ulogin":
+                for (let i = 0; i <= 7; i++) {
+                    $('.cls_container_igrid_master .Text_M' + i + '_2').val($('.cls_container_igrid_master .Text_M' + i).val());
+                }
+            default:
+                $('.cls_container_igrid_master .Text_M2_2').val($('.cls_container_igrid_master .Text_M2').val());
+                break;
+        }
+    });
+    
+    $('.cls_igrid_btn_save').click(function (e) {
+        switch ($('.cls_lov_master_name').text()) {
+            case "Brand":
+                str_id = $('.cls_container_igrid_master .Text_M1_2').val();
+                str_Description = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_table = "MasBrand";
+                str_charname = "ZPKG_SEC_BRAND";
+                break;
+            case "CatchingArea":
+                str_Description = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_id = str_Description;
+                str_table = "MasCatchingArea";
+                str_charname = "ZPKG_SEC_CATCHING_AREA";
+                break;
+            case "CatchingPeriod":
+                str_Description = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_id = str_Description;
+                str_table = "MasCatchingperiodDate";
+                str_charname = "ZPKG_SEC_CATCHING_PERIOD";
+                break;
+            case "Symbol":
+                str_Description = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_id = str_Description;
+                str_table = "MasSymbol";
+                str_charname = "ZPKG_SEC_SYMBOL";
+                break;
+            case "FAOZone":
+                str_Description = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_id = str_Description;
+                str_table = "MasFAOZone";
+                str_charname = "ZPKG_SEC_FAO";
+                break;
+            case "PrimaryType":
+                str_id = $('.cls_container_igrid_master .Text_M1_2').val();
+                str_id = str_Description;
+                str_table = "MasTypeofPrimary";
+                str_charname = "ZPKG_SEC_PRIMARY_TYPE";
+                break;
+            case "PMSColour":
+                str_Description = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_matgroup = $('.cls_container_igrid_master .Text_M3_2').val();
+                str_id = str_Description;
+                str_table = "MasPMSColour";
+                break;
+            case "ProcessColour":
+                str_Description = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_matgroup = $('.cls_container_igrid_master .Text_M3_2').val();
+
+                str_id = str_Description;
+                str_table = "MasProcessColour";
+                break;
+            case "TotalColour":
+                str_Description = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_matgroup = $('.cls_container_igrid_master .Text_M3_2').val();
+
+                str_id = str_Description;
+                str_table = "MasTotalColour";
+                break;
+            case "Gradeof":
+                str_Description = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_matgroup = $('.cls_container_igrid_master .Text_M3_2').val();
+
+                str_id = str_Description;
+                str_table = "MasGradeofCarton";
+                break;
+            case "TypeOf":
+                str_Description = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_matgroup = $('.cls_container_igrid_master .Text_M3_2').val();
+                str_mattype = $('.cls_container_igrid_master .Text_M4_2').val();
+                str_id = str_Description;
+                str_table = "MasTypeofCarton";
+                break;
+            case "Flute":
+                str_Description = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_matgroup = $('.cls_container_igrid_master .Text_M3_2').val();
+
+                str_id = str_Description;
+                str_table = "MasFlute";
+                break;
+            case "StyleofPrinting":
+                str_Description = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_matgroup = $('.cls_container_igrid_master .Text_M3_2').val();
+
+                str_id = str_Description;
+                str_table = "MasStyleofPrinting";
+                break;
+            case "PrimarySize":
+                str_item = 1;
+                str_id = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_Can = $('.cls_container_igrid_master .Text_M3_2').val();
+                str_Description = $('.cls_container_igrid_master .Text_M4_2').val();
+                str_LidType = $('.cls_container_igrid_master .Text_M5_2').val();
+                str_ContainerType = $('.cls_container_igrid_master .Text_M6_2').val();
+                str_DescriptionType = $('.cls_container_igrid_master .Text_M7_2').val();
+                str_matgroup = "";
+                str_table = "MasPrimarySize";
+                break;
+            case "PackStyle":
+                str_PrimaryCode = $('.cls_container_igrid_master .Text_M1_2').val();
+                str_GroupStyle = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_PackingStyle = $('.cls_container_igrid_master .Text_M3_2').val();
+                str_RefStyle = $('.cls_container_igrid_master .Text_M4_2').val();
+                str_Packsize = $('.cls_container_igrid_master .Text_M5_2').val();
+                str_BaseUnit = $('.cls_container_igrid_master .Text_M6_2').val();
+                str_TypeofPrimary = $('.cls_container_igrid_master .Text_M7_2').val();
+                str_matgroup = "";
+                str_table = "MasPackingStyle";
+                str_charname = "ZPKG_SEC_PACKING";
+                break;
+            case "PlantRegistered":
+                str_RegisteredNo = $('.cls_container_igrid_master .Text_M1_2').val();
+                str_Address = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_Plant = $('.cls_container_igrid_master .Text_M3_2').val();
+                str_table = "MasPlantRegisteredNo";
+                break;
+            case "Vendor":
+                str_id = $('.cls_container_igrid_master .Text_M1_2').val();
+                str_Description = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_matgroup = "";
+                str_table = "MasVendor";
+                str_charname = "ZPKG_SEC_VENDOR";
+                break;
+            case "ulogin":
+                str_username = $('.cls_container_igrid_master .Text_M1_2').val();
+                str_fn = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_FirstName = $('.cls_container_igrid_master .Text_M3_2').val();
+                str_LastName = $('.cls_container_igrid_master .Text_M4_2').val();
+                str_Email = $('.cls_container_igrid_master .Text_M5_2').val();
+                str_Authorize_ChangeMaster = $('.cls_container_igrid_master .Text_M6_2').val();
+                sUser = $('.cls_container_igrid_master .Text_M7_2').val();
+                str_table = "ulogin";
+            case "ProductGroup":
+                str_Product_Group = $('.cls_container_igrid_master .Text_M1_2').val();
+                str_Product_GroupDesc = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_PRD_Plant = $('.cls_container_igrid_master .Text_M3_2').val();
+                str_table = "MasProductGroup";
+
+                break;
+            case "WHManagement":
+                str_Product_Group = $('.cls_container_igrid_master .Text_M1_2').val();
+                str_Product_GroupDesc = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_PRD_Plant = $('.cls_container_igrid_master .Text_M3_2').val();
+                str_WHNumber = $('.cls_container_igrid_master .Text_M4_2').val();
+                str_StorageType = $('.cls_container_igrid_master .Text_M5_2').val();
+                str_LE_Qty = $('.cls_container_igrid_master .Text_M6_2').val();
+                str_Storage_UnitType = $('.cls_container_igrid_master .Text_M7_2').val();
+                str_table = "MasLogistics";
+                break;
+
+            case "SustainPlastic":
+                str_id = $('.cls_container_igrid_master .Text_M1_2').val();
+                str_Description = $('.cls_container_igrid_master .Text_M2_2').val();
+                str_matgroup = $('.cls_container_igrid_master .Text_M3_2').val();
+                str_table = "MasSustainPlastic";
+                break;
+        }
+        var form_name = '.cls_tfigrid ';
+
+        var jsonObj = new Object();
+        jsonObj.data = [];
+        var item = {};
+        item["Changed_Tabname"] = str_table;
+        item["Changed_Charname"] = str_charname;
+        item["Old_Id"] = str_old_id;
+        item["Id"] = str_id;
+        item["Old_Description"] = str_old_description;
+        item["Description"] = str_Description;
+        item["Changed_Action"] = Action;
+        item["Changed_By"] = CurrentUser;
+        item["Active"] = Active;
+        item["Material_Group"] = str_matgroup;
+        item["Material_Type"] = str_mattype;
+        item["DescriptionText"] = str_descriptiontext;
+        item["Can"] = str_Can;
+        item["LidType"] = str_LidType;
+        item["ContainerType"] = str_ContainerType;
+        item["DescriptionType"] = str_DescriptionType;
+        item["user_name"] = str_username;
+        item["fn"] = str_fn;
+        item["FirstName"] = str_FirstName;
+        item["LastName"] = str_LastName;
+        item["Email"] = str_Email;
+        item["Authorize_ChangeMaster"] = str_Authorize_ChangeMaster;
+        item["PrimaryCode"] = str_PrimaryCode;
+        item["GroupStyle"] = str_GroupStyle;
+        item["PackingStyle"] = str_PackingStyle;
+        item["RefStyle"] = str_RefStyle;
+        item["Packsize"] = str_Packsize;
+        item["BaseUnit"] = str_BaseUnit;
+        item["TypeofPrimary"] = str_TypeofPrimary;
+        item["RegisteredNo"] = str_RegisteredNo;
+        item["Address"] = str_Address;
+        item["Plant"] = str_Plant;
+        item["Product_Group"] = str_Product_Group;
+        item["Product_GroupDesc"] = str_Product_GroupDesc;
+        item["PRD_Plant"] = str_PRD_Plant;
+        item["WHNumber"] = str_WHNumber;
+        item["StorageType"] = str_StorageType;
+        item["LE_Qty"] = str_LE_Qty;
+        item["Storage_UnitType"] = str_Storage_UnitType;
+        item["Changed_Reason"] = Changed_Reason;
+        item["SAP_EDPUsername"] = sUser;
+        jsonObj.data = item;
+        var myurl = '/api/lov/savemaster';
+        var mytype = 'POST';
+        var mydata = jsonObj;
+
+        myAjaxConfirmSubmit(myurl, mytype, mydata, callbackSaveTaskFormPA);
+
+    });
+    //$(document).on('click', '#table_brand_view tr', function () {
+    //    var tableData = $(this).children("td").map(function () {
+    //        return $(this).text();
+    //    }).get();
+    //    debugger;
+    //    //alert("Your data is: " + $.trim(tableData[0]) + " , " + $.trim(tableData[1]));
+    //    //Label_M1
+    //    if ($(".Label_M1").is(':hidden')) {
+    //        $('.Label_M1').show();
+    //    }
+    //    if ($(".Text_M1").is(':hidden')) {
+    //        $('.Text_M1').show();
+    //    }
+    //    if ($(".Label_M1_2").is(':hidden')) {
+    //        $('.Label_M1_2').show();
+    //    }
+    //    if ($(".Text_M1_2").is(':hidden')) {
+    //        $('.Text_M1_2').show();
+    //    }
+
+    //    if ($(".Label_M2").is(':hidden')) {
+    //        $('.Label_M2').show();
+    //    }
+    //    if ($(".Text_M2").is(':hidden')) {
+    //        $('.Text_M2').show();
+    //    }
+    //    if ($(".Label_M2_2").is(':hidden')) {
+    //        $('.Label_M2_2').show();
+    //    }
+    //    if ($(".Text_M2_2").is(':hidden')) {
+    //        $('.Text_M2_2').show();
+    //    }
+
+    //    $('.Label_M1').html('ID');
+    //    $('.Label_M1_2').html('ID');
+    //    $('.cls_container_igrid_master .Text_M1').val($.trim(tableData[1]));
+    //    $('.cls_container_igrid_master .Text_M1_2').val($.trim(tableData[1]));
+
+    //    $('.Label_M2').html('Description');
+    //    $('.Label_M2_2').html('Description');
+    //    $('.cls_container_igrid_master .Text_M2').val($.trim(tableData[2]));
+    //    $('.cls_container_igrid_master .Text_M2_2').val($.trim(tableData[2]));
+    //    $('#modal_igrid_popup').modal({ backdrop: 'static', keyboard: true });
+    //});
+
+    
+    //debugger;
+    var table_primary_view;
+    //bind_lov('.cls_Update_characteristic .cls_lov_new_sold_to', '/api/lov/customer', 'data.DISPLAY_TXT');
+    bind_lov('.cls_Update_characteristic .cls_lov_master_name', '/api/lov/selectmaster', 'data.DISPLAY_TXT');
+    //bind_lov_nonOther('.cls_lov_master_name', '/api/lov/customer', 'data.DISPLAY_TXT');
+//    $(".cls_Update_characteristic .cls_trk_btn_search").click(function (e) {
+//        try {
+
+//            var master_name = $('.cls_Update_characteristic .cls_lov_master_name').val();
+
+//            if (!isEmpty(master_name)) {
+//                table_primary_view.ajax.reload();
+//                e.preventDefault();
+//            }
+//            else {
+//                alertError2("Please input master name.");
+//                e.preventDefault();
+//            }
+//        }    
+//        catch (err) { alert(err.message); }
+//    //bind_report_track_pg();
+//    //e.preventDefault();
+//});
+
+    $('.cls_Update_characteristic .cls_lov_master_name').on("change", function () {
+        var selections = $(this).select2('data');
+        var v = $(this)[0].value;
+        var isClear = true;
+        $('#popup_attachment_label').html(selections[0].DISPLAY_TXT);
+        switch (selections[0].DISPLAY_TXT) {
+            case 'PrimarySize':
+                columns = [
+                    {
+                        //render: function (data, type, row, meta) {
+                        //    return meta.row + meta.settings._iDisplayStart + 1;
+                        //}
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "Id", "className": "cls_nowrap" },
+                    { data: "Code", "className": "cls_nowrap" },
+                    { data: "Can", "className": "cls_nowrap" },
+                    { data: "Description", "className": "cls_nowrap" },
+                    { data: "ContainerType", "className": "cls_nowrap" },
+                    { data: "LidType", "className": "cls_nowrap" }
+                ];
+                url = suburl + "/api/lov/primarysizeIGrid";
+                table = '#table_primary_size_view';
+                divclass = '.div_table_primary_size';
+                break;
+            case 'FAOZone':
+                columns = [
+                    {
+                        //render: function (data, type, row, meta) {
+                        //    return '<input class="cls_chk_sendtopp" type="checkbox">';
+                        //}
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "Id", "className": "cls_nowrap" },
+                    { data: "Description", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ]
+                url = suburl + "/api/lov/FAOZoneIGrid";
+                table = '#table_faozone_view';
+                divclass = '.div_table_faozone';
+                break;
+            //case 'PackStyle':
+            //    columns = [
+            //        {
+            //            render: function (data, type, row, meta) {
+            //                return '<input class="cls_chk_sendtopp" type="checkbox">';
+            //            }
+            //        },
+            //        { data: "Id", "className": "cls_nowrap" },
+            //        { data: "Description", "className": "cls_nowrap" },
+            //        { data: "Inactive", "className": "cls_nowrap" },
+            //    ]
+            //    url = suburl + "/api/lov/PackStyleIGrid";
+            //    table = '#table_packstyle_view';
+            //    divclass = '.div_table_packstyle';
+            //    break;
+            case 'Symbol':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "Id", "className": "cls_nowrap" },
+                    { data: "Description", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ]
+                url = suburl + "/api/lov/SymbolIGrid";
+                table = '#table_symbol_view';
+                divclass = '.div_table_symbol';
+                break;
+            case 'TypeOf':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "ID", "className": "cls_nowrap" },
+                    { data: "DISPLAY_TXT", "className": "cls_nowrap" },
+                    { data: "MaterialGroup", "className": "cls_nowrap" },
+                    { data: "MaterialType", "className": "cls_nowrap" },
+                    { data: "DescriptionText", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+
+                ]
+                url = suburl + "/api/lov/TypeOfIGrid";
+                table = '#table_typeof_view';
+                divclass = '.div_table_typeof';
+                break;
+            case 'StyleofPrinting':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "ID", "className": "cls_nowrap" },
+                    { data: "DISPLAY_TXT", "className": "cls_nowrap" },
+                    { data: "MaterialGroup", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                    
+                ]
+                url = suburl + "/api/lov/StyleofPrintingIGrid";
+                table = '#table_styleofprinting_view';
+                divclass = '.div_table_styleofprinting';
+                break;
+            case 'TotalColour':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "ID", "className": "cls_nowrap" },
+                    { data: "DISPLAY_TXT", "className": "cls_nowrap" },
+                    { data: "MaterialGroup", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ]
+                url = suburl + "/api/lov/TotalColourIGrid";
+                table = '#table_totalcolour_view';
+                divclass = '.div_table_totalcolour';
+                break;
+            case 'ProcessColour':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "ID", "className": "cls_nowrap" },
+                    { data: "DISPLAY_TXT", "className": "cls_nowrap" },
+                    { data: "MaterialGroup", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ]
+                url = suburl + "/api/lov/ProcessColourIGrid";
+                table = '#table_processcolour_view';
+                divclass = '.div_table_processcolour';
+                break;
+            case 'PMSColour':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "ID", "className": "cls_nowrap" },
+                    { data: "DISPLAY_TXT", "className": "cls_nowrap" },
+                    { data: "MaterialGroup", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ]
+                url = suburl + "/api/lov/PMSColourIGrid";
+                table = '#table_pmscolour_view';
+                divclass = '.div_table_pmscolour';
+                break;
+            case 'CatchingPeriod':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "ID", "className": "cls_nowrap" },
+                    { data: "DISPLAY_TXT", "className": "cls_nowrap" },
+                ]
+                url = suburl + "/api/lov/CatchingPeriodIGrid";
+                table = '#table_catchingperiod_view';
+                divclass = '.div_table_catchingperiod';
+                break;
+            case 'CatchingArea':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "Id", "className": "cls_nowrap" },
+                    { data: "Description", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ]
+                url = suburl + "/api/lov/CatchingAreaIGrid";
+                table = '#table_catchingarea_view';
+                divclass = '.div_table_catchingarea';
+                break;
+            case 'PackStyle':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    /*{ data: "Id", "className": "cls_nowrap" },*/
+                    { data: "PrimaryCode", "className": "cls_nowrap" },
+                    { data: "GroupStyle", "className": "cls_nowrap" },
+                    { data: "PackingStyle", "className": "cls_nowrap" },
+                    { data: "RefStyle", "className": "cls_nowrap" },
+                    { data: "PackSize", "className": "cls_nowrap" },
+                    { data: "BaseUnit", "className": "cls_nowrap" },
+                    { data: "TypeofPrimary", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ];
+                url = suburl + "/api/lov/PackStyleIGrid";
+                table = '#table_packstyle_view';
+                divclass = '.div_table_packstyle';
+                break;
+            case 'CatchingMethod':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "Id", "className": "cls_nowrap" },
+                    { data: "Description", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ];
+                url = suburl + "/api/lov/CatchingMethodIGrid";
+                table = '#table_catchingmethod_view';
+                divclass = '.div_table_catchingmethod';
+                break;
+            case 'Specie':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "ID", "className": "cls_nowrap" },
+                    { data: "DISPLAY_TXT", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ];
+                url = suburl + "/api/lov/SpecieIGrid";
+                table = '#table_specie_view';
+                divclass = '.div_table_specie';
+                break;
+            case 'ulogin':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    /*{ data: "Id", "className": "cls_nowrap" },*/
+                    { data: "user_name", "className": "cls_nowrap" },
+                    { data: "fn", "className": "cls_nowrap" },
+                    { data: "FirstName", "className": "cls_nowrap" },
+                    { data: "LastName", "className": "cls_nowrap" },
+                    { data: "Email", "className": "cls_nowrap" },
+                    { data: "Authorize_ChangeMaster", "className": "cls_nowrap" },
+                    { data: "SAP_EDPUsername", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ];
+                url = suburl + "/api/lov/uloginIGrid";
+                table = '#table_ulogin_view';
+                divclass = '.div_table_ulogin';
+                break;
+            case 'Vendor':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "Id", "className": "cls_nowrap" },
+                    { data: "Code", "className": "cls_nowrap" },
+                    { data: "Name", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ];
+                url = suburl + "/api/lov/VendorIGrid";
+                table = '#table_vendor_view';
+                divclass = '.div_table_vendor';
+                break;
+            case 'ProductGroup':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "Id", "className": "cls_nowrap" },
+                    { data: "Product_Group", "className": "cls_nowrap" },
+                    { data: "Product_GroupDesc", "className": "cls_nowrap" },
+                    { data: "PRD_Plant", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ];
+                url = suburl + "/api/lov/ProductGroupIGrid";
+                table = '#table_productgroup_view';
+                divclass = '.div_table_productgroup';
+                break;
+            case 'WHManagement':
+                columns = [
+                    {
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "Id", "className": "cls_nowrap" },
+                    { data: "Description", "className": "cls_nowrap" },
+                ];
+                url = suburl + "/api/lov/WHManagementIGrid";
+                table = '#table_whmanagement_view';
+                divclass = '.div_table_whmanagement';
+                break;
+            case 'Flute':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "ID", "className": "cls_nowrap" },
+                    { data: "DISPLAY_TXT", "className": "cls_nowrap" },
+                    { data: "MaterialGroup", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ];
+                url = suburl + "/api/lov/FluteIGrid";
+                table = '#table_flute_view';
+                divclass = '.div_table_flute';
+                break;
+            case 'Gradeof':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "ID", "className": "cls_nowrap" },
+                    { data: "DISPLAY_TXT", "className": "cls_nowrap" },
+                    { data: "MaterialGroup", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ];
+                url = suburl + "/api/lov/GradeofIGrid";
+                table = '#table_gradeof_view';
+                divclass = '.div_table_gradeof';
+                break;
+            case 'ScientificName':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "ID", "className": "cls_nowrap" },
+                    { data: "DISPLAY_TXT", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ];
+                url = suburl + "/api/lov/ScientificNameIGrid";
+                table = '#table_scientificname_view';
+                divclass = '.div_table_scientificname';
+                break;
+            case 'PlantRegistered':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "Id", "className": "cls_nowrap" },
+                    { data: "RegisteredNo", "className": "cls_nowrap" },
+                    { data: "Address", "className": "cls_nowrap" },
+                    { data: "Plant", "className": "cls_nowrap" },
+                    { data: "Inactive", "className": "cls_nowrap" },
+                ];
+                url = suburl + "/api/lov/PlantRegisteredIGrid";
+                table = '#table_plantregistered_view';
+                divclass = '.div_table_plantregistered';
+                break;
+            case 'PrimaryType':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "Id", "className": "cls_nowrap" },
+                    { data: "Description", "className": "cls_nowrap" },
+                ];
+                url = suburl + "/api/lov/PrimaryTypeIGrid";
+                table = '#table_primarytype_view';
+                divclass = '.div_table_primarytype';
+                break;
+            case 'Brand':
+                columns = [
+                    {
+                        data: null,
+                        title: "checkbox",
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "ID", "className": "cls_nowrap" },
+                    { data: "DISPLAY_TXT", "className": "cls_nowrap" },
+                ];
+                url = suburl + "/api/lov/brandIGrid";
+                table = '#table_brand_view';
+                divclass = '.div_table_brand';
+                break;
+            case 'SustainPlastic':
+                columns = [
+                    { data: "Id", title: "Id" },
+                    { data: "value", title: "value" },
+                    { data: "Description", title: "Description" },
+                    { data: "MaterialGroup", title: "MaterialGroup" },
+                    { data: "Inactive", title: "Inactive" },
+                ]
+                url = suburl + "/api/lov/SustainPlasticIGrid";
+                table = '#table_sustainplastic_view';
+                divclass = '.div_table_sustainplastic';
+                break;
+            case 'SustainMaterial':
+                columns = [
+                    { data: "Id", title: "Id" },
+                    { data: "value", title: "value" },
+                    { data: "Description", title: "Description" },
+                    { data: "MaterialGroup", title: "MaterialGroup" },
+                    { data: "Inactive", title: "Inactive" },
+                ]
+                url = suburl + "/api/lov/SustainMaterialIGrid";
+                break;
+            case 'SustainCertSourcing':
+                columns = [
+                    { data: "Id", title: "Id" },
+                    { data: "value", title: "value" },
+                    { data: "Description", title: "Description" },
+                    { data: "MaterialGroup", title: "MaterialGroup" },
+                    { data: "Inactive", title: "Inactive" },
+                ]
+                url = suburl + "/api/lov/SustainCertSourcingIGrid";
+                break;
+            case 'SustainCertSourcing':
+                columns = [
+                    { data: "Id", title: "Id" },
+                    { data: "value", title: "value" },
+                    { data: "Description", title: "Description" },
+                    { data: "MaterialGroup", title: "MaterialGroup" },
+                    { data: "Inactive", title: "Inactive" },
+                ]
+                url = suburl + "/api/lov/SustainCertSourcingIGrid";
+                break;
+            default:
+                break;
+        }
+        bindSuggestMaterialPopUp(false, "0", columns, url, table, divclass);
+        $(document).on('click', table + ' tr', function () {
+            var tableData = $(this).children("td").map(function () {
+                //debugger;
+                var inx = $(this).index();
+                var hdr = $(this).closest('table').find('th').eq(inx).text();
+                $('.Label_M' + inx).html(hdr);
+                $('.Label_M' + inx + '_2').html(hdr);
+                if ($(".Label_M" + inx).is(':hidden')) {
+                    $('.Label_M' + inx).show();
+                }
+                if ($(".Text_M" + inx).is(':hidden')) {
+                    $('.Text_M' + inx).show();
+                }
+                if ($(".Label_M" + inx + "_2").is(':hidden')) {
+                    $('.Label_M' + inx + '_2').show();
+                }
+                if ($(".Text_M" + inx + "_2").is(':hidden')) {
+                    $('.Text_M' + inx + '_2').show();
+                }
+                return $(this).text();
+            }).get();
+
+            for (var i = 0; i < tableData.length; i++) {
+                $('.cls_container_igrid_master .Text_M' + i).val($.trim(tableData[i]));
+                $('.cls_container_igrid_master .Text_M' + i + '_2').val($.trim(tableData[i]));
+            }
+
+            //alert("Your data is: " + $.trim(tableData[0]) + " , " + $.trim(tableData[1]));
+            //Label_M1
+            //if ($(".Label_M1").is(':hidden')) {
+            //    $('.Label_M1').show();
+            //}
+            //if ($(".Text_M1").is(':hidden')) {
+            //    $('.Text_M1').show();
+            //}
+            //if ($(".Label_M1_2").is(':hidden')) {
+            //    $('.Label_M1_2').show();
+            //}
+            //if ($(".Text_M1_2").is(':hidden')) {
+            //    $('.Text_M1_2').show();
+            //}
+
+            //if ($(".Label_M2").is(':hidden')) {
+            //    $('.Label_M2').show();
+            //}
+            //if ($(".Text_M2").is(':hidden')) {
+            //    $('.Text_M2').show();
+            //}
+            //if ($(".Label_M2_2").is(':hidden')) {
+            //    $('.Label_M2_2').show();
+            //}
+            //if ($(".Text_M2_2").is(':hidden')) {
+            //    $('.Text_M2_2').show();
+            //}
+
+            //$('.Label_M1').html('ID');
+            //$('.Label_M1_2').html('ID');
+            //$('.cls_container_igrid_master .Text_M1').val($.trim(tableData[1]));
+            //$('.cls_container_igrid_master .Text_M1_2').val($.trim(tableData[1]));
+
+            //$('.Label_M2').html('Description');
+            //$('.Label_M2_2').html('Description');
+            //$('.cls_container_igrid_master .Text_M2').val($.trim(tableData[2]));
+            //$('.cls_container_igrid_master .Text_M2_2').val($.trim(tableData[2]));
+            
+            $('#modal_igrid_popup').modal({ backdrop: 'static', keyboard: true });
+        });
+        //table_primary_view.ajax.reload();
+    });
+});
+function cleardata() {
+    $('.Text_M1').hide();
+    $(".Label_M1").hide();
+    $('.Text_M2').hide();
+    $(".Label_M2").hide();
+    $('.Text_M3').hide();
+    $(".Label_M3").hide();
+    $('.Text_M4').hide();
+    $(".Label_M4").hide();
+    $('.Text_M5').hide();
+    $(".Label_M5").hide();
+    $('.Text_M6').hide();
+    $(".Label_M6").hide();
+    $('.Text_M7').hide();
+    $(".Label_M7").hide();
+
+    $('.Text_M1_2').hide();
+    $(".Label_M1_2").hide();
+    $('.Text_M2_2').hide();
+    $(".Label_M2_2").hide();
+    $('.Text_M3_2').hide();
+    $(".Label_M3_2").hide();
+    $('.Text_M4_2').hide();
+    $(".Label_M4_2").hide();
+    $('.Text_M5_2').hide();
+    $(".Label_M5_2").hide();
+    $('.Text_M6_2').hide();
+    $(".Label_M6_2").hide();
+    $('.Text_M7_2').hide();
+    $(".Label_M7_2").hide();
+
+    $('.div_table_primary_size').addClass('cls_hide');
+    $('.div_table_brand').addClass('cls_hide');
+    $('.div_table_faozone').addClass('cls_hide');
+
+    $('.div_table_primarytype').addClass('cls_hide');
+    $('.div_table_catchingarea').addClass('cls_hide');
+    $('.div_table_catchingperiod').addClass('cls_hide');
+    $('.div_table_pmscolour').addClass('cls_hide');
+    $('.div_table_processcolour').addClass('cls_hide');
+    $('.div_table_totalcolour').addClass('cls_hide');
+    $('.div_table_styleofprinting').addClass('cls_hide');
+    $('.div_table_typeof').addClass('cls_hide');
+    $('.div_table_totalcolour').addClass('cls_hide');
+    $('.div_table_symbol').addClass('cls_hide');
+    $('.div_table_sustainplastic').addClass('cls_hide');
+    $('.div_table_packstyle').addClass('cls_hide');
+    $('.div_table_plantregistered').addClass('cls_hide');
+    $('.div_table_catchingmethod').addClass('cls_hide');
+    $('.div_table_scientificname').addClass('cls_hide');
+    $('.div_table_specie').addClass('cls_hide');
+    $('.div_table_gradeof').addClass('cls_hide');
+    $('.div_table_flute').addClass('cls_hide');
+    $('.div_table_ulogin').addClass('cls_hide');
+    $('.div_table_vendor').addClass('cls_hide');
+    $('.div_table_productgroup').addClass('cls_hide');
+    $('.div_table_whmanagement').addClass('cls_hide');
+
+}
+function bindSuggestMaterialPopUp(serverSide, autosearch, columns, url, table, divclass) {
+    var groupColumnPPView = 2;
+    cleardata();
+    $(divclass).removeClass('cls_hide');
+    table_primary_view = $(table).DataTable({
+        "scrollY": "600px",
+        "scrollCollapse": true,
+        paging: true,
+        orderCellsTop: true,
+        stateSave: false,
+        ajax: function (data, callback, settings) {
+            //for (var i = 0, len = data.columns.length; i < len; i++) {
+            //    delete data.columns[i].name;
+            //    delete data.columns[i].data;
+            //    delete data.columns[i].searchable;
+            //    delete data.columns[i].orderable;
+            //    delete data.columns[i].search.regex;
+            //    delete data.search.regex;
+
+            //    delete data.columns[i].search.value;
+            //}
+            $.ajax({
+                /*url: suburl + "/api/lov/primarysizeIGrid",*/
+                url: url,
+                type: 'GET',
+                success: function (res) {
+                    dtSuccess(res, callback);
+                }
+            });
+        },
+        //"columnDefs": [
+        //    { "visible": false, "targets": groupColumnPPView },
+        //    { "orderable": false, "targets": 0 },
+        //],
+        select: {
+            style: 'os',
+            selector: 'td:first-child'
+        },
+        "order": [[1, 'desc']],
+        "processing": true,
+        "lengthChange": false,
+        "ordering": true,
+        "info": true,
+        "searching": true,
+        "scrollX": true,
+        "autoWidth": false,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                title: 'IGrid view',
+                extend: 'excelHtml5',
+                exportOptions: {
+                    //columns: [1, 2, 3, 4, 5, 6],
+                    format: {
+                        body: function (data, row, column, node) {
+                            return data;
+                        }
+                    }
+                }
+            }
+        ],
+        columns : columns,
+        
+        "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({ page: 'current' }).nodes();
+            var last = null; var j = 1;
+            //api.column(groupColumnIGridView, { page: 'current' }).data().each(function (group, i) {
+            //if (last !== group) {
+            //    var temp = [];
+            //    var str_grouping = "";
+            //    for (var x = 0; x < rows.data().length; x++) {
+            //        if (rows.data()[x].GROUPING === group) {
+            //            temp.push(rows.data()[x].ARTWORK_SUB_ID);
+            //        }
+            //    }
+            //    if (temp.length > 0)
+            //        str_grouping = temp.join("|");
+            //    $(rows).eq(i).before('<tr class="group highlight"><td><input data-group-name="' + str_grouping + '" class="cls_chk_group" type="checkbox"/></td><td colspan="16">Group ' + j + '</td></tr>');
+            //    last = group;
+            //    j++;
+            //}
+            //});
+            //$('.cls_cnt_igrid_view').text('(' + this.api().data().count() + ') ');
+        },
+        "createdRow": function (row, data, index) {
+            if (data.STATUS == "1")
+                $(row).css("color", "#A20025");
+        },
+        //"drawCallback": function (settings) {
+
+        //},
+        //"initComplete": function (settings, json) {
+        //    $('.cls_cnt_igrid_view').text('(' + json.data.length + ') ');
+        //}
+    });
+    //table_primary_view = $('#table_primary_view').DataTable({
+    //    serverSide: serverSide,
+    //    ajax: function (data, callback, settings) {
+    //        if (serverSide) {
+    //            for (var i = 0, len = data.columns.length; i < len; i++) {
+    //                delete data.columns[i].name;
+    //                delete data.columns[i].data;
+    //                delete data.columns[i].searchable;
+    //                delete data.columns[i].orderable;
+    //                delete data.columns[i].search.regex;
+    //                delete data.search.regex;
+
+    //                delete data.columns[i].search.value;
+    //            }
+    //        }
+    //        $.ajax({
+    //            url: suburl + "/api/taskform/igrid/primary",
+    //            type: 'GET',
+    //            data: data,
+    //            success: function (res) {
+    //                dtSuccess(res, callback);
+    //            }
+    //        });
+    //    },
+    //    fixedColumns: {
+    //        leftColumns: 1
+    //    },
+    //    "scrollX": true,
+    //    columns: [
+    //        {
+    //            data: null,
+    //            defaultContent: '',
+    //            className: 'select-checkbox',
+    //            orderable: false
+    //        },
+    //        { data: "Id", "className": "cls_nowrap" },
+    //        { data: "Code", "className": "cls_nowrap" },
+    //        { data: "Can", "className": "cls_nowrap" },
+    //        { data: "Description", "className": "cls_nowrap" },
+    //        { data: "ContainerType", "className": "cls_nowrap" },
+    //        { data: "LidType", "className": "cls_nowrap" }
+    //    ],
+    //    select: {
+    //        style: 'os',
+    //        selector: 'td:first-child'
+    //    },
+    //    "processing": true,
+    //    "rowCallback": function (row, data, index) {
+    //        if (!isEmpty(data.START_DATE)) {
+    //            $(row).find('.cls_startdate').html(myDateMoment(data.START_DATE));
+    //        }
+    //        if (!isEmpty(data.END_DATE)) {
+    //            $(row).find('.cls_enddate').html(myDateMoment(data.END_DATE));
+    //        }
+    //    },
+    //    order: [[2, 'asc']],
+    //    initComplete: function (settings, json) {
+
+    //    },
+    //});
+    function callbackSaveTaskFormPA() {
+        var ARTWORK_SUB_PA_ID = res.data[0].Id;
+    }
+}

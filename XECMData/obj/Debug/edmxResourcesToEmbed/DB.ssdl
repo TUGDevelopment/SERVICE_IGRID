@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CSTUModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'CSDEVTU.dbo.LLAttrData' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="LLAttrData">
+    <Key>
+      <PropertyRef Name="ID" />
+      <PropertyRef Name="VerNum" />
+      <PropertyRef Name="DefID" />
+      <PropertyRef Name="DefVerN" />
+      <PropertyRef Name="AttrID" />
+      <PropertyRef Name="AttrType" />
+      <PropertyRef Name="CustomID" />
+      <PropertyRef Name="EntryNum" />
+      <PropertyRef Name="ParentKeyID" />
+    </Key>
+    <Property Name="ID" Type="bigint" Nullable="false" />
+    <Property Name="VerNum" Type="bigint" Nullable="false" />
+    <Property Name="DefID" Type="bigint" Nullable="false" />
+    <Property Name="DefVerN" Type="bigint" Nullable="false" />
+    <Property Name="AttrID" Type="int" Nullable="false" />
+    <Property Name="AttrType" Type="int" Nullable="false" />
+    <Property Name="CustomID" Type="int" Nullable="false" />
+    <Property Name="EntryNum" Type="int" Nullable="false" />
+    <Property Name="ParentKeyID" Type="bigint" Nullable="false" />
+    <Property Name="KeyID" Type="bigint" />
+    <Property Name="ValInt" Type="bigint" />
+    <Property Name="ValReal" Type="numeric" Precision="28" Scale="14" />
+    <Property Name="ValDate" Type="datetime" />
+    <Property Name="ValStr" Type="nvarchar" MaxLength="255" />
+    <Property Name="ValLong" Type="nvarchar(max)" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'CSDEVTU.dbo.DTree' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="DTree">
+    <Key>
+      <PropertyRef Name="OwnerID" />
+      <PropertyRef Name="ParentID" />
+      <PropertyRef Name="DataID" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="OriginOwnerID" />
+      <PropertyRef Name="OriginDataID" />
+      <PropertyRef Name="UserID" />
+      <PropertyRef Name="GroupID" />
+      <PropertyRef Name="UPermissions" />
+      <PropertyRef Name="GPermissions" />
+      <PropertyRef Name="WPermissions" />
+      <PropertyRef Name="SPermissions" />
+      <PropertyRef Name="ACLCount" />
+      <PropertyRef Name="Deleted" />
+      <PropertyRef Name="GUID" />
+    </Key>
+    <Property Name="OwnerID" Type="bigint" Nullable="false" />
+    <Property Name="ParentID" Type="bigint" Nullable="false" />
+    <Property Name="DataID" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="248" Nullable="false" />
+    <Property Name="OriginOwnerID" Type="bigint" Nullable="false" />
+    <Property Name="OriginDataID" Type="bigint" Nullable="false" />
+    <Property Name="UserID" Type="bigint" Nullable="false" />
+    <Property Name="GroupID" Type="bigint" Nullable="false" />
+    <Property Name="UPermissions" Type="int" Nullable="false" />
+    <Property Name="GPermissions" Type="int" Nullable="false" />
+    <Property Name="WPermissions" Type="int" Nullable="false" />
+    <Property Name="SPermissions" Type="int" Nullable="false" />
+    <Property Name="ACLCount" Type="int" Nullable="false" />
+    <Property Name="PermID" Type="bigint" />
+    <Property Name="DataType" Type="bigint" />
+    <Property Name="CreatedBy" Type="bigint" />
+    <Property Name="CreateDate" Type="datetime" />
+    <Property Name="ModifiedBy" Type="bigint" />
+    <Property Name="ModifyDate" Type="datetime" />
+    <Property Name="MaxVers" Type="int" />
+    <Property Name="Reserved" Type="tinyint" />
+    <Property Name="ReservedBy" Type="bigint" />
+    <Property Name="ReservedDate" Type="datetime" />
+    <Property Name="VersionNum" Type="bigint" />
+    <Property Name="DComment" Type="nvarchar(max)" />
+    <Property Name="DCategory" Type="nvarchar" MaxLength="255" />
+    <Property Name="SubType" Type="int" />
+    <Property Name="ExAtt1" Type="nvarchar" MaxLength="255" />
+    <Property Name="ExAtt2" Type="nvarchar" MaxLength="255" />
+    <Property Name="Ordering" Type="bigint" />
+    <Property Name="Major" Type="bigint" />
+    <Property Name="Minor" Type="bigint" />
+    <Property Name="ReleaseRef" Type="bigint" />
+    <Property Name="ChildCount" Type="bigint" />
+    <Property Name="AssignedTo" Type="bigint" />
+    <Property Name="DateAssigned" Type="datetime" />
+    <Property Name="DateEffective" Type="datetime" />
+    <Property Name="DateExpiration" Type="datetime" />
+    <Property Name="DateDue" Type="datetime" />
+    <Property Name="DateStarted" Type="datetime" />
+    <Property Name="DateCompleted" Type="datetime" />
+    <Property Name="Status" Type="int" />
+    <Property Name="Priority" Type="int" />
+    <Property Name="GIF" Type="nvarchar" MaxLength="255" />
+    <Property Name="ExtendedData" Type="nvarchar(max)" />
+    <Property Name="Catalog" Type="int" />
+    <Property Name="CacheExpiration" Type="int" />
+    <Property Name="Deleted" Type="int" Nullable="false" />
+    <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="CSTUModelStoreContainer">
+    <EntitySet Name="LLAttrData" EntityType="Self.LLAttrData" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [LLAttrData].[ID] AS [ID], 
+    [LLAttrData].[VerNum] AS [VerNum], 
+    [LLAttrData].[DefID] AS [DefID], 
+    [LLAttrData].[DefVerN] AS [DefVerN], 
+    [LLAttrData].[AttrID] AS [AttrID], 
+    [LLAttrData].[AttrType] AS [AttrType], 
+    [LLAttrData].[CustomID] AS [CustomID], 
+    [LLAttrData].[EntryNum] AS [EntryNum], 
+    [LLAttrData].[ParentKeyID] AS [ParentKeyID], 
+    [LLAttrData].[KeyID] AS [KeyID], 
+    [LLAttrData].[ValInt] AS [ValInt], 
+    [LLAttrData].[ValReal] AS [ValReal], 
+    [LLAttrData].[ValDate] AS [ValDate], 
+    [LLAttrData].[ValStr] AS [ValStr], 
+    [LLAttrData].[ValLong] AS [ValLong]
+    FROM [dbo].[LLAttrData] AS [LLAttrData]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="DTree" EntityType="Self.DTree" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [DTree].[OwnerID] AS [OwnerID], 
+    [DTree].[ParentID] AS [ParentID], 
+    [DTree].[DataID] AS [DataID], 
+    [DTree].[Name] AS [Name], 
+    [DTree].[OriginOwnerID] AS [OriginOwnerID], 
+    [DTree].[OriginDataID] AS [OriginDataID], 
+    [DTree].[UserID] AS [UserID], 
+    [DTree].[GroupID] AS [GroupID], 
+    [DTree].[UPermissions] AS [UPermissions], 
+    [DTree].[GPermissions] AS [GPermissions], 
+    [DTree].[WPermissions] AS [WPermissions], 
+    [DTree].[SPermissions] AS [SPermissions], 
+    [DTree].[ACLCount] AS [ACLCount], 
+    [DTree].[PermID] AS [PermID], 
+    [DTree].[DataType] AS [DataType], 
+    [DTree].[CreatedBy] AS [CreatedBy], 
+    [DTree].[CreateDate] AS [CreateDate], 
+    [DTree].[ModifiedBy] AS [ModifiedBy], 
+    [DTree].[ModifyDate] AS [ModifyDate], 
+    [DTree].[MaxVers] AS [MaxVers], 
+    [DTree].[Reserved] AS [Reserved], 
+    [DTree].[ReservedBy] AS [ReservedBy], 
+    [DTree].[ReservedDate] AS [ReservedDate], 
+    [DTree].[VersionNum] AS [VersionNum], 
+    [DTree].[DComment] AS [DComment], 
+    [DTree].[DCategory] AS [DCategory], 
+    [DTree].[SubType] AS [SubType], 
+    [DTree].[ExAtt1] AS [ExAtt1], 
+    [DTree].[ExAtt2] AS [ExAtt2], 
+    [DTree].[Ordering] AS [Ordering], 
+    [DTree].[Major] AS [Major], 
+    [DTree].[Minor] AS [Minor], 
+    [DTree].[ReleaseRef] AS [ReleaseRef], 
+    [DTree].[ChildCount] AS [ChildCount], 
+    [DTree].[AssignedTo] AS [AssignedTo], 
+    [DTree].[DateAssigned] AS [DateAssigned], 
+    [DTree].[DateEffective] AS [DateEffective], 
+    [DTree].[DateExpiration] AS [DateExpiration], 
+    [DTree].[DateDue] AS [DateDue], 
+    [DTree].[DateStarted] AS [DateStarted], 
+    [DTree].[DateCompleted] AS [DateCompleted], 
+    [DTree].[Status] AS [Status], 
+    [DTree].[Priority] AS [Priority], 
+    [DTree].[GIF] AS [GIF], 
+    [DTree].[ExtendedData] AS [ExtendedData], 
+    [DTree].[Catalog] AS [Catalog], 
+    [DTree].[CacheExpiration] AS [CacheExpiration], 
+    [DTree].[Deleted] AS [Deleted], 
+    [DTree].[GUID] AS [GUID]
+    FROM [dbo].[DTree] AS [DTree]</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+</Schema>

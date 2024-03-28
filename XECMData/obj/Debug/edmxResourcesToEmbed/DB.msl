@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CSTUModelStoreContainer" CdmEntityContainer="CSTUEntities">
+    <EntitySetMapping Name="LLAttrData">
+      <EntityTypeMapping TypeName="CSTUModel.LLAttrData">
+        <MappingFragment StoreEntitySet="LLAttrData">
+          <ScalarProperty Name="ValLong" ColumnName="ValLong" />
+          <ScalarProperty Name="ValStr" ColumnName="ValStr" />
+          <ScalarProperty Name="ValDate" ColumnName="ValDate" />
+          <ScalarProperty Name="ValReal" ColumnName="ValReal" />
+          <ScalarProperty Name="ValInt" ColumnName="ValInt" />
+          <ScalarProperty Name="KeyID" ColumnName="KeyID" />
+          <ScalarProperty Name="ParentKeyID" ColumnName="ParentKeyID" />
+          <ScalarProperty Name="EntryNum" ColumnName="EntryNum" />
+          <ScalarProperty Name="CustomID" ColumnName="CustomID" />
+          <ScalarProperty Name="AttrType" ColumnName="AttrType" />
+          <ScalarProperty Name="AttrID" ColumnName="AttrID" />
+          <ScalarProperty Name="DefVerN" ColumnName="DefVerN" />
+          <ScalarProperty Name="DefID" ColumnName="DefID" />
+          <ScalarProperty Name="VerNum" ColumnName="VerNum" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DTree">
+      <EntityTypeMapping TypeName="CSTUModel.DTree">
+        <MappingFragment StoreEntitySet="DTree">
+          <ScalarProperty Name="GUID" ColumnName="GUID" />
+          <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+          <ScalarProperty Name="CacheExpiration" ColumnName="CacheExpiration" />
+          <ScalarProperty Name="Catalog" ColumnName="Catalog" />
+          <ScalarProperty Name="ExtendedData" ColumnName="ExtendedData" />
+          <ScalarProperty Name="GIF" ColumnName="GIF" />
+          <ScalarProperty Name="Priority" ColumnName="Priority" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="DateCompleted" ColumnName="DateCompleted" />
+          <ScalarProperty Name="DateStarted" ColumnName="DateStarted" />
+          <ScalarProperty Name="DateDue" ColumnName="DateDue" />
+          <ScalarProperty Name="DateExpiration" ColumnName="DateExpiration" />
+          <ScalarProperty Name="DateEffective" ColumnName="DateEffective" />
+          <ScalarProperty Name="DateAssigned" ColumnName="DateAssigned" />
+          <ScalarProperty Name="AssignedTo" ColumnName="AssignedTo" />
+          <ScalarProperty Name="ChildCount" ColumnName="ChildCount" />
+          <ScalarProperty Name="ReleaseRef" ColumnName="ReleaseRef" />
+          <ScalarProperty Name="Minor" ColumnName="Minor" />
+          <ScalarProperty Name="Major" ColumnName="Major" />
+          <ScalarProperty Name="Ordering" ColumnName="Ordering" />
+          <ScalarProperty Name="ExAtt2" ColumnName="ExAtt2" />
+          <ScalarProperty Name="ExAtt1" ColumnName="ExAtt1" />
+          <ScalarProperty Name="SubType" ColumnName="SubType" />
+          <ScalarProperty Name="DCategory" ColumnName="DCategory" />
+          <ScalarProperty Name="DComment" ColumnName="DComment" />
+          <ScalarProperty Name="VersionNum" ColumnName="VersionNum" />
+          <ScalarProperty Name="ReservedDate" ColumnName="ReservedDate" />
+          <ScalarProperty Name="ReservedBy" ColumnName="ReservedBy" />
+          <ScalarProperty Name="Reserved" ColumnName="Reserved" />
+          <ScalarProperty Name="MaxVers" ColumnName="MaxVers" />
+          <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="DataType" ColumnName="DataType" />
+          <ScalarProperty Name="PermID" ColumnName="PermID" />
+          <ScalarProperty Name="ACLCount" ColumnName="ACLCount" />
+          <ScalarProperty Name="SPermissions" ColumnName="SPermissions" />
+          <ScalarProperty Name="WPermissions" ColumnName="WPermissions" />
+          <ScalarProperty Name="GPermissions" ColumnName="GPermissions" />
+          <ScalarProperty Name="UPermissions" ColumnName="UPermissions" />
+          <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="OriginDataID" ColumnName="OriginDataID" />
+          <ScalarProperty Name="OriginOwnerID" ColumnName="OriginOwnerID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="DataID" ColumnName="DataID" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

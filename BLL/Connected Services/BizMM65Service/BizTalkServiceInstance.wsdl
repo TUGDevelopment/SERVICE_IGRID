@@ -1,0 +1,938 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="BizTalkServiceInstance" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation>
+    <CreationInfo Created="2018-11-19 08:58:57Z" />
+  </wsdl:documentation>
+  <wsp:Policy wsu:Id="WSHttpBinding_ITwoWayAsync_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xs:schema xmlns:tns="http://schemas.microsoft.com/Message" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/Message" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:complexType name="MessageBody">
+        <xs:sequence>
+          <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##any" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+    <xs:schema xmlns:tns="http://tempuri.org/Imports" targetNamespace="http://tempuri.org/Imports" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import namespace="http://tempuri.org/" />
+    </xs:schema>
+    <xs:schema xmlns:b="http://schemas.microsoft.com/BizTalk/2003" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="inputArtworkNumber">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="_artworkObject" type="tns:ArtworkObject" />
+            <xs:element minOccurs="0" maxOccurs="1" name="_itemsArtwork" type="tns:ArrayOfInboundArtwork" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="ArtworkObject">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="ArtworkNumber" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Date" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Time" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RecordType" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MaterialNumber" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MaterialDescription" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="MaterialCreatedDate" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ArtworkURL" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Status" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PAUserName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PGUserName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ReferenceMaterial" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Plant" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PrintingStyleofPrimary" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PrintingStyleofSecondary" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomersDesign" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomersDesignDetail" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomersSpec" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomersSpecDetail" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomersSize" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomersSizeDetail" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomerNominatesVendor" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomerNominatesVendorDetail" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomerNominatesColorPantone" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomerNominatesColorPantoneDetail" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomersBarcodeScanable" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomersBarcodeScanableDetail" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomersBarcodeSpec" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustomersBarcodeSpecDetail" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="FirstInfoGroup" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SONumber" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SOitem" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SOPlant" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PICMKT" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Destination" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RemarkNoteofPA" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="FinalInfoGroup" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RemarkNoteofPG" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CompleteInfoGroup" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ProductionExpirydatesystem" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Seriousnessofcolorprinting" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CustIngreNutritionAnalysis" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ShadeLimit" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PackageQuantity" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="WastePercent" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ArrayOfInboundArtwork">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="InboundArtwork" nillable="true" type="tns:InboundArtwork" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="InboundArtwork">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="ArtworkNumber" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Date" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Time" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Characteristic" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Value" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="inputArtworkNumberResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="inputArtworkNumberResult" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="uploadfile">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Data" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Doc" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="username" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="uploadfileResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="SendEmailUpdateMaster">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="_name" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SendEmailUpdateMasterResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="SendEmail">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="_name" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SendEmailResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetUpdate">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="sName" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetUpdateResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetImpactmat">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="sName" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetImpactmatResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetImpactmatResult">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:any />
+                  <xs:any />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMasterData">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="sName" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMasterDataResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetMasterDataResult">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:any />
+                  <xs:any />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetQuery">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="sName" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetQueryResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetQueryResult">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:any />
+                  <xs:any />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="UpdatePrimarySize">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Item" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Id" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Can" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="LidType" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="ContainerType" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DescriptionType" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Changed_Action" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Changed_By" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Active" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="UpdatePrimarySizeResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="UpdateMaster">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Changed_Tabname" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Changed_Charname" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Old_Id" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Id" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Changed_Action" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Changed_By" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Active" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Material_Group" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Material_Type" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DescriptionText" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Can" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="LidType" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="ContainerType" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DescriptionType" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="user_name" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="fn" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="FirstName" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="LastName" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Email" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Authorize_ChangeMaster" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PrimaryCode" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GroupStyle" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PackingStyle" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="RefStyle" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Packsize" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="BaseUnit" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="RegisteredNo" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Address" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Plant" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Product_Group" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Product_GroupDesc" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PRD_Plant" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="WHNumber" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="StorageType" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="LE_Qty" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Storage_UnitType" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="UpdateMasterResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="UpdateTransMaster">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Changed_Tabname" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Changed_Charname" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Old_Id" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Id" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Old_Description" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Changed_Action" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Changed_By" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Active" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Material_Group" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Material_Type" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DescriptionText" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Can" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="LidType" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="ContainerType" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DescriptionType" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="user_name" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="fn" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="FirstName" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="LastName" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Email" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Authorize_ChangeMaster" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PrimaryCode" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GroupStyle" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PackingStyle" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="RefStyle" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Packsize" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="BaseUnit" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="RegisteredNo" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Address" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Plant" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Product_Group" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Product_GroupDesc" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PRD_Plant" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="WHNumber" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="StorageType" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="LE_Qty" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Storage_UnitType" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Changed_Reason" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="UpdateTransMasterResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetComplateMaterial2">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="name" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="sCondition" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="sUser" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="FrDt" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="ToDt" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetComplateMaterial2Response">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetTrackingReport">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="name" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="sCondition" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="sUser" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="FrDt" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="ToDt" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetTrackingReportResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetMasterDataLog">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="name" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="FrDt" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="ToDt" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="sUser" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Shortname" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMasterDataLogResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetMatStatus">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="name" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMatStatusResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetHistoryLog">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="name" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="FrDt" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="ToDt" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetHistoryLogResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetKPILog">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="LayOut" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="FrDt" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="ToDt" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetKPILogResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetKPILog_Summarize">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="LayOut" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="FrDt" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="ToDt" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetKPILog_SummarizeResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetSelectCrossColumn2">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="sName" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="FrDt" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="ToDt" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetSelectCrossColumn2Response">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="Getulogin">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="username" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="password" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetuloginResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="Getreason">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Id" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="fn" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetreasonResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="saveaprrove">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="data" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="saveaprroveResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetDelDocument">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Id" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetDelDocumentResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetsaveInfoGroup">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Id" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="InfoGroup" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="user" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Check_PChanged" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetsaveInfoGroupResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="savecopy">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Id" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="copy" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="user" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="savecopyResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="ApproveStep">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="user" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Id" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="action" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="condition" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="satusapp" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ApproveStepResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="Getflagchangeresult">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="sName" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetflagchangeresultResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetHistory">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="sName" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetHistoryResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetMasterLog">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="sName" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="sUser" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="FrDt" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="ToDt" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMasterLogResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetPlantRegisteredNo">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="sName" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetPlantRegisteredNoResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="Getsapmaterial">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="name" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="sCondition" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetsapmaterialResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="Getselectall">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="user" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="where" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetselectallResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="Getinfogroup">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="where" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetinfogroupResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="Getpersonal">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="user" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="where" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetpersonalResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetPendingJob">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="user" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="where" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetPendingJobResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetSearchresults">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="table" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="where" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetSearchresultsResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetDetails">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="name" type="xs:string" />
+            <xs:element minOccurs="1" maxOccurs="1" name="age" type="xs:int" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetDetailsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetDetailsResult" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetDataSet">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="sName" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetDataSetResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetDataSetResult">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:any />
+                  <xs:any />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Getjson">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="sName" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetjsonResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="savedata">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="data" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="savedataResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="selectitemsdata">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="id" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="selectitemsdataResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="selectitems">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="id" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="selectitemsResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="Requestitems">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="sName" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RequestitemsResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="Assign">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="data" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AssignResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="saveCreateroot">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="data" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="saveCreaterootResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="saveRequestDocument">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="data" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="saveRequestDocumentResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="savedocument">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="data" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="savedocumentResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="savebyte">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="data" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="savebyteResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="savebytencp">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="data" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="savebytencpResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="savechangeresult">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Result" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Matdoc" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Activeby" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="savechangeresultResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="savedocumentncp">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="data" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="savedocumentncpResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="savemaster">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="data" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="savemasterResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="saveinfogroup">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Id" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Result" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="saveinfogroupResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetImpactedMatDesc">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="name" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="User" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="FrDt" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="ToDt" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Status" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="MasterName" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Action" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetImpactedMatDescResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="saveImpactedMatDesc">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Id" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Reason" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Status" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="saveImpactedMatDescResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="UpdateImpactedmat">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Changed_Id" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Changed_Action" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Material" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DMSNo" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="New_Material" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="New_Description" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Status" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Reason" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="NewMat_JobId" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Char_Name" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Char_OldValue" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Char_NewValue" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="UpdateImpactedmatResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="Delete_UnusedJob">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Id" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Delete_UnusedJobResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="ReUpload">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Id" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ReUploadResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="InactiveMat">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Material" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="InactiveMatResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="ReactiveMat">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Material" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ReactiveMatResponse">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="DataSet" nillable="true">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:any />
+            <xs:any />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="string" nillable="true" type="xs:string" />
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="MM65_inputArtworkNumber_InputMessage">
+    <wsdl:part name="part" element="tns:inputArtworkNumber" />
+  </wsdl:message>
+  <wsdl:message name="MM65_inputArtworkNumber_OutputMessage">
+    <wsdl:part name="part" element="tns:inputArtworkNumberResponse" />
+  </wsdl:message>
+  <wsdl:portType name="MM65">
+    <wsdl:documentation />
+    <wsdl:operation name="inputArtworkNumber">
+      <wsdl:documentation />
+      <wsdl:input message="tns:MM65_inputArtworkNumber_InputMessage" />
+      <wsdl:output message="tns:MM65_inputArtworkNumber_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WSHttpBinding_ITwoWayAsync" type="tns:MM65">
+    <wsp:PolicyReference URI="#WSHttpBinding_ITwoWayAsync_policy" />
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="inputArtworkNumber">
+      <wsdl:documentation />
+      <soap12:operation soapAction="inputArtworkNumber" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" encodingStyle="http://www.w3.org/2003/05/soap-encoding" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" encodingStyle="http://www.w3.org/2003/05/soap-encoding" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BizTalkServiceInstance">
+    <wsdl:port name="WSHttpBinding_ITwoWayAsync" binding="tns:WSHttpBinding_ITwoWayAsync">
+      <soap12:address location="http://seulonbt998.mwb.net/BizTalkWcfService/MM65.svc" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>http://seulonbt998.mwb.net/BizTalkWcfService/MM65.svc</wsa10:Address>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

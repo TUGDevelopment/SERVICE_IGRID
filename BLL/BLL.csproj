@@ -1,0 +1,954 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9CFFBA2A-5671-490F-A135-BE0CC97D3C09}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BLL</RootNamespace>
+    <AssemblyName>BLL</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=7.0.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.7.0.1\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML, Version=0.94.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.94.2\lib\net46\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.1.0.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.1.0\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="FastMember, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.1.3.0\lib\net45\FastMember.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\netstandard2.0\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.0.1\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Packaging, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Packaging.4.0.0\lib\net46\System.IO.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Async, Version=4.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Async.4.0.0\lib\net461\System.Linq.Async.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.0\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Connected Services\Authentication\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\BizMM65Service\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\ContentService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\DocumentManagement\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\MemberService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Enums\EnumExtension.cs" />
+    <Compile Include="Enums\PackagingTypeMapping.cs" />
+    <Compile Include="Helpers\Artwork\ArtworkUploadHelper.cs" />
+    <Compile Include="Helpers\Artwork\ArtworkRequestHelper.cs" />
+    <Compile Include="Helpers\Artwork\ArtworkCustomerOtherHelper.cs" />
+    <Compile Include="Helpers\Artwork\ArtworkRemarkReason.cs" />
+    <Compile Include="Helpers\Common\FormNumberHelper.cs" />
+    <Compile Include="Helpers\Common\MaterialIGridHelper.cs" />
+    <Compile Include="Helpers\Common\RequestFormHelper.cs" />
+    <Compile Include="Helpers\LOV\ArtworkNoHelper.cs" />
+    <Compile Include="Helpers\LOV\PackagingSecHelper.cs" />
+    <Compile Include="Helpers\LOV\SelectMasterHelper.cs" />
+    <Compile Include="Helpers\LOV\ZoneHelper.cs" />
+    <Compile Include="Helpers\LOV\MaterialHelper.cs" />
+    <Compile Include="Helpers\LOV\DecisionReasonHelper.cs" />
+    <Compile Include="Helpers\LOV\PositionHelper.cs" />
+    <Compile Include="Helpers\LOV\ItemDiStickerHelper.cs" />
+    <Compile Include="Helpers\LOV\FlieTemplateHelper.cs" />
+    <Compile Include="Helpers\LOV\ItemStylePrintingHelper.cs" />
+    <Compile Include="Helpers\LOV\ListOfArtworkHelper.cs" />
+    <Compile Include="Helpers\LOV\MarketingHelper.cs" />
+    <Compile Include="Helpers\LOV\RecipientHelper.cs" />
+    <Compile Include="Helpers\LOV\UserHelper.cs" />
+    <Compile Include="Helpers\LOV\WorkFlowStepHelper.cs" />
+    <Compile Include="Helpers\LOV\StepMockupHelper.cs" />
+    <Compile Include="Helpers\LOV\CheckListCreatorHelper.cs" />
+    <Compile Include="Helpers\LOV\TwoPHelper.cs" />
+    <Compile Include="Helpers\LOV\ListOfCheckListHelper.cs" />
+    <Compile Include="Helpers\LOV\ThreePHelper.cs" />
+    <Compile Include="Helpers\LOV\ReviewerHelper.cs" />
+    <Compile Include="Helpers\Master\IGRIDHelper.cs" />
+    <Compile Include="Helpers\Master\PICHelper.cs" />
+    <Compile Include="Helpers\Master\POHelper.cs" />
+    <Compile Include="Helpers\Master\SOHelper.cs" />
+    <Compile Include="Helpers\Master\UserRoleHelper.cs" />
+    <Compile Include="Helpers\Report\IGRIDMasterDataChangeLogReportHelper.cs" />
+    <Compile Include="Helpers\Report\IGRIDMatStatusReportHelper.cs" />
+    <Compile Include="Helpers\Report\IGRIDOverallMasterReportHelper.cs" />
+    <Compile Include="Helpers\Report\MaterialLockReportHelper.cs" />
+    <Compile Include="Helpers\Report\EndToEndReportHelper.cs" />
+    <Compile Include="Helpers\Report\KPIReportHelper.cs" />
+    <Compile Include="Helpers\Report\HistoryReportHelper.cs" />
+    <Compile Include="Helpers\Report\ImpactedMatDescReportHelper.cs" />
+    <Compile Include="Helpers\Report\IGridSummaryReportHelper.cs" />
+    <Compile Include="Helpers\Report\TrackingIGridReportHelper.cs" />
+    <Compile Include="Helpers\Report\OverviewReportHelper.cs" />
+    <Compile Include="Helpers\Report\SummaryReportHelper.cs" />
+    <Compile Include="Helpers\Report\SOReportHelper.cs" />
+    <Compile Include="Helpers\Report\VendorCustomerCollaborationReportHelper.cs" />
+    <Compile Include="Helpers\Report\WarehouseReportHelper.cs" />
+    <Compile Include="Helpers\Report\OutstandingReportHelper.cs" />
+    <Compile Include="Helpers\Report\TrackingReportHelper.cs" />
+    <Compile Include="Helpers\Common\ReferenceHelper.cs" />
+    <Compile Include="Helpers\Common\ProductHelper.cs" />
+    <Compile Include="Helpers\CheckList\CheckListRequestHelper.cs" />
+    <Compile Include="Helpers\LOV\ItemStyleHelper.cs" />
+    <Compile Include="Helpers\LOV\ItemCoatingHelper.cs" />
+    <Compile Include="Helpers\LOV\ItemNumberOfColorHelper.cs" />
+    <Compile Include="Helpers\LOV\ItemBoxColorHelper.cs" />
+    <Compile Include="Helpers\LOV\ItemPrintSystemHelper.cs" />
+    <Compile Include="Helpers\Common\MessageHelper.cs" />
+    <Compile Include="Helpers\Dashboard\DashboardHelper.cs" />
+    <Compile Include="Helpers\LOV\PackingStyleHelper.cs" />
+    <Compile Include="Helpers\LOV\LidTypeHelper.cs" />
+    <Compile Include="Helpers\LOV\CustomerMasterHelper.cs" />
+    <Compile Include="Helpers\LOV\ItemPackingTypeHelper.cs" />
+    <Compile Include="Helpers\LOV\PackSizeHelper.cs" />
+    <Compile Include="Helpers\LOV\PlantHelper.cs" />
+    <Compile Include="Helpers\LOV\BrandHelper.cs" />
+    <Compile Include="Helpers\LOV\CompanyHelper.cs" />
+    <Compile Include="Helpers\LOV\CountryHelper.cs" />
+    <Compile Include="Helpers\LOV\PrimarySizeHelper.cs" />
+    <Compile Include="Helpers\LOV\ContainerTypeHelper.cs" />
+    <Compile Include="Helpers\LOV\PrimaryTypeHelper.cs" />
+    <Compile Include="Helpers\LOV\TypeOfProductHelper.cs" />
+    <Compile Include="Helpers\LOV\RDPersonHelper.cs" />
+    <Compile Include="Helpers\TaskForm\ArtworkProcess\ArtworkProcessHelper.cs" />
+    <Compile Include="Helpers\TaskForm\AssignSalesOrderItem\SalesOrderHelper.cs" />
+    <Compile Include="Helpers\TaskForm\Attachment\AttachmentArtworkHelper.cs" />
+    <Compile Include="Helpers\TaskForm\Attachment\AttachmentMockupHelper.cs" />
+    <Compile Include="Helpers\TaskForm\CheckList\CheckListCustomerOtherHelper.cs" />
+    <Compile Include="Helpers\TaskForm\CheckList\CheckListInfoHelper.cs" />
+    <Compile Include="Helpers\TaskForm\Customer\CustomerHelper.cs" />
+    <Compile Include="Helpers\TaskForm\History\HistoryHelper.cs" />
+    <Compile Include="Helpers\TaskForm\IGrid\IGridFormHelper.cs" />
+    <Compile Include="Helpers\TaskForm\Internal_Department\ApproveMatchboardHelper.cs" />
+    <Compile Include="Helpers\TaskForm\Internal_Department\PlanningHelper.cs" />
+    <Compile Include="Helpers\TaskForm\Internal_Department\RDHelper.cs" />
+    <Compile Include="Helpers\TaskForm\Internal_Department\WarehouseHelper.cs" />
+    <Compile Include="Helpers\TaskForm\MK\SendTo\GMMKByMKHelper.cs" />
+    <Compile Include="Helpers\TaskForm\MK\SendTo\PAByMKHelper.cs" />
+    <Compile Include="Helpers\TaskForm\MK\SendTo\QCByMKHelper.cs" />
+    <Compile Include="Helpers\TaskForm\MockUpProcess\MockUpProcessHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PA\PAFormHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PA\Send_To\CustomerByPAHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PA\Send_To\MKByPAHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PA\Send_To\PGByPAHelper.cs.cs" />
+    <Compile Include="Helpers\TaskForm\PA\Send_To\PlanningByPAHelper.cs.cs" />
+    <Compile Include="Helpers\TaskForm\PA\Send_To\PPByPAHelper.cs.cs" />
+    <Compile Include="Helpers\TaskForm\PA\Send_To\QCByPAHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PA\Send_To\VendorByPAHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PA\Send_To\WarehouseByPAHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\DiCutHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\FluteHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\GradeOfHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\PGFormHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\PriceTemplateCompareHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\PriceTemplateHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\PriceTemplateVendorHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\SAPVendorHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\SearchDieLineHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\SearchDieLine_ForArtworkHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\SelectVendor.cs" />
+    <Compile Include="Helpers\TaskForm\PG\SendTo\CustomerByPGHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\SendTo\PlanningByPGHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\SendTo\RDByPGHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\SendTo\VendorByPGHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PG\SendTo\WarehouseByPGHelper.cs" />
+    <Compile Include="Helpers\TaskForm\POMappingAW\POMappingAWHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PP\PPFormHelper.cs" />
+    <Compile Include="Helpers\TaskForm\PP\SendTo\VendorByPPHelper.cs" />
+    <Compile Include="Helpers\TaskForm\QC\QCFormHelper.cs" />
+    <Compile Include="Helpers\TaskForm\QC\SendTo\GMQCByQCHelper.cs" />
+    <Compile Include="Helpers\TaskForm\QC\SendTo\MKByQCHelper.cs" />
+    <Compile Include="Helpers\TaskForm\QC\SendTo\RDByQCHelper.cs" />
+    <Compile Include="Helpers\TaskForm\Vendor\VendorHelper.cs" />
+    <Compile Include="Services\ADService.cs" />
+    <Compile Include="Services\EmailService.cs" />
+    <Compile Include="Services\CWSService.cs" />
+    <Compile Include="Services\CNService.cs" />
+    <Compile Include="Services\DBServices.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\EncryptionService.cs" />
+    <Compile Include="Services\ValidateServices.cs" />
+    <Compile Include="Services\MapperServices.cs" />
+    <Compile Include="WebServices\Helper\Common\Characteristic_Helper.cs" />
+    <Compile Include="WebServices\Helper\Common\PG_Helper.cs" />
+    <Compile Include="WebServices\Helper\iGrid\MM_65_Hepler.cs" />
+    <Compile Include="WebServices\Helper\iGrid\MM_72_Hepler.cs" />
+    <Compile Include="WebServices\Helper\iGrid\MM_73_Hepler.cs" />
+    <Compile Include="WebServices\Helper\SAP\MM_70_Helper.cs" />
+    <Compile Include="WebServices\Helper\SAP\MM_71_Helper.cs" />
+    <Compile Include="WebServices\Helper\SAP\SD_129_Helper.cs" />
+    <Compile Include="WebServices\Helper\SAP\SD_127_Helper.cs" />
+    <Compile Include="WebServices\Helper\SAP\SD_128_Helper.cs" />
+    <Compile Include="WebServices\Helper\SAP\SD_131_Helper.cs" />
+    <Compile Include="WebServices\Model\IGRID_MM65_INPUT_MODEL.cs" />
+    <Compile Include="WebServices\Model\SAP_M_PO_IDOC_MODEL.cs" />
+    <Compile Include="WebServices\Model\SAP_M_PLANT_MODEL .cs" />
+    <Compile Include="WebServices\Model\CHARACTERISTIC_MODEL.cs" />
+    <Compile Include="WebServices\Model\CN_MODEL.cs" />
+    <Compile Include="WebServices\Model\IGRID_OUTBOUND_HEADER_MODEL.cs" />
+    <Compile Include="WebServices\Model\IGRID_OUTBOUND_ITEM_MODEL.cs" />
+    <Compile Include="WebServices\Model\IGRID_OUTBOUND_MODEL.cs" />
+    <Compile Include="WebServices\Model\SAP_M_ORDER_BOM_MODEL.cs" />
+    <Compile Include="WebServices\Model\SAP_M_LONG_TEXT_MODEL.cs" />
+    <Compile Include="WebServices\Model\SAP_M_PO_COMPLETE_SO_MODEL.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{df907f88-7270-4b91-95c1-032cc9c7d5ac}</Project>
+      <Name>DAL</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\Authentication\Authentication.wsdl" />
+    <None Include="Connected Services\Authentication\Authentication.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\Authentication\Authentication1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\Authentication\BLL.Authentication.AuthenticateApplicationResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Authentication\BLL.Authentication.CombineApplicationTokenResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Authentication\BLL.Authentication.GetSessionExpirationDateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Authentication\BLL.Authentication.ImpersonateApplicationResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Authentication\BLL.Authentication.ImpersonateUserResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Authentication\BLL.Authentication.OTAuthentication.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Authentication\BLL.Authentication.RefreshTokenResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\BizMM65Service\BizTalkServiceInstance.wsdl" />
+    <None Include="Connected Services\BizMM65Service\BLL.BizMM65Service.inputArtworkNumberResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\BizMM65Service\BLL.BizMM65Service.inputArtworkNumberResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\ContentService\BLL.ContentService.DownloadContentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\ContentService\BLL.ContentService.OTAuthentication.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\ContentService\BLL.ContentService.UploadContentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\ContentService\ContentService.wsdl" />
+    <None Include="Connected Services\ContentService\ContentService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\ContentService\ContentService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\ContentService\ContentService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.AddFavoriteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.AddMajorVersionContextResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.AddMajorVersionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.AddNodeRightResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.AddToCollectionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.AddVersionContextResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.AddVersionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.Attachment.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.AttributeGroup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.AttributeGroupDefinition.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CategoryInheritance.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CategoryItemsUpgradeInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.ChunkedOperationContext.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CompoundDocRelease.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CopyNodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateCategoryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateDocumentContextResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateDocumentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateFolderResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateNodeAndVersionContextResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateNodeAndVersionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateNodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateReleaseResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateRenditionContextResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateRenditionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateShortcutResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateSimpleDocumentContextResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateSimpleDocumentResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateSimpleFolderResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.CreateURLResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.DeleteNodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.DeleteReleaseResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.DeleteRenditionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.DeleteVersionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetAllFavoritesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetAllMultilingualMetadataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetAttributeGroupDefinitionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetAttributeGroupTemplateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetCategoryDefinitionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetCategoryDefinitionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetCategoryInheritanceResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetCategoryTemplateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetMetadataLanguagesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetMultilingualMetadataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetNodeAuditRecordsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetNodeByGUIDResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetNodeByNameResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetNodeByNicknameResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetNodeByPathResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetNodeGUIDResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetNodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetNodeRightsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetNodesByNicknameResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetNodesInContainerResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetNodesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetNodeTemplateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetNodeTypesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetPagedNodeAuditDataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetReleaseResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetRenditionContentsContextResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetRenditionContentsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetRootNodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetRootNodeTypesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetVersionByGUIDResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetVersionContentsContextResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetVersionContentsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetVersionGUIDResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.GetVersionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.ListNodesByPageResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.ListNodesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.ListReferencesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.ListReleasesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.ListRenditionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.LockReleaseResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.LockVersionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.MetadataLanguage.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.MoveNodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.MultilingualMetadata.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.Node.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.NodeAuditRecord.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.NodePageResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.NodeRights.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.NodeRightUpdateInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.OTAuthentication.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.PagedNodeAuditData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.PromoteVersionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.PurgeVersionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.RearrangeNodesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.RemoveFavoriteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.RemoveFromCollectionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.RemoveNodeRightResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.RenameNodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.ReportResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.RepositionNodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.ReserveNodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.RunReportResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.SetCategoryInheritanceResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.SetNodeMetadataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.SetNodeRightsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.UnlockReleaseResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.UnlockVersionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.UnreserveNodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.UpdateCategoryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.UpdateMultilingualMetadataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.UpdateNodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.UpdateNodeRightResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.UpdateNodeRightsContextResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.UpdateNodeRightsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.UpdateVersionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.UpgradeCategoryItemsContextResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.UpgradeCategoryItemsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\BLL.DocumentManagement.Version.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\DocumentManagement\DocumentManagement.wsdl" />
+    <None Include="Connected Services\DocumentManagement\DocumentManagement.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\DocumentManagement\DocumentManagement1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\DocumentManagement\DocumentManagement2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.AddListOfMembersToGroupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.AddMemberToGroupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.ConvertExternalUserToUserResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.CreateDomainResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.CreateExternalGroupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.CreateExternalUserResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.CreateGroupInDomainResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.CreateGroupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.CreateMemberResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.CreateUserInDomainResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.CreateUserResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.DeleteListOfMembersResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.DeleteMemberResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.GetAuthenticatedUserResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.GetGroupByNameInDomainResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.GetGroupByNameResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.GetMemberByIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.GetMemberByLoginNameResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.GetMembersByIDResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.GetMetadataLanguageResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.GetSearchResultsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.GetUserByLoginNameInDomainResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.GetUserByLoginNameResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.Group.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.ListMemberOfResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.ListMembersResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.ListRightsByIDResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.Member.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.MemberRight.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.MemberSearchResults.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.OTAuthentication.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.PageHandle.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.RemoveListOfMembersFromGroupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.RemoveMemberFromGroupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.SearchForMembersResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.SetMetadataLanguageResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.UpdateMemberResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.UpdatePasswordResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\BLL.MemberService.User.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\MemberService\MemberService.wsdl" />
+    <None Include="Connected Services\MemberService\MemberService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\MemberService\MemberService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\MemberService\MemberService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Scripts\jquery-2.1.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\Authentication\" />
+    <WCFMetadataStorage Include="Connected Services\BizMM65Service\" />
+    <WCFMetadataStorage Include="Connected Services\ContentService\" />
+    <WCFMetadataStorage Include="Connected Services\DocumentManagement\" />
+    <WCFMetadataStorage Include="Connected Services\MemberService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\Authentication\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\Authentication\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\Authentication\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\ContentService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\ContentService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\ContentService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\DocumentManagement\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\DocumentManagement\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\DocumentManagement\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\MemberService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\MemberService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\MemberService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\TaskForm\Artwork\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\BizMM65Service\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\BizMM65Service\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\BizMM65Service\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>9</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FileTest\SALES_ORDER_NO20210209160109.xml" />
+    <Content Include="Scripts\jquery-2.1.1.intellisense.js" />
+    <Content Include="Scripts\jquery-2.1.1.js" />
+    <Content Include="Scripts\jquery-2.1.1.min.js" />
+    <Content Include="Scripts\nugetexample.js" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CSTUModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="CSTUEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="LLAttrData" EntityType="CSTUModel.LLAttrData" />
+    <EntitySet Name="DTree" EntityType="CSTUModel.DTree" />
+  </EntityContainer>
+  <EntityType Name="LLAttrData">
+    <Key>
+      <PropertyRef Name="ID" />
+      <PropertyRef Name="VerNum" />
+      <PropertyRef Name="DefID" />
+      <PropertyRef Name="DefVerN" />
+      <PropertyRef Name="AttrID" />
+      <PropertyRef Name="AttrType" />
+      <PropertyRef Name="CustomID" />
+      <PropertyRef Name="EntryNum" />
+      <PropertyRef Name="ParentKeyID" />
+    </Key>
+    <Property Name="ID" Type="Int64" Nullable="false" />
+    <Property Name="VerNum" Type="Int64" Nullable="false" />
+    <Property Name="DefID" Type="Int64" Nullable="false" />
+    <Property Name="DefVerN" Type="Int64" Nullable="false" />
+    <Property Name="AttrID" Type="Int32" Nullable="false" />
+    <Property Name="AttrType" Type="Int32" Nullable="false" />
+    <Property Name="CustomID" Type="Int32" Nullable="false" />
+    <Property Name="EntryNum" Type="Int32" Nullable="false" />
+    <Property Name="ParentKeyID" Type="Int64" Nullable="false" />
+    <Property Name="KeyID" Type="Int64" />
+    <Property Name="ValInt" Type="Int64" />
+    <Property Name="ValReal" Type="Decimal" Precision="28" Scale="14" />
+    <Property Name="ValDate" Type="DateTime" Precision="3" />
+    <Property Name="ValStr" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ValLong" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="DTree">
+    <Key>
+      <PropertyRef Name="OwnerID" />
+      <PropertyRef Name="ParentID" />
+      <PropertyRef Name="DataID" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="OriginOwnerID" />
+      <PropertyRef Name="OriginDataID" />
+      <PropertyRef Name="UserID" />
+      <PropertyRef Name="GroupID" />
+      <PropertyRef Name="UPermissions" />
+      <PropertyRef Name="GPermissions" />
+      <PropertyRef Name="WPermissions" />
+      <PropertyRef Name="SPermissions" />
+      <PropertyRef Name="ACLCount" />
+      <PropertyRef Name="Deleted" />
+      <PropertyRef Name="GUID" />
+    </Key>
+    <Property Name="OwnerID" Type="Int64" Nullable="false" />
+    <Property Name="ParentID" Type="Int64" Nullable="false" />
+    <Property Name="DataID" Type="Int64" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="248" FixedLength="false" Unicode="true" />
+    <Property Name="OriginOwnerID" Type="Int64" Nullable="false" />
+    <Property Name="OriginDataID" Type="Int64" Nullable="false" />
+    <Property Name="UserID" Type="Int64" Nullable="false" />
+    <Property Name="GroupID" Type="Int64" Nullable="false" />
+    <Property Name="UPermissions" Type="Int32" Nullable="false" />
+    <Property Name="GPermissions" Type="Int32" Nullable="false" />
+    <Property Name="WPermissions" Type="Int32" Nullable="false" />
+    <Property Name="SPermissions" Type="Int32" Nullable="false" />
+    <Property Name="ACLCount" Type="Int32" Nullable="false" />
+    <Property Name="PermID" Type="Int64" />
+    <Property Name="DataType" Type="Int64" />
+    <Property Name="CreatedBy" Type="Int64" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedBy" Type="Int64" />
+    <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+    <Property Name="MaxVers" Type="Int32" />
+    <Property Name="Reserved" Type="Byte" />
+    <Property Name="ReservedBy" Type="Int64" />
+    <Property Name="ReservedDate" Type="DateTime" Precision="3" />
+    <Property Name="VersionNum" Type="Int64" />
+    <Property Name="DComment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="DCategory" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="SubType" Type="Int32" />
+    <Property Name="ExAtt1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ExAtt2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Ordering" Type="Int64" />
+    <Property Name="Major" Type="Int64" />
+    <Property Name="Minor" Type="Int64" />
+    <Property Name="ReleaseRef" Type="Int64" />
+    <Property Name="ChildCount" Type="Int64" />
+    <Property Name="AssignedTo" Type="Int64" />
+    <Property Name="DateAssigned" Type="DateTime" Precision="3" />
+    <Property Name="DateEffective" Type="DateTime" Precision="3" />
+    <Property Name="DateExpiration" Type="DateTime" Precision="3" />
+    <Property Name="DateDue" Type="DateTime" Precision="3" />
+    <Property Name="DateStarted" Type="DateTime" Precision="3" />
+    <Property Name="DateCompleted" Type="DateTime" Precision="3" />
+    <Property Name="Status" Type="Int32" />
+    <Property Name="Priority" Type="Int32" />
+    <Property Name="GIF" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ExtendedData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Catalog" Type="Int32" />
+    <Property Name="CacheExpiration" Type="Int32" />
+    <Property Name="Deleted" Type="Int32" Nullable="false" />
+    <Property Name="GUID" Type="Guid" Nullable="false" />
+  </EntityType>
+</Schema>

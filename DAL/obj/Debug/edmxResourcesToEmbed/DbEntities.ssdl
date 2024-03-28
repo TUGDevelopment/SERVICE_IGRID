@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CostingDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="SapMaterial">
+    <Key>
+      <PropertyRef Name="DocumentNo" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DocumentNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Material" Type="nvarchar" MaxLength="50" />
+    <Property Name="Description" Type="nvarchar" MaxLength="250" />
+    <Property Name="Brand" Type="nvarchar" MaxLength="50" />
+    <Property Name="PrimarySize" Type="nvarchar" MaxLength="50" />
+    <Property Name="Version" Type="nvarchar" MaxLength="50" />
+    <Property Name="ChangePoint" Type="nvarchar" MaxLength="1" />
+    <Property Name="MaterialGroup" Type="nvarchar" MaxLength="250" />
+    <Property Name="CreateBy" Type="nvarchar" MaxLength="250" />
+    <Property Name="CreateOn" Type="datetime" />
+    <Property Name="StatusApp" Type="nvarchar" MaxLength="1" />
+    <Property Name="SheetSize" Type="nvarchar" MaxLength="250" />
+    <Property Name="Assignee" Type="nvarchar" MaxLength="250" />
+    <Property Name="PackingStyle" Type="nvarchar" MaxLength="250" />
+    <Property Name="Packing" Type="nvarchar" MaxLength="250" />
+    <Property Name="StyleofPrinting" Type="nvarchar" MaxLength="250" />
+    <Property Name="ContainerType" Type="nvarchar" MaxLength="250" />
+    <Property Name="LidType" Type="nvarchar" MaxLength="250" />
+    <Property Name="Condition" Type="nvarchar" MaxLength="250" />
+    <Property Name="ModifyBy" Type="nvarchar" MaxLength="250" />
+    <Property Name="ModifyOn" Type="datetime" />
+    <Property Name="ProductCode" Type="nvarchar(max)" />
+    <Property Name="FAOZone" Type="nvarchar" MaxLength="250" />
+    <Property Name="Plant" Type="nvarchar" MaxLength="250" />
+    <Property Name="Totalcolour" Type="nvarchar" MaxLength="250" />
+    <Property Name="Processcolour" Type="nvarchar" MaxLength="250" />
+    <Property Name="PlantRegisteredNo" Type="nvarchar" MaxLength="250" />
+    <Property Name="CompanyNameAddress" Type="nvarchar(max)" />
+    <Property Name="PMScolour" Type="nvarchar" MaxLength="250" />
+    <Property Name="Symbol" Type="nvarchar(max)" />
+    <Property Name="CatchingArea" Type="nvarchar" MaxLength="250" />
+    <Property Name="CatchingPeriodDate" Type="nvarchar" MaxLength="250" />
+    <Property Name="Grandof" Type="nvarchar" MaxLength="250" />
+    <Property Name="Flute" Type="nvarchar" MaxLength="250" />
+    <Property Name="Vendor" Type="nvarchar" MaxLength="250" />
+    <Property Name="Dimension" Type="nvarchar" MaxLength="250" />
+    <Property Name="RSC" Type="nvarchar" MaxLength="250" />
+    <Property Name="Accessories" Type="nvarchar(max)" />
+    <Property Name="PrintingStyleofPrimary" Type="nvarchar" MaxLength="250" />
+    <Property Name="PrintingStyleofSecondary" Type="nvarchar" MaxLength="250" />
+    <Property Name="CustomerDesign" Type="nvarchar(max)" />
+    <Property Name="CustomerSpec" Type="nvarchar(max)" />
+    <Property Name="CustomerSize" Type="nvarchar(max)" />
+    <Property Name="CustomerVendor" Type="nvarchar(max)" />
+    <Property Name="CustomerColor" Type="nvarchar(max)" />
+    <Property Name="CustomerScanable" Type="nvarchar(max)" />
+    <Property Name="CustomerBarcodeSpec" Type="nvarchar(max)" />
+    <Property Name="FirstInfoGroup" Type="nvarchar" MaxLength="250" />
+    <Property Name="SO" Type="nvarchar" MaxLength="250" />
+    <Property Name="PICMkt" Type="nvarchar" MaxLength="250" />
+    <Property Name="SOPlant" Type="nvarchar" MaxLength="250" />
+    <Property Name="Destination" Type="nvarchar" MaxLength="250" />
+    <Property Name="Remark" Type="nvarchar(max)" />
+    <Property Name="GrossWeight" Type="nvarchar" MaxLength="250" />
+    <Property Name="FinalInfoGroup" Type="nvarchar" MaxLength="250" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="Typeof" Type="nvarchar" MaxLength="250" />
+    <Property Name="TypeofCarton2" Type="nvarchar" MaxLength="250" />
+    <Property Name="DMSNo" Type="nvarchar" MaxLength="250" />
+    <Property Name="TypeofPrimary" Type="nvarchar" MaxLength="250" />
+    <Property Name="PrintingSystem" Type="nvarchar" MaxLength="250" />
+    <Property Name="Direction" Type="nvarchar" MaxLength="250" />
+    <Property Name="RollSheet" Type="nvarchar" MaxLength="250" />
+    <Property Name="RequestType" Type="nvarchar" MaxLength="250" />
+    <Property Name="PlantAddress" Type="nvarchar" MaxLength="250" />
+    <Property Name="Refnumber" Type="nvarchar" MaxLength="50" />
+    <Property Name="Extended_Plant" Type="nvarchar" MaxLength="50" />
+    <Property Name="Fixed_Desc" Type="nvarchar" MaxLength="1" />
+    <Property Name="Inactive" Type="nvarchar" MaxLength="1" />
+    <Property Name="Catching_Method" Type="nvarchar(max)" />
+    <Property Name="Scientific_Name" Type="nvarchar(max)" />
+    <Property Name="Specie" Type="nvarchar(max)" />
+    <Property Name="SustainMaterial" Type="nvarchar(max)" />
+    <Property Name="SustainPlastic" Type="nvarchar(max)" />
+    <Property Name="SustainReuseable" Type="nvarchar(max)" />
+    <Property Name="SustainRecyclable" Type="nvarchar(max)" />
+    <Property Name="SustainComposatable" Type="nvarchar(max)" />
+    <Property Name="SustainCertification" Type="nvarchar(max)" />
+    <Property Name="SustainCertSourcing" Type="nvarchar(max)" />
+    <Property Name="SustainOther" Type="nvarchar(max)" />
+    <Property Name="SusSecondaryPKGWeight" Type="nvarchar(max)" />
+    <Property Name="SusRecycledContent" Type="nvarchar(max)" />
+    <Property Name="PrimarySize_id" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityContainer Name="CostingDbModelStoreContainer">
+    <EntitySet Name="SapMaterial" EntityType="Self.SapMaterial" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

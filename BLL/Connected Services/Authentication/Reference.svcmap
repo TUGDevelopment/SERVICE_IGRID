@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="58eb5547-b654-46ff-8849-bf0b5c776aff" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://idc-app-dv3-114.thaiunion.co.th:8081/cws/services/Authentication?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="Authentication.xsd" MetadataType="Schema" ID="62c83f96-4669-4a57-87a9-9c71697eb915" SourceId="1" SourceUrl="http://idc-app-dv3-114.thaiunion.co.th:8081/cws/services/Authentication?xsd=1" />
+    <MetadataFile FileName="Authentication1.xsd" MetadataType="Schema" ID="1ada440f-0f3c-4e74-b4e0-42569c73f1e3" SourceId="1" SourceUrl="http://idc-app-dv3-114.thaiunion.co.th:8081/cws/services/Authentication?xsd=2" />
+    <MetadataFile FileName="Authentication.wsdl" MetadataType="Wsdl" ID="3539a6d4-9a1f-456a-b022-9d1b93774c6d" SourceId="1" SourceUrl="http://idc-app-dv3-114.thaiunion.co.th:8081/cws/services/Authentication?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

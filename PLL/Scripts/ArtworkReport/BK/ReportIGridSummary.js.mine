@@ -1,0 +1,265 @@
+﻿////var first_load = true;
+////var columns, url;
+$(document).ready(function () {
+    //bind_lov('.cls_report_overview .cls_lov_condition', '/api/lov/condition', 'data.DISPLAY_TXT');
+    cleardata();
+    first_load = false;
+    $('.cls_report_igridsummary .cls_lov_action').on("change", function () {
+        //var selections = $(this).select2('data');
+        //var v = $(this)[0].value;
+        //var isClear = true;
+    });
+    //$('.cls_over_btn_Remove').click(function (e) {
+    //    var table = $('#table_report_igrids').DataTable();
+    //    var tblData = table.rows('.selected').data();
+    //    if (tblData.length > 0) {
+    //        //const array = [];
+    //        for (i = 0; i < tblData.length; i++) {
+    //            //var three_p_id = tblData[i].Id;
+    //            //array.push(tblData[i].Id);
+    //            var jsonObj = new Object();
+    //            jsonObj.data = [];
+    //            var item = {};
+    //            item["Material"] = tblData[i].Material;
+    //            jsonObj.data = item;
+    //            var myurl = '/api/report/overviewreport';
+    //            var mytype = 'POST';
+    //            var mydata = jsonObj;
+
+    //            myAjaxConfirmSubmit(myurl, mytype, mydata, callbackSaveTaskFormPA);
+    //        }
+    //    }
+    //});
+    
+    $(".cls_report_igridsummary .cls_btn_export_excel").click(function () {
+        $(".cls_report_igridsummary .buttons-excel").click();
+        // $(".cls_report_warehouse .buttons-excel").unbind();
+    });
+    $(".cls_report_igridsummary .cls_igrids_btn_search").click(function (e) {
+        //debugger;
+        var columns, url;
+        var condition = $('.cls_report_igridsummary .cls_lov_action').val();
+        if (isEmpty($('.cls_report_igridsummary .cls_txt_master_keyword').val())) {
+            alertError2("Please input keyword.");
+
+            e.preventDefault();
+        }
+        else {
+            if (condition == "All") {
+                //table_report_overview.ajax.reload();
+
+                columns = [
+                    //{
+                    //    render: function (data, type, row, meta) {
+                    //        return meta.row + meta.settings._iDisplayStart + 1;
+                    //    }
+                    //},
+                    {
+                        data: null,
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "ID", "className": "cls_nowrap" },
+                    { data: "Condition", "className": "cls_nowrap" },
+                    { data: "RequestType", "className": "cls_nowrap" },
+                    { data: "DocumentNo", "className": "cls_nowrap" },
+                    { data: "DMSNo", "className": "cls_nowrap" },
+                    { data: "Material", "className": "cls_nowrap" },
+                    { data: "Description", "className": "cls_nowrap" },
+                    { data: "MaterialGroup", "className": "cls_nowrap" },
+                    { data: "Brand", "className": "cls_nowrap" },
+                    { data: "Assignee", "className": "cls_nowrap" },
+                    { data: "CreateOn", "className": "cls_nowrap" },
+                    { data: "ActiveBy", "className": "cls_nowrap" },
+                    { data: "StatusApp", "className": "cls_nowrap" },
+                    { data: "Remark", "className": "cls_nowrap" },
+                    
+                ];
+                url = suburl + "/api/report/igridsummaryreport?data.where=" + $('.cls_report_igridsummary .cls_txt_master_keyword').val()
+                    + "&data.first_load=" + first_load;
+                builddata(false, "0", columns, url, "#table_report_igrids_all", ".cls_table_report_igrids_all");
+                //e.preventDefault();
+            } else if (condition == "Complete") {
+                columns = [
+                    //{
+                    //    render: function (data, type, row, meta) {
+                    //        return meta.row + meta.settings._iDisplayStart + 1;
+                    //    }
+                    //},
+                    {
+                        data: null,
+                        defaultContent: '',
+                        className: 'select-checkbox',
+                        orderable: false
+                    },
+                    { data: "Id", "className": "cls_nowrap" },
+                    { data: "Title", "className": "cls_nowrap" },
+                    { data: "RequestType", "className": "cls_nowrap" },
+                    { data: "DocumentNo", "className": "cls_nowrap" },
+                    { data: "DMSNo", "className": "cls_nowrap" },
+                    { data: "Material", "className": "cls_nowrap" },
+                    { data: "Description", "className": "cls_nowrap" },
+                    { data: "MaterialGroup", "className": "cls_nowrap" },
+                    { data: "Brand", "className": "cls_nowrap" },
+                    { data: "fn", "className": "cls_nowrap" },
+                    { data: "CreateOn", "className": "cls_nowrap" },
+                    { data: "ActiveBy", "className": "cls_nowrap" },
+                    { data: "FinalInfoGroup", "className": "cls_nowrap" },
+                    { data: "Remark", "className": "cls_nowrap" },
+                ];
+                url = suburl + "/api/report/igridcompletereport?data.where=" + $('.cls_report_igridsummary .cls_txt_master_keyword').val()
+                    + "&data.first_load=" + first_load;
+                builddata(false, "0", columns, url, "#table_report_igrids", ".cls_table_report_igrids");
+                //e.preventDefault();
+            }
+        }
+    });
+    bind_report_igridsummary_main("1")
+    //builddata(false, "0");
+});
+
+
+function bind_report_igridsummary_main(first_load) {
+
+    columns = [
+        //{
+        //    render: function (data, type, row, meta) {
+        //        return meta.row + meta.settings._iDisplayStart + 1;
+        //    }
+        //},
+        {
+            data: null,
+            defaultContent: '',
+            className: 'select-checkbox',
+            orderable: false
+        },
+        { data: "Id", "className": "cls_nowrap" },
+        { data: "Condition", "className": "cls_nowrap" },
+        { data: "RequestType", "className": "cls_nowrap" },
+        { data: "DocumentNo", "className": "cls_nowrap" },
+        { data: "DMSNo", "className": "cls_nowrap" },
+        { data: "Material", "className": "cls_nowrap" },
+        { data: "Description", "className": "cls_nowrap" },
+        { data: "MaterialGroup", "className": "cls_nowrap" },
+        { data: "Brand", "className": "cls_nowrap" },
+        { data: "Assignee", "className": "cls_nowrap" },
+        { data: "CreateOn", "className": "cls_nowrap" },
+        { data: "ActiveBy", "className": "cls_nowrap" },
+        { data: "StatusApp", "className": "cls_nowrap" },
+        { data: "Remark", "className": "cls_nowrap" },
+
+    ];
+    url = suburl + "/api/report/igridsummaryreport?data.where=" + $('.cls_report_igridsummary .cls_txt_master_keyword').val()
+        + "&data.first_load=" + first_load;
+    builddata(false, "0", columns, url, "#table_report_igrids_all", ".cls_table_report_igrids_all");
+        //e.preventDefault();
+}
+function cleardata() {
+    $('.cls_table_report_igrids_all').addClass('cls_hide');
+    $('.cls_table_report_igrids').addClass('cls_hide');
+}
+function builddata(serverSide, autosearch, columns, url, table, divclass ) {
+    var groupColumn = 4;
+    cleardata();
+    $(divclass).removeClass('cls_hide');
+    var table_report_overview = $(table).DataTable()
+    table_report_overview.destroy();
+    table_report_overview = $(table).DataTable({
+
+        "scrollY": "600px",
+        "scrollCollapse": true,
+        paging: false,
+        orderCellsTop: true,
+        stateSave: false,
+        serverSide: false,
+        ajax: function (data, callback, settings) {
+            //for (var i = 0, len = data.columns.length; i < len; i++) {
+            //    delete data.columns[i].name;
+            //    delete data.columns[i].data;
+            //    delete data.columns[i].searchable;
+            //    delete data.columns[i].orderable;
+            //    delete data.columns[i].search.regex;
+            //    delete data.search.regex;
+
+            //    delete data.columns[i].search.value;
+            //}
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (res) {
+                    dtSuccess(res, callback);
+                }
+            });
+        },
+        //"columnDefs": [
+        //    { "visible": false, "targets": groupColumnPPView },
+        //    { "orderable": false, "targets": 0 },
+        //],
+        "order": [[1, 'desc']],
+        "processing": true,
+        "lengthChange": false,
+        select: {
+            style: 'os',
+            selector: 'td:first-child'
+        },
+        "ordering": true,
+        "info": true,
+        "searching": false,
+        "scrollX": true,
+        "autoWidth": false,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                title: 'IGrid view',
+                extend: 'excelHtml5',
+                exportOptions: {
+                    //columns: [1, 2, 3, 4, 5, 6],
+                    format: {
+                        body: function (data, row, column, node) {
+                            return data;
+                        }
+                    }
+                }
+            }
+        ],
+        columns: columns,
+        "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({ page: 'current' }).nodes();
+            var last = null; var j = 1;
+            api.column(groupColumn, { page: 'current' }).data().each(function (group, i) {
+            if (last !== group) {
+                var temp = [];
+                var str_grouping = "";
+                for (var x = 0; x < rows.data().length; x++) {
+                    if (rows.data()[x].GROUPING === group) {
+                        temp.push(rows.data()[x].DocumentNo);
+                    }
+                }
+                if (temp.length > 0)
+                    str_grouping = temp.join("|");
+                $(rows).eq(i).before('<tr class="group highlight"><td><input data-group-name="' + str_grouping + '" class="cls_chk_group" type="checkbox"/></td><td colspan="16"> ' + group + '</td></tr>');
+                last = group;
+                j++;
+            }
+            });
+            $('.cls_cnt_igrid_view').text('(' + this.api().data().count() + ') ');
+        },
+        "createdRow": function (row, data, index) {
+            if (data.STATUS == "1")
+                $(row).css("color", "#A20025");
+        },
+        //"drawCallback": function (settings) {
+
+        //},
+        //"initComplete": function (settings, json) {
+        //    $('.cls_cnt_igrid_view').text('(' + json.data.length + ') ');
+        //}
+    });
+    $(table + "_wrapper .dt-buttons .buttons-excel").hide();
+}
+function callbackSaveTaskFormPA() {
+    //ARTWORK_SUB_PA_ID = res.data[0].ID;
+    //builddata(false, "0");
+}

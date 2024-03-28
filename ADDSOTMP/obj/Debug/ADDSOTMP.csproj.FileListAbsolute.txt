@@ -1,0 +1,5 @@
+D:\ThaiUnion\xECM\TUArtwork\ADDSOTMP\obj\Debug\ADDSOTMP.csproj.AssemblyReference.cache
+D:\ThaiUnion\xECM\TUArtwork\ADDSOTMP\obj\Debug\ADDSOTMP.csproj.CoreCompileInputs.cache
+D:\ThaiUnion\xECM\TUArtwork\ADDSOTMP\obj\Debug\ADDSOTMP.exe
+D:\ThaiUnion\xECM\TUArtwork\ADDSOTMP\obj\Debug\ADDSOTMP.pdb
+D:\ThaiUnion\xECM\TUArtwork\ADDSOTMP\obj\Debug\ADDSOTMP.exe.config

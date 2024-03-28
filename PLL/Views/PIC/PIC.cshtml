@@ -1,0 +1,407 @@
+﻿@{
+    ViewBag.Title = "Account allocation setting";
+}
+<div class="cls_pic_data">
+    <div class="panel-default">
+
+        <h3 class="panel-title">Account allocation setting</h3>
+
+        <form>
+            <div class="row">
+                <div class="col-md-2 control-label">
+                    Sold To :
+                </div>
+
+                <div class="col-md-4">
+                    <div style="display:none;" class="row tr_tfartwork_pic_sold_to_multiple tr_tfartwork_pic_sold_to_multiple_static">
+                        <div class="col-md-10">
+                            @Html.Partial("LOV/ListOfValue", new ViewDataDictionary { { "cls_ddl", "cls_lov_pic_sold_to_multiple cls_lov_pic_sold_to_multiple_static " } })
+                        </div>
+                        <div class="col-md-1" style="padding-left: 0px;">
+                            <img class="cls_img_lov_tfartwork_pic_add_sold_to_multiple imgadd" title="Add" style="cursor:pointer;" src="~/Content/img/ico_add.png" />
+                            <img class="cls_img_lov_tfartwork_pa_delete_sold_to_multiple imgdelete" title="Delete" style="cursor:pointer;display:none;" src="~/Content/img/ico_delete.png" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-2 control-label">
+                    Ship To :
+                </div>
+                <div class="col-md-4">
+                    <div style="display:none;" class="row tr_tfartwork_pic_ship_to_multiple tr_tfartwork_pic_ship_to_multiple_static">
+                        <div class="col-md-10">
+                            @Html.Partial("LOV/ListOfValue", new ViewDataDictionary { { "cls_ddl", "cls_lov_pic_ship_to_multiple cls_lov_pic_ship_to_multiple_static " } })
+                        </div>
+                        <div class="col-md-1" style="padding-left: 0px;">
+                            <img class="cls_img_lov_tfartwork_pic_add_ship_to_multiple imgadd" title="Add" style="cursor:pointer;" src="~/Content/img/ico_add.png" />
+                            <img class="cls_img_lov_tfartwork_pa_delete_ship_to_multiple imgdelete" title="Delete" style="cursor:pointer;display:none;" src="~/Content/img/ico_delete.png" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-2 control-label">
+                    Zone :
+                </div>
+                <div class="col-md-4">
+                    <div style="display:none;" class="row tr_tfartwork_pic_zone_multiple tr_tfartwork_pic_zone_multiple_static">
+                        <div class="col-md-10">
+                            @Html.Partial("LOV/ListOfValue", new ViewDataDictionary { { "cls_ddl", "cls_lov_pic_zone_multiple cls_lov_pic_zone_multiple_static " } })
+                        </div>
+                        <div class="col-md-1" style="padding-left: 0px;">
+                            <img class="cls_img_lov_tfartwork_pic_add_zone_multiple imgadd" title="Add" style="cursor:pointer;" src="~/Content/img/ico_add.png" />
+                            <img class="cls_img_lov_tfartwork_pa_delete_zone_multiple imgdelete" title="Delete" style="cursor:pointer;display:none;" src="~/Content/img/ico_delete.png" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-2 control-label">
+                    Country :
+                </div>
+                <div class="col-md-4">
+                    <div style="display:none;" class="row tr_tfartwork_pic_country_multiple tr_tfartwork_pic_country_multiple_static">
+                        <div class="col-md-10">
+                            @Html.Partial("LOV/ListOfValue", new ViewDataDictionary { { "cls_ddl", "cls_lov_pic_country_multiple cls_lov_pic_country_multiple_static " } })
+                        </div>
+                        <div class="col-md-1" style="padding-left: 0px;">
+                            <img class="cls_img_lov_tfartwork_pic_add_country_multiple imgadd" title="Add" style="cursor:pointer;" src="~/Content/img/ico_add.png" />
+                            <img class="cls_img_lov_tfartwork_pa_delete_country_multiple imgdelete" title="Delete" style="cursor:pointer;display:none;" src="~/Content/img/ico_delete.png" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-2 control-label">
+                    Person in charge (PIC) :
+                </div>
+                <div class="col-md-4">
+                    <div style="display:none;" class="row tr_tfartwork_pic_person_multiple tr_tfartwork_pic_person_multiple_static">
+                        <div class="col-md-10">
+                            @Html.Partial("LOV/ListOfValue", new ViewDataDictionary { { "cls_ddl", "cls_lov_pic_person_multiple cls_lov_pic_person_multiple_static " } })
+                        </div>
+                        <div class="col-md-1" style="padding-left: 0px;">
+                            <img class="cls_img_lov_tfartwork_pic_add_person_multiple imgadd" title="Add" style="cursor:pointer;" src="~/Content/img/ico_add.png" />
+                            <img class="cls_img_lov_tfartwork_pa_delete_person_multiple imgdelete" title="Delete" style="cursor:pointer;display:none;" src="~/Content/img/ico_delete.png" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div>
+                <button type="submit" class="cls_btn_search btn btn-primary">Search</button>
+                <button type="button" class="cls_btn_pic_clear btn btn-danger">Clear</button>
+                <button type="button" class="cls_btn_pic_export btn btn-success">Export Excel</button>
+                <button type="button" class="cls_btn_pic_upload btn btn-warning">Upload Excel for update PIC</button>
+            </div>
+            <br />
+        </form>
+
+    </div>
+    <hr style="margin-top:10px;margin-bottom:10px;" />
+    <div class="row">
+        <div class="col-md-12 cls_table_pic">
+            <table id="table_pic" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th class="cls_nowrap">No. </th>
+                        <th class="cls_nowrap">User name</th>
+                        <th class="cls_nowrap">First name</th>
+                        <th class="cls_nowrap">Last name</th>
+                        <th class="cls_nowrap">Sold-to</th>
+                        <th class="cls_nowrap"> Sold-to name</th>
+                        <th class="cls_nowrap">Ship-to</th>
+                        <th class="cls_nowrap">Ship-to name</th>
+                        <th class="cls_nowrap">Zone</th>
+                        <th class="cls_nowrap">Country</th>
+                        <th class="cls_nowrap">Country Name</th>
+                        <th class="cls_nowrap">PIC_ID</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal SO Att -->
+<div class="modal" id="modal_report_warehouse_so_att" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="vertical-alignment-helper">
+        <input type="hidden" class="cls_so_att_salesorderno" />
+        <div class="modal-dialog  modal_in_modal vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">SO Attachment</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="cls_div_table_report_warehouse_so_att">
+                        <table id="table_report_warehouse_so_att" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th class="cls_nowrap"></th>
+                                    <th style="width:100px;">Title</th>
+                                    <th class="cls_nowrap">File name</th>
+                                    <th style="width:150px;">Created by</th>
+                                    <th style="width:150px;">Created date</th>
+                                    <th style="width:60px;">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal PO Att -->
+<div class="modal" id="modal_report_warehouse_po_att" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="vertical-alignment-helper">
+        <input type="hidden" class="cls_po_att_pono" />
+        <div class="modal-dialog  modal_in_modal vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">PO Attachment</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="cls_div_table_report_warehouse_po_att">
+                        <table id="table_report_warehouse_po_att" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th class="cls_nowrap"></th>
+                                    <th style="width:100px;">Title</th>
+                                    <th class="cls_nowrap">File name</th>
+                                    <th style="width:150px;">Created by</th>
+                                    <th style="width:150px;">Created date</th>
+                                    <th style="width:60px;">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal AW Att -->
+<div class="modal" id="modal_report_warehouse_aw_att" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="vertical-alignment-helper">
+        <input type="hidden" class="cls_aw_att_mat_no" />
+        <input type="hidden" class="cls_aw_att_mat_desc" />
+        <div class="modal-dialog  modal_in_modal vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">AW Attachment</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="cls_div_table_report_warehouse_aw_att">
+                        <table id="table_report_warehouse_aw_att" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th class="cls_nowrap"></th>
+                                    <th style="width:100px;">Title</th>
+                                    <th class="cls_nowrap">File name</th>
+                                    <th style="width:150px;">Created by</th>
+                                    <th style="width:150px;">Created date</th>
+                                    <th style="width:60px;">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/picsetting")
+}
+
+
+
+
+@*<h4>
+        Account allocation setting
+    </h4>
+
+    <form>
+        <div class="row">
+            <div class="col-md-2 control-label">
+                Sold To :
+            </div>
+
+            <div class="col-md-4">
+                <div style="display:none;" class="row tr_tfartwork_pic_sold_to_multiple tr_tfartwork_pic_sold_to_multiple_static">
+                    <div class="col-md-10">
+                        @Html.Partial("LOV/ListOfValue", new ViewDataDictionary { { "cls_ddl", "cls_lov_pic_sold_to_multiple cls_lov_pic_sold_to_multiple_static " } })
+                    </div>
+                    <div class="col-md-1" style="padding-left: 0px;">
+                        <img class="cls_img_lov_tfartwork_pic_add_sold_to_multiple imgadd" title="Add" style="cursor:pointer;" src="~/Content/img/ico_add.png" />
+                        <img class="cls_img_lov_tfartwork_pa_delete_sold_to_multiple imgdelete" title="Delete" style="cursor:pointer;display:none;" src="~/Content/img/ico_delete.png" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2 control-label">
+                Ship To :
+            </div>
+            <div class="col-md-4">
+                <div style="display:none;" class="row tr_tfartwork_pic_ship_to_multiple tr_tfartwork_pic_ship_to_multiple_static">
+                    <div class="col-md-10">
+                        @Html.Partial("LOV/ListOfValue", new ViewDataDictionary { { "cls_ddl", "cls_lov_pic_ship_to_multiple cls_lov_pic_ship_to_multiple_static " } })
+                    </div>
+                    <div class="col-md-1" style="padding-left: 0px;">
+                        <img class="cls_img_lov_tfartwork_pic_add_ship_to_multiple imgadd" title="Add" style="cursor:pointer;" src="~/Content/img/ico_add.png" />
+                        <img class="cls_img_lov_tfartwork_pa_delete_ship_to_multiple imgdelete" title="Delete" style="cursor:pointer;display:none;" src="~/Content/img/ico_delete.png" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2 control-label">
+                Zone :
+            </div>
+            <div class="col-md-4">
+                <div style="display:none;" class="row tr_tfartwork_pic_zone_multiple tr_tfartwork_pic_zone_multiple_static">
+                    <div class="col-md-10">
+                        @Html.Partial("LOV/ListOfValue", new ViewDataDictionary { { "cls_ddl", "cls_lov_pic_zone_multiple cls_lov_pic_zone_multiple_static " } })
+                    </div>
+                    <div class="col-md-1" style="padding-left: 0px;">
+                        <img class="cls_img_lov_tfartwork_pic_add_zone_multiple imgadd" title="Add" style="cursor:pointer;" src="~/Content/img/ico_add.png" />
+                        <img class="cls_img_lov_tfartwork_pa_delete_zone_multiple imgdelete" title="Delete" style="cursor:pointer;display:none;" src="~/Content/img/ico_delete.png" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2 control-label">
+                Country :
+            </div>
+            <div class="col-md-4">
+                <div style="display:none;" class="row tr_tfartwork_pic_country_multiple tr_tfartwork_pic_country_multiple_static">
+                    <div class="col-md-10">
+                        @Html.Partial("LOV/ListOfValue", new ViewDataDictionary { { "cls_ddl", "cls_lov_pic_country_multiple cls_lov_pic_country_multiple_static " } })
+                    </div>
+                    <div class="col-md-1" style="padding-left: 0px;">
+                        <img class="cls_img_lov_tfartwork_pic_add_country_multiple imgadd" title="Add" style="cursor:pointer;" src="~/Content/img/ico_add.png" />
+                        <img class="cls_img_lov_tfartwork_pa_delete_country_multiple imgdelete" title="Delete" style="cursor:pointer;display:none;" src="~/Content/img/ico_delete.png" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2 control-label">
+                Person in charge (PIC) :
+            </div>
+            <div class="col-md-4">
+                <div style="display:none;" class="row tr_tfartwork_pic_person_multiple tr_tfartwork_pic_person_multiple_static">
+                    <div class="col-md-10">
+                        @Html.Partial("LOV/ListOfValue", new ViewDataDictionary { { "cls_ddl", "cls_lov_pic_person_multiple cls_lov_pic_person_multiple_static " } })
+                    </div>
+                    <div class="col-md-1" style="padding-left: 0px;">
+                        <img class="cls_img_lov_tfartwork_pic_add_person_multiple imgadd" title="Add" style="cursor:pointer;" src="~/Content/img/ico_add.png" />
+                        <img class="cls_img_lov_tfartwork_pa_delete_person_multiple imgdelete" title="Delete" style="cursor:pointer;display:none;" src="~/Content/img/ico_delete.png" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br />
+        <div>
+            <button type="submit" class="cls_btn_search btn btn-primary">Search</button>
+            <button type="button" class="cls_btn_pic_clear btn btn-danger">Clear</button>
+            <button type="button" class="cls_btn_pic_export btn btn-success">Export Excel</button>
+            <button type="button" class="cls_btn_pic_upload btn btn-warning">Upload Excel for update PIC</button>
+        </div>
+        <br />
+
+        <hr style="margin-top:10px;margin-bottom:10px;" />
+        <div class="row">
+            <div class="col-md-12 cls_table_pic">
+                <table id="table_pic" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th class="cls_nowrap">No. </th>
+                            <th class="cls_nowrap">User name</th>
+                            <th class="cls_nowrap">First name</th>
+                            <th class="cls_nowrap">Last name</th>
+                            <th class="cls_nowrap">Sold-to</th>
+                            <th class="cls_nowrap"> Sold-to name</th>
+                            <th class="cls_nowrap">Ship-to</th>
+                            <th class="cls_nowrap">Ship-to name</th>
+                            <th class="cls_nowrap">Zone</th>
+                            <th class="cls_nowrap">Country</th>
+                            <th class="cls_nowrap">Country Name</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+
+
+    </form>
+
+    <div class="modal" id="modal_tfartwork_pic_upload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Upload file for Update PIC</h4>
+                </div>
+                <form>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="cls_btn_tfartwork_suggest_material_close btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    @section scripts
+    {
+
+        @Scripts.Render("~/bundles/picsetting")
+
+    }*@
+
+

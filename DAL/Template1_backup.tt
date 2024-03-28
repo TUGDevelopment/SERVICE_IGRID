@@ -1,0 +1,767 @@
+﻿<#@ include file="EF6.Utility.CS.ttinclude"#><#@ template debug="true" hostSpecific="true" #><#@ output extension=".cs" #>
+using System.Linq;
+using System.Data.Entity;
+using System.Collections.Generic;
+using DAL;
+using System.Web.Script.Serialization;
+using System;
+using DAL.Model;
+class CheckValue
+{
+	public static bool EqualsDefaultValue<T>(T value)
+	{
+		return EqualityComparer<T>.Default.Equals(value, default(T));
+	}
+}
+<#
+const string inputFile = @"DB.edmx";
+var textTransform = DynamicTextTransformation.Create(this);
+var code = new CodeGenerationTools(this);
+var ef = new MetadataTools(this);
+var typeMapper = new TypeMapper(code, ef, textTransform.Errors);
+var	fileManager = EntityFrameworkTemplateFileManager.Create(this);
+var itemCollection = new EdmMetadataLoader(textTransform.Host, textTransform.Errors).CreateEdmItemCollection(inputFile);
+var codeStringGenerator = new CodeStringGenerator(code, typeMapper, ef);
+
+if (!typeMapper.VerifyCaseInsensitiveTypeUniqueness(typeMapper.GetAllGlobalItems(itemCollection), inputFile))
+{
+    return string.Empty;
+}
+#>
+public class MapperServices{
+public static void Initialize()
+{
+AutoMapper.Mapper.Initialize(cfg =>
+{
+<#
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+#>
+  cfg.CreateMap<<#=codeStringGenerator.aa2(entity)#>, <#=codeStringGenerator.aa(entity)#>>();
+  cfg.CreateMap<<#=codeStringGenerator.aa(entity)#>, <#=codeStringGenerator.aa2(entity)#>>();
+<# 	
+}
+#>
+});
+}
+
+<#
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+#>
+        public static <#=codeStringGenerator.aa(entity)#> <#=codeStringGenerator.aa(entity)#>(<#=codeStringGenerator.aa2(entity)#> item)
+        {
+            return AutoMapper.Mapper.Map<<#=codeStringGenerator.aa(entity)#>>(item);
+        }
+        public static <#=codeStringGenerator.aa2(entity)#> <#=codeStringGenerator.aa(entity)#>(<#=codeStringGenerator.aa(entity)#> item)
+        {
+            return AutoMapper.Mapper.Map<<#=codeStringGenerator.aa2(entity)#>>(item);
+        }
+        public static List<<#=codeStringGenerator.aa2(entity)#>> <#=codeStringGenerator.aa(entity)#>(List<<#=codeStringGenerator.aa(entity)#>> item)
+        {
+            return AutoMapper.Mapper.Map<List<<#=codeStringGenerator.aa2(entity)#>>>(item);
+        }
+<#
+}
+#>
+
+}
+
+
+
+<#
+foreach (var entity in typeMapper.GetItemsToGenerate<EntityType>(itemCollection))
+{
+#>
+<#=codeStringGenerator.EntityClassOpening(entity)#>
+{
+	<#=codeStringGenerator.GetByIDEntity(entity)#>
+	<#=codeStringGenerator.GetEntity(entity)#>
+	<#=codeStringGenerator.GetAllEntity(entity)#>
+	<#=codeStringGenerator.SaveOrUpdateEntity(entity)#>
+	<#=codeStringGenerator.DeleteByIDEntity(entity)#>
+}
+<# 
+}
+
+#>
+<#+
+
+
+
+
+
+public class CodeStringGenerator
+{
+    private readonly CodeGenerationTools _code;
+    private readonly TypeMapper _typeMapper;
+    private readonly MetadataTools _ef;
+
+    public CodeStringGenerator(CodeGenerationTools code, TypeMapper typeMapper, MetadataTools ef)
+    {
+        ArgumentNotNull(code, "code");
+        ArgumentNotNull(typeMapper, "typeMapper");
+        ArgumentNotNull(ef, "ef");
+
+        _code = code;
+        _typeMapper = typeMapper;
+        _ef = ef;
+    }
+
+    public string Property(EdmProperty edmProperty)
+    {
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "{0} {1} {2} {{ {3}get; {4}set; }}",
+            Accessibility.ForProperty(edmProperty),
+            _typeMapper.GetTypeName(edmProperty.TypeUsage),
+            _code.Escape(edmProperty),
+            _code.SpaceAfter(Accessibility.ForGetter(edmProperty)),
+            _code.SpaceAfter(Accessibility.ForSetter(edmProperty)));
+    }
+
+    public string NavigationProperty(NavigationProperty navProp)
+    {
+        var endType = _typeMapper.GetTypeName(navProp.ToEndMember.GetEntityType());
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "{0} {1} {2} {{ {3}get; {4}set; }}",
+            AccessibilityAndVirtual(Accessibility.ForNavigationProperty(navProp)),
+            navProp.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many ? ("ICollection<" + endType + ">") : endType,
+            _code.Escape(navProp),
+            _code.SpaceAfter(Accessibility.ForGetter(navProp)),
+            _code.SpaceAfter(Accessibility.ForSetter(navProp)));
+    }
+    
+    public string AccessibilityAndVirtual(string accessibility)
+    {
+        return accessibility + (accessibility != "private" ? " virtual" : "");
+    }
+    
+    public string EntityClassOpening(EntityType entity)
+    {
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            @"{0} class {1}_SERVICE{2}",
+            Accessibility.ForType(entity),            
+			_code.Escape(entity),
+            _code.StringBefore(" : ", _typeMapper.GetTypeName(entity.BaseType)));
+    }
+    
+	public string GetByIDEntity(EntityType entity)
+    {
+		var edmName = "";
+		var simpleProperties = _typeMapper.GetSimpleProperties(entity);
+        foreach (var edmProperty in simpleProperties)
+        {
+			edmName = _code.Escape(edmProperty);
+			break;
+        }
+
+		var str = "";
+		str += " public static "+_code.Escape(entity)+" GetBy"+edmName+"(int? "+edmName+")";
+		str += " {";
+		str += " using (ARTWORKEntities dc = new ARTWORKEntities())";
+		str += " {";
+	    str += " if("+edmName+" == null || "+edmName+" == 0) return null;";
+		str += " else return (from p in dc."+_code.Escape(entity)+" where p."+edmName+" == "+edmName+" select p).FirstOrDefault();";
+		str += " }";
+		str += " }";
+
+		str += " public static "+_code.Escape(entity)+" GetBy"+edmName+"(int? "+edmName+", ARTWORKEntities dc)";
+		str += " {";
+	    str += " if("+edmName+" == null || "+edmName+" == 0) return null;";
+		str += " else return (from p in dc."+_code.Escape(entity)+" where p."+edmName+" == "+edmName+" select p).FirstOrDefault();";
+		str += " }";
+
+		return str;
+    }
+	public string aa(EntityType entity)
+    {
+		return _code.Escape(entity);
+    }
+	public string aa2(EntityType entity)
+    {
+		return _code.Escape(entity) + "_2";
+    }
+	public string GetEntity(EntityType entity)
+    {
+		var str = "";
+		str += " public static List<"+_code.Escape(entity)+"> GetByItem("+_code.Escape(entity)+" Item)";
+		str += " {";
+		str += " using (ARTWORKEntities dc = new ARTWORKEntities())";
+		str += " {";
+		str += " if (Item == null)";
+        str += " return new List<"+_code.Escape(entity)+">();";
+		str += " else";
+		str += " return CriteriaBy((from p in dc."+_code.Escape(entity)+" select p),Item).ToList();";
+		str += " }";
+		str += " }";
+
+		str += " public static List<"+_code.Escape(entity)+"> GetByItem("+_code.Escape(entity)+" Item, ARTWORKEntities dc)";
+		str += " {";
+		str += " if (Item == null)";
+        str += " return new List<"+_code.Escape(entity)+">();";
+		str += " else";
+		str += " return CriteriaBy((from p in dc."+_code.Escape(entity)+" select p),Item).ToList();";
+		str += " }";
+
+		str += " public static IQueryable<"+_code.Escape(entity)+"> CriteriaBy(IQueryable<"+_code.Escape(entity)+"> q, "+_code.Escape(entity)+" criteria)";
+        str += " {";
+		
+		var simpleProperties = _typeMapper.GetSimpleProperties(entity);
+        foreach (var edmProperty in simpleProperties)
+        {
+			var edmName = _code.Escape(edmProperty);
+			str +=  "if (!CheckValue.EqualsDefaultValue(criteria."+edmName+")) { q = (from r in q where r."+edmName+" == criteria."+edmName+" select r); }";
+        }
+		str += " return q;";
+		str += " }";
+
+		str += "";
+		str += " public static List<"+_code.Escape(entity)+"> GetByItemContain("+_code.Escape(entity)+" Item)";
+		str += " {";
+		str += " using (ARTWORKEntities dc = new ARTWORKEntities())";
+		str += " {";
+		str += " if (Item == null)";
+        str += " return new List<"+_code.Escape(entity)+">();";
+		str += " else";
+		str += " return CriteriaByContains((from p in dc."+_code.Escape(entity)+" select p),Item).ToList();";
+		str += " }";
+		str += " }";
+
+		str += "";
+		str += " public static List<"+_code.Escape(entity)+"> GetByItemContain("+_code.Escape(entity)+" Item, ARTWORKEntities dc)";
+		str += " {";
+		str += " if (Item == null)";
+        str += " return new List<"+_code.Escape(entity)+">();";
+		str += " else";
+		str += " return CriteriaByContains((from p in dc."+_code.Escape(entity)+" select p),Item).ToList();";
+		str += " }";
+
+		str += " public static IQueryable<"+_code.Escape(entity)+"> CriteriaByContains(IQueryable<"+_code.Escape(entity)+"> q, "+_code.Escape(entity)+" criteria)";
+        str += " {";
+		
+		simpleProperties = _typeMapper.GetSimpleProperties(entity);
+        foreach (var edmProperty in simpleProperties)
+        {
+			var edmName = _code.Escape(edmProperty);
+			var edmType = _typeMapper.GetTypeName(edmProperty.TypeUsage);
+			if(edmName == "+edmName+")
+			{
+				str +=  "if (!CheckValue.EqualsDefaultValue(criteria."+edmName+")) { q = (from r in q where r."+edmName+" == criteria."+edmName+" select r); }";
+			}
+			else
+			{
+			if(edmType == "string")
+			str +=  "if (!CheckValue.EqualsDefaultValue(criteria."+edmName+")) { q = (from r in q where r."+edmName+".Contains(criteria."+edmName+") select r); }";
+			if(edmType == "int")
+			str +=  "if (!CheckValue.EqualsDefaultValue(criteria."+edmName+")) { q = (from r in q where r."+edmName+".ToString().Contains(criteria."+edmName+".ToString()) select r); }";
+			if(edmType == "?int")
+			str +=  "if (!CheckValue.EqualsDefaultValue(criteria."+edmName+")) { q = (from r in q where r."+edmName+".Value.Contains(criteria."+edmName+") select r);}";
+			}
+        }
+		str += " return q;";
+		str += " }";
+
+		return str;
+    }
+
+	public string GetAllEntity(EntityType entity)
+    {
+		var str = "";
+		str += " public static List<"+_code.Escape(entity)+"> GetAll()";
+		str += " {";
+		str += " using (ARTWORKEntities dc = new ARTWORKEntities())";
+		str += " {";
+		str += " return (from p in dc."+_code.Escape(entity)+" select p).ToList();";
+		str += " }";
+		str += " }";
+
+		return str;
+    }
+
+	public string SaveOrUpdateEntity(EntityType entity)
+    {
+	    if(_code.Escape(entity).StartsWith("V_")){return "";}
+
+		var edmName = "";
+		var simpleProperties = _typeMapper.GetSimpleProperties(entity);
+        foreach (var edmProperty in simpleProperties)
+        {
+			edmName = _code.Escape(edmProperty);
+			break;
+        }
+		
+		var str = "";
+		str += " public static void SaveOrUpdate("+_code.Escape(entity)+" Item)";
+		str += " {";
+		str += " string Action = \"\";";
+        str += " try";
+        str += " {";
+		str += " using (ARTWORKEntities dc = new ARTWORKEntities())";
+		str += " {";
+		str += " if(GetBy"+edmName+"(Item."+edmName+") == null)";
+		str += " {";
+		str += " Action = \"I\";";
+		str += " Item.CREATE_DATE = DateTime.Now;";
+		str += " Item.UPDATE_DATE = DateTime.Now;";
+		str += " dc."+_code.Escape(entity)+".Add(Item);";
+		str += " dc.SaveChanges();";
+		str += " SaveLog(Item,null,Action, dc);";
+		str += " }";
+		str += " else ";
+		str += " {";
+		str += " Action = \"U\";";
+		str += " Item.CREATE_DATE = GetBy"+edmName+"(Item."+edmName+").CREATE_DATE;";
+		str += " Item.CREATE_BY = GetBy"+edmName+"(Item."+edmName+").CREATE_BY;";
+		str += " Item.UPDATE_DATE = DateTime.Now;";
+		str += " dc.Entry(Item).State = EntityState.Modified;";
+		str += " dc.SaveChanges();";
+		str += " SaveLog(Item,GetBy"+edmName+"(Item."+edmName+"),Action, dc);";
+		str += " }";
+		str += " }";
+		str += " }";
+		str += " catch (Exception ex)";
+        str += " {";
+        str += " if (Action == \"I\") SaveLogError(Item, null, Action, ex);";
+		str += " else if (Action == \"U\") SaveLogError(Item, GetBy"+edmName+"(Item."+edmName+"), Action, ex);";
+		str += " throw;";
+        str += " }";
+		str += " }";
+
+		str += " public static void SaveOrUpdate("+_code.Escape(entity)+" Item, ARTWORKEntities dc)";
+		str += " {";
+		str += " string Action = \"\";";
+        str += " try";
+        str += " {";
+		str += " if(GetBy"+edmName+"(Item."+edmName+", dc) == null)";
+		str += " {";
+		str += " Action = \"I\";";
+		str += " Item.CREATE_DATE = DateTime.Now;";
+		str += " Item.UPDATE_DATE = DateTime.Now;";
+		str += " dc."+_code.Escape(entity)+".Add(Item);";
+		str += " dc.SaveChanges();";
+		str += " SaveLog(Item,null,Action, dc);";
+		str += " }";
+		str += " else ";
+		str += " {";
+		str += " Action = \"U\";";
+		str += " Item.CREATE_DATE = GetBy"+edmName+"(Item."+edmName+", dc).CREATE_DATE;";
+		str += " Item.CREATE_BY = GetBy"+edmName+"(Item."+edmName+", dc).CREATE_BY;";
+		str += " Item.UPDATE_DATE = DateTime.Now;";
+
+		str += " var local = dc.Set<"+_code.Escape(entity)+">().Local.FirstOrDefault(f => f."+edmName+" == Item."+edmName+"); if (local != null) { dc.Entry(local).State = EntityState.Detached; }";
+
+		str += " dc.Entry(Item).State = EntityState.Modified;";
+		str += " dc.SaveChanges();";
+		str += " SaveLog(Item,GetBy"+edmName+"(Item."+edmName+", dc),Action, dc);";
+		str += " }";
+		str += " }";
+		str += " catch (Exception ex)";
+        str += " {";
+        str += " if (Action == \"I\") SaveLogError(Item, null, Action, ex);";
+		str += " else if (Action == \"U\") SaveLogError(Item, GetBy"+edmName+"(Item."+edmName+", dc), Action, ex);";
+		str += " throw;";
+        str += " }";
+		str += " }";
+
+		
+
+		str += " public static void SaveLog("+_code.Escape(entity)+" NewItem, "+_code.Escape(entity)+" OldItem, string Action, ARTWORKEntities dc)";
+		str += " {";
+		str += " try {";
+		str += " ART_SYS_LOG Item = new ART_SYS_LOG();";
+		str += " Item.ACTION = Action;";
+		str += " Item.TABLE_NAME =\""+_code.Escape(entity)+"\";";
+		str += " if(NewItem != null) Item.NEW_VALUE = new JavaScriptSerializer().Serialize(NewItem);";
+		str += " if(OldItem != null) Item.OLD_VALUE = new JavaScriptSerializer().Serialize(OldItem);";
+		str += " Item.UPDATE_DATE = DateTime.Now;";
+		str += " if (NewItem != null) Item.UPDATE_BY = NewItem.UPDATE_BY;";
+		str += " else if (OldItem != null) Item.UPDATE_BY = OldItem.UPDATE_BY;";
+		str += " Item.CREATE_DATE = DateTime.Now;";
+		str += " if (NewItem != null) Item.CREATE_BY = NewItem.CREATE_BY;";
+		str += " else if (OldItem != null) Item.CREATE_BY = OldItem.CREATE_BY;";
+		str += " dc.ART_SYS_LOG.Add(Item);";
+		str += " dc.SaveChanges();";
+		str += " }";
+		str += " catch(Exception ex) {    ";
+		str += " ART_SYS_LOG Item = new ART_SYS_LOG();";
+		str += " Item.ACTION = Action;";
+		str += " Item.TABLE_NAME =\""+_code.Escape(entity)+"\";";
+		str += " Item.UPDATE_DATE = DateTime.Now;";
+		str += " if (NewItem != null) Item.UPDATE_BY = NewItem.UPDATE_BY;";
+		str += " else if (OldItem != null) Item.UPDATE_BY = OldItem.UPDATE_BY;";
+		str += " Item.CREATE_DATE = DateTime.Now;";
+		str += " if (NewItem != null) Item.CREATE_BY = NewItem.CREATE_BY;";
+		str += " else if (OldItem != null) Item.CREATE_BY = OldItem.CREATE_BY;";
+		str += " Item.ERROR_MSG = ex.InnerException == null ? ex.Message : ex.InnerException.Message;";
+		str += " dc.ART_SYS_LOG.Add(Item);";
+		str += " dc.SaveChanges();";
+		str += " }";
+		str += " }";
+
+		str += " public static void SaveLogError("+_code.Escape(entity)+" NewItem, "+_code.Escape(entity)+" OldItem, string Action, Exception ex)";
+		str += " {";
+		str += " using (ARTWORKEntities dc = new ARTWORKEntities())";
+        str += " {";
+		str += " ART_SYS_LOG Item = new ART_SYS_LOG();";
+		str += " Item.ACTION = Action;";
+		str += " Item.TABLE_NAME =\""+_code.Escape(entity)+"\";";
+		str += " if(NewItem != null) Item.NEW_VALUE = new JavaScriptSerializer().Serialize(NewItem);";
+		str += " if(OldItem != null) Item.OLD_VALUE = new JavaScriptSerializer().Serialize(OldItem);";
+		str += " Item.UPDATE_DATE = DateTime.Now;";
+		str += " if (NewItem != null) Item.UPDATE_BY = NewItem.UPDATE_BY;";
+		str += " else if (OldItem != null) Item.UPDATE_BY = OldItem.UPDATE_BY;";
+		str += " Item.CREATE_DATE = DateTime.Now;";
+		str += " if (NewItem != null) Item.CREATE_BY = NewItem.CREATE_BY;";
+		str += " else if (OldItem != null) Item.CREATE_BY = OldItem.CREATE_BY;";
+		str += " Item.ERROR_MSG = ex.InnerException == null ? ex.Message : ex.InnerException.Message;";
+		str += " dc.ART_SYS_LOG.Add(Item);";
+		str += " dc.SaveChanges();";
+		str += " }";
+		str += " }";
+		return str;
+    }
+	public string DeleteByIDEntity(EntityType entity)
+    {	    
+	    if(_code.Escape(entity).StartsWith("V_")){return "";}
+
+		var edmName = "";
+		var simpleProperties = _typeMapper.GetSimpleProperties(entity);
+        foreach (var edmProperty in simpleProperties)
+        {
+			edmName = _code.Escape(edmProperty);
+			break;
+        }
+
+		var str = "";
+		str += " public static void DeleteBy"+edmName+"(int? "+edmName+")";
+		str += " {";
+		str += " using (ARTWORKEntities dc = new ARTWORKEntities())";
+		str += " {";
+		str += " var Item = GetBy"+edmName+"("+edmName+");";
+		str += " if(Item != null)";
+		str += " {";
+		str += " dc.Entry(Item).State = EntityState.Deleted;";
+		str += " dc.SaveChanges();";
+		str += " SaveLog(null,Item,\"D\", dc);";
+		str += " }";
+		str += " }";
+		str += " }";
+
+		str += " public static void DeleteBy"+edmName+"(int? "+edmName+", ARTWORKEntities dc)";
+		str += " {";
+		str += " var Item = GetBy"+edmName+"("+edmName+", dc);";
+		str += " if(Item != null)";
+		str += " {";
+		str += " dc.Entry(Item).State = EntityState.Deleted;";
+		str += " dc.SaveChanges();";
+		str += " SaveLog(null,Item,\"D\", dc);";
+		str += " }";
+		str += " }";
+		return str;
+    }
+
+}
+
+
+
+
+public class TypeMapper
+{
+    private const string ExternalTypeNameAttributeName = @"http://schemas.microsoft.com/ado/2006/04/codegeneration:ExternalTypeName";
+
+    private readonly System.Collections.IList _errors;
+    private readonly CodeGenerationTools _code;
+    private readonly MetadataTools _ef;
+
+    public TypeMapper(CodeGenerationTools code, MetadataTools ef, System.Collections.IList errors)
+    {
+        ArgumentNotNull(code, "code");
+        ArgumentNotNull(ef, "ef");
+        ArgumentNotNull(errors, "errors");
+
+        _code = code;
+        _ef = ef;
+        _errors = errors;
+    }
+
+    public static string FixNamespaces(string typeName)
+    {
+        return typeName.Replace("System.Data.Spatial.", "System.Data.Entity.Spatial.");
+    }
+
+    public string GetTypeName(TypeUsage typeUsage)
+    {
+        return typeUsage == null ? null : GetTypeName(typeUsage.EdmType, _ef.IsNullable(typeUsage), modelNamespace: null);
+    }
+
+    public string GetTypeName(EdmType edmType)
+    {
+        return GetTypeName(edmType, isNullable: null, modelNamespace: null);
+    }
+
+    public string GetTypeName(TypeUsage typeUsage, string modelNamespace)
+    {
+        return typeUsage == null ? null : GetTypeName(typeUsage.EdmType, _ef.IsNullable(typeUsage), modelNamespace);
+    }
+
+    public string GetTypeName(EdmType edmType, string modelNamespace)
+    {
+        return GetTypeName(edmType, isNullable: null, modelNamespace: modelNamespace);
+    }
+
+    public string GetTypeName(EdmType edmType, bool? isNullable, string modelNamespace)
+    {
+        if (edmType == null)
+        {
+            return null;
+        }
+
+        var collectionType = edmType as CollectionType;
+        if (collectionType != null)
+        {
+            return String.Format(CultureInfo.InvariantCulture, "ICollection<{0}>", GetTypeName(collectionType.TypeUsage, modelNamespace));
+        }
+
+        var typeName = _code.Escape(edmType.MetadataProperties
+                                .Where(p => p.Name == ExternalTypeNameAttributeName)
+                                .Select(p => (string)p.Value)
+                                .FirstOrDefault())
+            ?? (modelNamespace != null && edmType.NamespaceName != modelNamespace ?
+                _code.CreateFullName(_code.EscapeNamespace(edmType.NamespaceName), _code.Escape(edmType)) :
+                _code.Escape(edmType));
+
+        if (edmType is StructuralType)
+        {
+            return typeName;
+        }
+
+        if (edmType is SimpleType)
+        {
+            var clrType = UnderlyingClrType(edmType);
+            if (!IsEnumType(edmType))
+            {
+                typeName = _code.Escape(clrType);
+            }
+
+            typeName = FixNamespaces(typeName);
+
+            return clrType.IsValueType && isNullable == true ?
+                String.Format(CultureInfo.InvariantCulture, "Nullable<{0}>", typeName) :
+                typeName;
+        }
+
+        throw new ArgumentException("edmType");
+    }
+    
+    public Type UnderlyingClrType(EdmType edmType)
+    {
+        ArgumentNotNull(edmType, "edmType");
+
+        var primitiveType = edmType as PrimitiveType;
+        if (primitiveType != null)
+        {
+            return primitiveType.ClrEquivalentType;
+        }
+
+        if (IsEnumType(edmType))
+        {
+            return GetEnumUnderlyingType(edmType).ClrEquivalentType;
+        }
+
+        return typeof(object);
+    }
+    
+    public object GetEnumMemberValue(MetadataItem enumMember)
+    {
+        ArgumentNotNull(enumMember, "enumMember");
+        
+        var valueProperty = enumMember.GetType().GetProperty("Value");
+        return valueProperty == null ? null : valueProperty.GetValue(enumMember, null);
+    }
+    
+    public string GetEnumMemberName(MetadataItem enumMember)
+    {
+        ArgumentNotNull(enumMember, "enumMember");
+        
+        var nameProperty = enumMember.GetType().GetProperty("Name");
+        return nameProperty == null ? null : (string)nameProperty.GetValue(enumMember, null);
+    }
+
+    public System.Collections.IEnumerable GetEnumMembers(EdmType enumType)
+    {
+        ArgumentNotNull(enumType, "enumType");
+
+        var membersProperty = enumType.GetType().GetProperty("Members");
+        return membersProperty != null 
+            ? (System.Collections.IEnumerable)membersProperty.GetValue(enumType, null)
+            : Enumerable.Empty<MetadataItem>();
+    }
+    
+    public bool EnumIsFlags(EdmType enumType)
+    {
+        ArgumentNotNull(enumType, "enumType");
+        
+        var isFlagsProperty = enumType.GetType().GetProperty("IsFlags");
+        return isFlagsProperty != null && (bool)isFlagsProperty.GetValue(enumType, null);
+    }
+
+    public bool IsEnumType(GlobalItem edmType)
+    {
+        ArgumentNotNull(edmType, "edmType");
+
+        return edmType.GetType().Name == "EnumType";
+    }
+
+    public PrimitiveType GetEnumUnderlyingType(EdmType enumType)
+    {
+        ArgumentNotNull(enumType, "enumType");
+
+        return (PrimitiveType)enumType.GetType().GetProperty("UnderlyingType").GetValue(enumType, null);
+    }
+
+    public string CreateLiteral(object value)
+    {
+        if (value == null || value.GetType() != typeof(TimeSpan))
+        {
+            return _code.CreateLiteral(value);
+        }
+
+        return string.Format(CultureInfo.InvariantCulture, "new TimeSpan({0})", ((TimeSpan)value).Ticks);
+    }
+    
+    public bool VerifyCaseInsensitiveTypeUniqueness(IEnumerable<string> types, string sourceFile)
+    {
+        ArgumentNotNull(types, "types");
+        ArgumentNotNull(sourceFile, "sourceFile");
+        
+        var hash = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+        if (types.Any(item => !hash.Add(item)))
+        {
+            _errors.Add(
+                new CompilerError(sourceFile, -1, -1, "6023",
+                    String.Format(CultureInfo.CurrentCulture, CodeGenerationTools.GetResourceString("Template_CaseInsensitiveTypeConflict"))));
+            return false;
+        }
+        return true;
+    }
+    
+    public IEnumerable<SimpleType> GetEnumItemsToGenerate(IEnumerable<GlobalItem> itemCollection)
+    {
+        return GetItemsToGenerate<SimpleType>(itemCollection)
+            .Where(e => IsEnumType(e));
+    }
+    
+    public IEnumerable<T> GetItemsToGenerate<T>(IEnumerable<GlobalItem> itemCollection) where T: EdmType
+    {
+        return itemCollection
+            .OfType<T>()
+            .Where(i => !i.MetadataProperties.Any(p => p.Name == ExternalTypeNameAttributeName))
+            .OrderBy(i => i.Name);
+    }
+
+    public IEnumerable<string> GetAllGlobalItems(IEnumerable<GlobalItem> itemCollection)
+    {
+        return itemCollection
+            .Where(i => i is EntityType || i is ComplexType || i is EntityContainer || IsEnumType(i))
+            .Select(g => GetGlobalItemName(g));
+    }
+
+    public string GetGlobalItemName(GlobalItem item)
+    {
+        if (item is EdmType)
+        {
+            return ((EdmType)item).Name;
+        }
+        else
+        {
+            return ((EntityContainer)item).Name;
+        }
+    }
+
+    public IEnumerable<EdmProperty> GetSimpleProperties(EntityType type)
+    {
+        return type.Properties.Where(p => p.TypeUsage.EdmType is SimpleType && p.DeclaringType == type);
+    }
+    
+    public IEnumerable<EdmProperty> GetSimpleProperties(ComplexType type)
+    {
+        return type.Properties.Where(p => p.TypeUsage.EdmType is SimpleType && p.DeclaringType == type);
+    }
+    
+    public IEnumerable<EdmProperty> GetComplexProperties(EntityType type)
+    {
+        return type.Properties.Where(p => p.TypeUsage.EdmType is ComplexType && p.DeclaringType == type);
+    }
+    
+    public IEnumerable<EdmProperty> GetComplexProperties(ComplexType type)
+    {
+        return type.Properties.Where(p => p.TypeUsage.EdmType is ComplexType && p.DeclaringType == type);
+    }
+
+    public IEnumerable<EdmProperty> GetPropertiesWithDefaultValues(EntityType type)
+    {
+        return type.Properties.Where(p => p.TypeUsage.EdmType is SimpleType && p.DeclaringType == type && p.DefaultValue != null);
+    }
+    
+    public IEnumerable<EdmProperty> GetPropertiesWithDefaultValues(ComplexType type)
+    {
+        return type.Properties.Where(p => p.TypeUsage.EdmType is SimpleType && p.DeclaringType == type && p.DefaultValue != null);
+    }
+
+    public IEnumerable<NavigationProperty> GetNavigationProperties(EntityType type)
+    {
+        return type.NavigationProperties.Where(np => np.DeclaringType == type);
+    }
+    
+    public IEnumerable<NavigationProperty> GetCollectionNavigationProperties(EntityType type)
+    {
+        return type.NavigationProperties.Where(np => np.DeclaringType == type && np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many);
+    }
+    
+    public FunctionParameter GetReturnParameter(EdmFunction edmFunction)
+    {
+        ArgumentNotNull(edmFunction, "edmFunction");
+
+        var returnParamsProperty = edmFunction.GetType().GetProperty("ReturnParameters");
+        return returnParamsProperty == null
+            ? edmFunction.ReturnParameter
+            : ((IEnumerable<FunctionParameter>)returnParamsProperty.GetValue(edmFunction, null)).FirstOrDefault();
+    }
+
+    public bool IsComposable(EdmFunction edmFunction)
+    {
+        ArgumentNotNull(edmFunction, "edmFunction");
+
+        var isComposableProperty = edmFunction.GetType().GetProperty("IsComposableAttribute");
+        return isComposableProperty != null && (bool)isComposableProperty.GetValue(edmFunction, null);
+    }
+
+    public IEnumerable<FunctionImportParameter> GetParameters(EdmFunction edmFunction)
+    {
+        return FunctionImportParameter.Create(edmFunction.Parameters, _code, _ef);
+    }
+
+    public TypeUsage GetReturnType(EdmFunction edmFunction)
+    {
+        var returnParam = GetReturnParameter(edmFunction);
+        return returnParam == null ? null : _ef.GetElementType(returnParam.TypeUsage);
+    }
+    
+    public bool GenerateMergeOptionFunction(EdmFunction edmFunction, bool includeMergeOption)
+    {
+        var returnType = GetReturnType(edmFunction);
+        return !includeMergeOption && returnType != null && returnType.EdmType.BuiltInTypeKind == BuiltInTypeKind.EntityType;
+    }
+}
+
+public static void ArgumentNotNull<T>(T arg, string name) where T : class
+{
+    if (arg == null)
+    {
+        throw new ArgumentNullException(name);
+    }
+}
+#>

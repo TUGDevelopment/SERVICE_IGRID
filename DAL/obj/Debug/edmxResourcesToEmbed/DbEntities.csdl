@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CostingDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="SapMaterial">
+    <Key>
+      <PropertyRef Name="DocumentNo" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DocumentNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Material" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Brand" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PrimarySize" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Version" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ChangePoint" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="MaterialGroup" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="CreateBy" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="CreateOn" Type="DateTime" Precision="3" />
+    <Property Name="StatusApp" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="SheetSize" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Assignee" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="PackingStyle" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Packing" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="StyleofPrinting" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="ContainerType" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="LidType" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Condition" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="ModifyBy" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="ModifyOn" Type="DateTime" Precision="3" />
+    <Property Name="ProductCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FAOZone" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Plant" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Totalcolour" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Processcolour" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="PlantRegisteredNo" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="CompanyNameAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PMScolour" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Symbol" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CatchingArea" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="CatchingPeriodDate" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Grandof" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Flute" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Vendor" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Dimension" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="RSC" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Accessories" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PrintingStyleofPrimary" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="PrintingStyleofSecondary" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerDesign" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerSpec" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerSize" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerVendor" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerColor" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerScanable" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerBarcodeSpec" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FirstInfoGroup" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="SO" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="PICMkt" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="SOPlant" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Destination" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="GrossWeight" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="FinalInfoGroup" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Typeof" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="TypeofCarton2" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="DMSNo" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="TypeofPrimary" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="PrintingSystem" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Direction" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="RollSheet" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="RequestType" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="PlantAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Refnumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Extended_Plant" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Fixed_Desc" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="Inactive" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="Catching_Method" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Scientific_Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Specie" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SustainMaterial" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SustainPlastic" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SustainReuseable" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SustainRecyclable" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SustainComposatable" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SustainCertification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SustainCertSourcing" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SustainOther" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SusSecondaryPKGWeight" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SusRecycledContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PrimarySize_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="SapMaterials" EntityType="Self.SapMaterial" />
+  </EntityContainer>
+</Schema>

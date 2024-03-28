@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CostingDbModelStoreContainer" CdmEntityContainer="Entities">
+    <EntitySetMapping Name="SapMaterials">
+      <EntityTypeMapping TypeName="CostingDbModel.SapMaterial">
+        <MappingFragment StoreEntitySet="SapMaterial">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="DocumentNo" ColumnName="DocumentNo" />
+          <ScalarProperty Name="Material" ColumnName="Material" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Brand" ColumnName="Brand" />
+          <ScalarProperty Name="PrimarySize" ColumnName="PrimarySize" />
+          <ScalarProperty Name="Version" ColumnName="Version" />
+          <ScalarProperty Name="ChangePoint" ColumnName="ChangePoint" />
+          <ScalarProperty Name="MaterialGroup" ColumnName="MaterialGroup" />
+          <ScalarProperty Name="CreateBy" ColumnName="CreateBy" />
+          <ScalarProperty Name="CreateOn" ColumnName="CreateOn" />
+          <ScalarProperty Name="StatusApp" ColumnName="StatusApp" />
+          <ScalarProperty Name="SheetSize" ColumnName="SheetSize" />
+          <ScalarProperty Name="Assignee" ColumnName="Assignee" />
+          <ScalarProperty Name="PackingStyle" ColumnName="PackingStyle" />
+          <ScalarProperty Name="Packing" ColumnName="Packing" />
+          <ScalarProperty Name="StyleofPrinting" ColumnName="StyleofPrinting" />
+          <ScalarProperty Name="ContainerType" ColumnName="ContainerType" />
+          <ScalarProperty Name="LidType" ColumnName="LidType" />
+          <ScalarProperty Name="Condition" ColumnName="Condition" />
+          <ScalarProperty Name="ModifyBy" ColumnName="ModifyBy" />
+          <ScalarProperty Name="ModifyOn" ColumnName="ModifyOn" />
+          <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
+          <ScalarProperty Name="FAOZone" ColumnName="FAOZone" />
+          <ScalarProperty Name="Plant" ColumnName="Plant" />
+          <ScalarProperty Name="Totalcolour" ColumnName="Totalcolour" />
+          <ScalarProperty Name="Processcolour" ColumnName="Processcolour" />
+          <ScalarProperty Name="PlantRegisteredNo" ColumnName="PlantRegisteredNo" />
+          <ScalarProperty Name="CompanyNameAddress" ColumnName="CompanyNameAddress" />
+          <ScalarProperty Name="PMScolour" ColumnName="PMScolour" />
+          <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+          <ScalarProperty Name="CatchingArea" ColumnName="CatchingArea" />
+          <ScalarProperty Name="CatchingPeriodDate" ColumnName="CatchingPeriodDate" />
+          <ScalarProperty Name="Grandof" ColumnName="Grandof" />
+          <ScalarProperty Name="Flute" ColumnName="Flute" />
+          <ScalarProperty Name="Vendor" ColumnName="Vendor" />
+          <ScalarProperty Name="Dimension" ColumnName="Dimension" />
+          <ScalarProperty Name="RSC" ColumnName="RSC" />
+          <ScalarProperty Name="Accessories" ColumnName="Accessories" />
+          <ScalarProperty Name="PrintingStyleofPrimary" ColumnName="PrintingStyleofPrimary" />
+          <ScalarProperty Name="PrintingStyleofSecondary" ColumnName="PrintingStyleofSecondary" />
+          <ScalarProperty Name="CustomerDesign" ColumnName="CustomerDesign" />
+          <ScalarProperty Name="CustomerSpec" ColumnName="CustomerSpec" />
+          <ScalarProperty Name="CustomerSize" ColumnName="CustomerSize" />
+          <ScalarProperty Name="CustomerVendor" ColumnName="CustomerVendor" />
+          <ScalarProperty Name="CustomerColor" ColumnName="CustomerColor" />
+          <ScalarProperty Name="CustomerScanable" ColumnName="CustomerScanable" />
+          <ScalarProperty Name="CustomerBarcodeSpec" ColumnName="CustomerBarcodeSpec" />
+          <ScalarProperty Name="FirstInfoGroup" ColumnName="FirstInfoGroup" />
+          <ScalarProperty Name="SO" ColumnName="SO" />
+          <ScalarProperty Name="PICMkt" ColumnName="PICMkt" />
+          <ScalarProperty Name="SOPlant" ColumnName="SOPlant" />
+          <ScalarProperty Name="Destination" ColumnName="Destination" />
+          <ScalarProperty Name="Remark" ColumnName="Remark" />
+          <ScalarProperty Name="GrossWeight" ColumnName="GrossWeight" />
+          <ScalarProperty Name="FinalInfoGroup" ColumnName="FinalInfoGroup" />
+          <ScalarProperty Name="Note" ColumnName="Note" />
+          <ScalarProperty Name="Typeof" ColumnName="Typeof" />
+          <ScalarProperty Name="TypeofCarton2" ColumnName="TypeofCarton2" />
+          <ScalarProperty Name="DMSNo" ColumnName="DMSNo" />
+          <ScalarProperty Name="TypeofPrimary" ColumnName="TypeofPrimary" />
+          <ScalarProperty Name="PrintingSystem" ColumnName="PrintingSystem" />
+          <ScalarProperty Name="Direction" ColumnName="Direction" />
+          <ScalarProperty Name="RollSheet" ColumnName="RollSheet" />
+          <ScalarProperty Name="RequestType" ColumnName="RequestType" />
+          <ScalarProperty Name="PlantAddress" ColumnName="PlantAddress" />
+          <ScalarProperty Name="Refnumber" ColumnName="Refnumber" />
+          <ScalarProperty Name="Extended_Plant" ColumnName="Extended_Plant" />
+          <ScalarProperty Name="Fixed_Desc" ColumnName="Fixed_Desc" />
+          <ScalarProperty Name="Inactive" ColumnName="Inactive" />
+          <ScalarProperty Name="Catching_Method" ColumnName="Catching_Method" />
+          <ScalarProperty Name="Scientific_Name" ColumnName="Scientific_Name" />
+          <ScalarProperty Name="Specie" ColumnName="Specie" />
+          <ScalarProperty Name="SustainMaterial" ColumnName="SustainMaterial" />
+          <ScalarProperty Name="SustainPlastic" ColumnName="SustainPlastic" />
+          <ScalarProperty Name="SustainReuseable" ColumnName="SustainReuseable" />
+          <ScalarProperty Name="SustainRecyclable" ColumnName="SustainRecyclable" />
+          <ScalarProperty Name="SustainComposatable" ColumnName="SustainComposatable" />
+          <ScalarProperty Name="SustainCertification" ColumnName="SustainCertification" />
+          <ScalarProperty Name="SustainCertSourcing" ColumnName="SustainCertSourcing" />
+          <ScalarProperty Name="SustainOther" ColumnName="SustainOther" />
+          <ScalarProperty Name="SusSecondaryPKGWeight" ColumnName="SusSecondaryPKGWeight" />
+          <ScalarProperty Name="SusRecycledContent" ColumnName="SusRecycledContent" />
+          <ScalarProperty Name="PrimarySize_id" ColumnName="PrimarySize_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

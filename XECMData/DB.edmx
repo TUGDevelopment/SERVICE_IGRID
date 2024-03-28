@@ -1,0 +1,391 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CSTUModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CSDEVTU.dbo.LLAttrData' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="LLAttrData">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="VerNum" />
+            <PropertyRef Name="DefID" />
+            <PropertyRef Name="DefVerN" />
+            <PropertyRef Name="AttrID" />
+            <PropertyRef Name="AttrType" />
+            <PropertyRef Name="CustomID" />
+            <PropertyRef Name="EntryNum" />
+            <PropertyRef Name="ParentKeyID" />
+          </Key>
+          <Property Name="ID" Type="bigint" Nullable="false" />
+          <Property Name="VerNum" Type="bigint" Nullable="false" />
+          <Property Name="DefID" Type="bigint" Nullable="false" />
+          <Property Name="DefVerN" Type="bigint" Nullable="false" />
+          <Property Name="AttrID" Type="int" Nullable="false" />
+          <Property Name="AttrType" Type="int" Nullable="false" />
+          <Property Name="CustomID" Type="int" Nullable="false" />
+          <Property Name="EntryNum" Type="int" Nullable="false" />
+          <Property Name="ParentKeyID" Type="bigint" Nullable="false" />
+          <Property Name="KeyID" Type="bigint" />
+          <Property Name="ValInt" Type="bigint" />
+          <Property Name="ValReal" Type="numeric" Precision="28" Scale="14" />
+          <Property Name="ValDate" Type="datetime" />
+          <Property Name="ValStr" Type="nvarchar" MaxLength="255" />
+          <Property Name="ValLong" Type="nvarchar(max)" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CSDEVTU.dbo.DTree' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="DTree">
+          <Key>
+            <PropertyRef Name="OwnerID" />
+            <PropertyRef Name="ParentID" />
+            <PropertyRef Name="DataID" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="OriginOwnerID" />
+            <PropertyRef Name="OriginDataID" />
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="GroupID" />
+            <PropertyRef Name="UPermissions" />
+            <PropertyRef Name="GPermissions" />
+            <PropertyRef Name="WPermissions" />
+            <PropertyRef Name="SPermissions" />
+            <PropertyRef Name="ACLCount" />
+            <PropertyRef Name="Deleted" />
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="OwnerID" Type="bigint" Nullable="false" />
+          <Property Name="ParentID" Type="bigint" Nullable="false" />
+          <Property Name="DataID" Type="bigint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="248" Nullable="false" />
+          <Property Name="OriginOwnerID" Type="bigint" Nullable="false" />
+          <Property Name="OriginDataID" Type="bigint" Nullable="false" />
+          <Property Name="UserID" Type="bigint" Nullable="false" />
+          <Property Name="GroupID" Type="bigint" Nullable="false" />
+          <Property Name="UPermissions" Type="int" Nullable="false" />
+          <Property Name="GPermissions" Type="int" Nullable="false" />
+          <Property Name="WPermissions" Type="int" Nullable="false" />
+          <Property Name="SPermissions" Type="int" Nullable="false" />
+          <Property Name="ACLCount" Type="int" Nullable="false" />
+          <Property Name="PermID" Type="bigint" />
+          <Property Name="DataType" Type="bigint" />
+          <Property Name="CreatedBy" Type="bigint" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="ModifiedBy" Type="bigint" />
+          <Property Name="ModifyDate" Type="datetime" />
+          <Property Name="MaxVers" Type="int" />
+          <Property Name="Reserved" Type="tinyint" />
+          <Property Name="ReservedBy" Type="bigint" />
+          <Property Name="ReservedDate" Type="datetime" />
+          <Property Name="VersionNum" Type="bigint" />
+          <Property Name="DComment" Type="nvarchar(max)" />
+          <Property Name="DCategory" Type="nvarchar" MaxLength="255" />
+          <Property Name="SubType" Type="int" />
+          <Property Name="ExAtt1" Type="nvarchar" MaxLength="255" />
+          <Property Name="ExAtt2" Type="nvarchar" MaxLength="255" />
+          <Property Name="Ordering" Type="bigint" />
+          <Property Name="Major" Type="bigint" />
+          <Property Name="Minor" Type="bigint" />
+          <Property Name="ReleaseRef" Type="bigint" />
+          <Property Name="ChildCount" Type="bigint" />
+          <Property Name="AssignedTo" Type="bigint" />
+          <Property Name="DateAssigned" Type="datetime" />
+          <Property Name="DateEffective" Type="datetime" />
+          <Property Name="DateExpiration" Type="datetime" />
+          <Property Name="DateDue" Type="datetime" />
+          <Property Name="DateStarted" Type="datetime" />
+          <Property Name="DateCompleted" Type="datetime" />
+          <Property Name="Status" Type="int" />
+          <Property Name="Priority" Type="int" />
+          <Property Name="GIF" Type="nvarchar" MaxLength="255" />
+          <Property Name="ExtendedData" Type="nvarchar(max)" />
+          <Property Name="Catalog" Type="int" />
+          <Property Name="CacheExpiration" Type="int" />
+          <Property Name="Deleted" Type="int" Nullable="false" />
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="CSTUModelStoreContainer">
+          <EntitySet Name="LLAttrData" EntityType="Self.LLAttrData" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [LLAttrData].[ID] AS [ID], 
+    [LLAttrData].[VerNum] AS [VerNum], 
+    [LLAttrData].[DefID] AS [DefID], 
+    [LLAttrData].[DefVerN] AS [DefVerN], 
+    [LLAttrData].[AttrID] AS [AttrID], 
+    [LLAttrData].[AttrType] AS [AttrType], 
+    [LLAttrData].[CustomID] AS [CustomID], 
+    [LLAttrData].[EntryNum] AS [EntryNum], 
+    [LLAttrData].[ParentKeyID] AS [ParentKeyID], 
+    [LLAttrData].[KeyID] AS [KeyID], 
+    [LLAttrData].[ValInt] AS [ValInt], 
+    [LLAttrData].[ValReal] AS [ValReal], 
+    [LLAttrData].[ValDate] AS [ValDate], 
+    [LLAttrData].[ValStr] AS [ValStr], 
+    [LLAttrData].[ValLong] AS [ValLong]
+    FROM [dbo].[LLAttrData] AS [LLAttrData]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="DTree" EntityType="Self.DTree" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [DTree].[OwnerID] AS [OwnerID], 
+    [DTree].[ParentID] AS [ParentID], 
+    [DTree].[DataID] AS [DataID], 
+    [DTree].[Name] AS [Name], 
+    [DTree].[OriginOwnerID] AS [OriginOwnerID], 
+    [DTree].[OriginDataID] AS [OriginDataID], 
+    [DTree].[UserID] AS [UserID], 
+    [DTree].[GroupID] AS [GroupID], 
+    [DTree].[UPermissions] AS [UPermissions], 
+    [DTree].[GPermissions] AS [GPermissions], 
+    [DTree].[WPermissions] AS [WPermissions], 
+    [DTree].[SPermissions] AS [SPermissions], 
+    [DTree].[ACLCount] AS [ACLCount], 
+    [DTree].[PermID] AS [PermID], 
+    [DTree].[DataType] AS [DataType], 
+    [DTree].[CreatedBy] AS [CreatedBy], 
+    [DTree].[CreateDate] AS [CreateDate], 
+    [DTree].[ModifiedBy] AS [ModifiedBy], 
+    [DTree].[ModifyDate] AS [ModifyDate], 
+    [DTree].[MaxVers] AS [MaxVers], 
+    [DTree].[Reserved] AS [Reserved], 
+    [DTree].[ReservedBy] AS [ReservedBy], 
+    [DTree].[ReservedDate] AS [ReservedDate], 
+    [DTree].[VersionNum] AS [VersionNum], 
+    [DTree].[DComment] AS [DComment], 
+    [DTree].[DCategory] AS [DCategory], 
+    [DTree].[SubType] AS [SubType], 
+    [DTree].[ExAtt1] AS [ExAtt1], 
+    [DTree].[ExAtt2] AS [ExAtt2], 
+    [DTree].[Ordering] AS [Ordering], 
+    [DTree].[Major] AS [Major], 
+    [DTree].[Minor] AS [Minor], 
+    [DTree].[ReleaseRef] AS [ReleaseRef], 
+    [DTree].[ChildCount] AS [ChildCount], 
+    [DTree].[AssignedTo] AS [AssignedTo], 
+    [DTree].[DateAssigned] AS [DateAssigned], 
+    [DTree].[DateEffective] AS [DateEffective], 
+    [DTree].[DateExpiration] AS [DateExpiration], 
+    [DTree].[DateDue] AS [DateDue], 
+    [DTree].[DateStarted] AS [DateStarted], 
+    [DTree].[DateCompleted] AS [DateCompleted], 
+    [DTree].[Status] AS [Status], 
+    [DTree].[Priority] AS [Priority], 
+    [DTree].[GIF] AS [GIF], 
+    [DTree].[ExtendedData] AS [ExtendedData], 
+    [DTree].[Catalog] AS [Catalog], 
+    [DTree].[CacheExpiration] AS [CacheExpiration], 
+    [DTree].[Deleted] AS [Deleted], 
+    [DTree].[GUID] AS [GUID]
+    FROM [dbo].[DTree] AS [DTree]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CSTUModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="CSTUEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="LLAttrData" EntityType="CSTUModel.LLAttrData" />
+          <EntitySet Name="DTree" EntityType="CSTUModel.DTree" />
+        </EntityContainer>
+        <EntityType Name="LLAttrData">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="VerNum" />
+            <PropertyRef Name="DefID" />
+            <PropertyRef Name="DefVerN" />
+            <PropertyRef Name="AttrID" />
+            <PropertyRef Name="AttrType" />
+            <PropertyRef Name="CustomID" />
+            <PropertyRef Name="EntryNum" />
+            <PropertyRef Name="ParentKeyID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" />
+          <Property Name="VerNum" Type="Int64" Nullable="false" />
+          <Property Name="DefID" Type="Int64" Nullable="false" />
+          <Property Name="DefVerN" Type="Int64" Nullable="false" />
+          <Property Name="AttrID" Type="Int32" Nullable="false" />
+          <Property Name="AttrType" Type="Int32" Nullable="false" />
+          <Property Name="CustomID" Type="Int32" Nullable="false" />
+          <Property Name="EntryNum" Type="Int32" Nullable="false" />
+          <Property Name="ParentKeyID" Type="Int64" Nullable="false" />
+          <Property Name="KeyID" Type="Int64" />
+          <Property Name="ValInt" Type="Int64" />
+          <Property Name="ValReal" Type="Decimal" Precision="28" Scale="14" />
+          <Property Name="ValDate" Type="DateTime" Precision="3" />
+          <Property Name="ValStr" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ValLong" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="DTree">
+          <Key>
+            <PropertyRef Name="OwnerID" />
+            <PropertyRef Name="ParentID" />
+            <PropertyRef Name="DataID" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="OriginOwnerID" />
+            <PropertyRef Name="OriginDataID" />
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="GroupID" />
+            <PropertyRef Name="UPermissions" />
+            <PropertyRef Name="GPermissions" />
+            <PropertyRef Name="WPermissions" />
+            <PropertyRef Name="SPermissions" />
+            <PropertyRef Name="ACLCount" />
+            <PropertyRef Name="Deleted" />
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="OwnerID" Type="Int64" Nullable="false" />
+          <Property Name="ParentID" Type="Int64" Nullable="false" />
+          <Property Name="DataID" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="248" FixedLength="false" Unicode="true" />
+          <Property Name="OriginOwnerID" Type="Int64" Nullable="false" />
+          <Property Name="OriginDataID" Type="Int64" Nullable="false" />
+          <Property Name="UserID" Type="Int64" Nullable="false" />
+          <Property Name="GroupID" Type="Int64" Nullable="false" />
+          <Property Name="UPermissions" Type="Int32" Nullable="false" />
+          <Property Name="GPermissions" Type="Int32" Nullable="false" />
+          <Property Name="WPermissions" Type="Int32" Nullable="false" />
+          <Property Name="SPermissions" Type="Int32" Nullable="false" />
+          <Property Name="ACLCount" Type="Int32" Nullable="false" />
+          <Property Name="PermID" Type="Int64" />
+          <Property Name="DataType" Type="Int64" />
+          <Property Name="CreatedBy" Type="Int64" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int64" />
+          <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+          <Property Name="MaxVers" Type="Int32" />
+          <Property Name="Reserved" Type="Byte" />
+          <Property Name="ReservedBy" Type="Int64" />
+          <Property Name="ReservedDate" Type="DateTime" Precision="3" />
+          <Property Name="VersionNum" Type="Int64" />
+          <Property Name="DComment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DCategory" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="SubType" Type="Int32" />
+          <Property Name="ExAtt1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ExAtt2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Ordering" Type="Int64" />
+          <Property Name="Major" Type="Int64" />
+          <Property Name="Minor" Type="Int64" />
+          <Property Name="ReleaseRef" Type="Int64" />
+          <Property Name="ChildCount" Type="Int64" />
+          <Property Name="AssignedTo" Type="Int64" />
+          <Property Name="DateAssigned" Type="DateTime" Precision="3" />
+          <Property Name="DateEffective" Type="DateTime" Precision="3" />
+          <Property Name="DateExpiration" Type="DateTime" Precision="3" />
+          <Property Name="DateDue" Type="DateTime" Precision="3" />
+          <Property Name="DateStarted" Type="DateTime" Precision="3" />
+          <Property Name="DateCompleted" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="Priority" Type="Int32" />
+          <Property Name="GIF" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ExtendedData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Catalog" Type="Int32" />
+          <Property Name="CacheExpiration" Type="Int32" />
+          <Property Name="Deleted" Type="Int32" Nullable="false" />
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CSTUModelStoreContainer" CdmEntityContainer="CSTUEntities">
+          <EntitySetMapping Name="LLAttrData">
+            <EntityTypeMapping TypeName="CSTUModel.LLAttrData">
+              <MappingFragment StoreEntitySet="LLAttrData">
+                <ScalarProperty Name="ValLong" ColumnName="ValLong" />
+                <ScalarProperty Name="ValStr" ColumnName="ValStr" />
+                <ScalarProperty Name="ValDate" ColumnName="ValDate" />
+                <ScalarProperty Name="ValReal" ColumnName="ValReal" />
+                <ScalarProperty Name="ValInt" ColumnName="ValInt" />
+                <ScalarProperty Name="KeyID" ColumnName="KeyID" />
+                <ScalarProperty Name="ParentKeyID" ColumnName="ParentKeyID" />
+                <ScalarProperty Name="EntryNum" ColumnName="EntryNum" />
+                <ScalarProperty Name="CustomID" ColumnName="CustomID" />
+                <ScalarProperty Name="AttrType" ColumnName="AttrType" />
+                <ScalarProperty Name="AttrID" ColumnName="AttrID" />
+                <ScalarProperty Name="DefVerN" ColumnName="DefVerN" />
+                <ScalarProperty Name="DefID" ColumnName="DefID" />
+                <ScalarProperty Name="VerNum" ColumnName="VerNum" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DTree">
+            <EntityTypeMapping TypeName="CSTUModel.DTree">
+              <MappingFragment StoreEntitySet="DTree">
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="CacheExpiration" ColumnName="CacheExpiration" />
+                <ScalarProperty Name="Catalog" ColumnName="Catalog" />
+                <ScalarProperty Name="ExtendedData" ColumnName="ExtendedData" />
+                <ScalarProperty Name="GIF" ColumnName="GIF" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="DateCompleted" ColumnName="DateCompleted" />
+                <ScalarProperty Name="DateStarted" ColumnName="DateStarted" />
+                <ScalarProperty Name="DateDue" ColumnName="DateDue" />
+                <ScalarProperty Name="DateExpiration" ColumnName="DateExpiration" />
+                <ScalarProperty Name="DateEffective" ColumnName="DateEffective" />
+                <ScalarProperty Name="DateAssigned" ColumnName="DateAssigned" />
+                <ScalarProperty Name="AssignedTo" ColumnName="AssignedTo" />
+                <ScalarProperty Name="ChildCount" ColumnName="ChildCount" />
+                <ScalarProperty Name="ReleaseRef" ColumnName="ReleaseRef" />
+                <ScalarProperty Name="Minor" ColumnName="Minor" />
+                <ScalarProperty Name="Major" ColumnName="Major" />
+                <ScalarProperty Name="Ordering" ColumnName="Ordering" />
+                <ScalarProperty Name="ExAtt2" ColumnName="ExAtt2" />
+                <ScalarProperty Name="ExAtt1" ColumnName="ExAtt1" />
+                <ScalarProperty Name="SubType" ColumnName="SubType" />
+                <ScalarProperty Name="DCategory" ColumnName="DCategory" />
+                <ScalarProperty Name="DComment" ColumnName="DComment" />
+                <ScalarProperty Name="VersionNum" ColumnName="VersionNum" />
+                <ScalarProperty Name="ReservedDate" ColumnName="ReservedDate" />
+                <ScalarProperty Name="ReservedBy" ColumnName="ReservedBy" />
+                <ScalarProperty Name="Reserved" ColumnName="Reserved" />
+                <ScalarProperty Name="MaxVers" ColumnName="MaxVers" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="DataType" ColumnName="DataType" />
+                <ScalarProperty Name="PermID" ColumnName="PermID" />
+                <ScalarProperty Name="ACLCount" ColumnName="ACLCount" />
+                <ScalarProperty Name="SPermissions" ColumnName="SPermissions" />
+                <ScalarProperty Name="WPermissions" ColumnName="WPermissions" />
+                <ScalarProperty Name="GPermissions" ColumnName="GPermissions" />
+                <ScalarProperty Name="UPermissions" ColumnName="UPermissions" />
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="OriginDataID" ColumnName="OriginDataID" />
+                <ScalarProperty Name="OriginOwnerID" ColumnName="OriginOwnerID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DataID" ColumnName="DataID" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

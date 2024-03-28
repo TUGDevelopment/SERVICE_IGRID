@@ -1,0 +1,31 @@
+﻿{
+  "data": [
+	{
+	  "no": "100000002",
+	  "so_number": "100000002",
+      "so_item": "A",
+      "sold_to_name": "Test B",
+      "sales_org": "Position",
+      "country": "TH",
+      "material_no": "",
+      "order_bom_item": "Test1",
+	  "order_bom": "Test Test",
+	  "rdd":"Nestle thailand"
+    },
+	{
+	  "no": "100000002",
+	  "so_number": "100000002",
+      "so_item": "B",
+      "sold_to_name": "Test B",
+      "sales_org": "Position",
+      "country": "TH",
+      "material_no": "",
+      "order_bom_item": "Test1",
+	  "order_bom": "Test Test",
+	  "rdd":"Nestle thailand"
+    }
+
+  ]
+}
+
+
