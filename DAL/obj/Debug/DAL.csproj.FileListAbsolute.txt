@@ -253,6 +253,7 @@ D:\Andy\Github\ArtworkProj\DAL\bin\Debug\System.Memory.xml
 D:\Andy\Github\ArtworkProj\DAL\bin\Debug\System.Numerics.Vectors.xml
 D:\Andy\Github\ArtworkProj\DAL\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 D:\Andy\Github\ArtworkProj\DAL\bin\Debug\System.Threading.Tasks.Extensions.xml
+D:\Andy\Github\ArtworkProj\DAL\obj\Debug\DAL.csproj.AssemblyReference.cache
 D:\Andy\Github\ArtworkProj\DAL\obj\Debug\DAL.csproj.CoreCompileInputs.cache
 D:\Andy\Github\ArtworkProj\DAL\obj\Debug\DAL.csproj.CopyComplete
 D:\Andy\Github\ArtworkProj\DAL\obj\Debug\DAL.dll

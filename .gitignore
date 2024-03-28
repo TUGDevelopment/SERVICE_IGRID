@@ -23,6 +23,8 @@ bld/
 [Ll]og/
 
 #ArtworkIgnore
+ADData/obj/Debug/
+ADData/bin/Debug/
 ADData/obj/Debug/*
 ADData/bin/Debug/*
 ADDSOTMP/obj/Debug/*
