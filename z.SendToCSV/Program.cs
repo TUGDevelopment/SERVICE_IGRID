@@ -33,11 +33,14 @@ namespace z.SendToCSV
 
                     da.Fill(oDataset);
                     con.Close();
-                    GetmasterUpdateToCSV(oDataset.Tables[0]);
+
+                    //GetmasterUpdateToCSV(oDataset.Tables[0]);
+                    SQ01(oDataset.Tables[0]);
+                    CT04(oDataset.Tables[0]);
                 }
-                GetQuery("X");
-                GetImpactmat("X");
-                GetUpdateTOSQL("X");
+                GetQuery("X"); //BAPI_UpdateMATCharacteristics, MM01
+                GetImpactmat("X"); //CLMM, MM02
+                GetUpdateTOSQL("X"); //ReadCSVToIgrid
             }
             catch (HttpRequestException e)
             {
@@ -231,7 +234,6 @@ namespace z.SendToCSV
                 p.Kill();
             }
         }
-         
         public static void testsendmaster(string SubChanged_Id)
         {
             string strSQL = " select Id,Changed_Charname,Description,Changed_Action,Old_Description from TransMaster where Changed_id ='" + SubChanged_Id + "'";
@@ -246,7 +248,7 @@ namespace z.SendToCSV
                 CNService.master_artwork(value);
             }
         }
-            public static void SendEmailUpdateMaster(string _name)
+        public static void SendEmailUpdateMaster(string _name)
         {
             //string datapath = "~/FileTest/" + _name;
             string _email = "";
@@ -314,15 +316,106 @@ namespace z.SendToCSV
                 "PRD Characteristic master is maintained in SAP " + "[" + _Body.Substring(0, 6) + "]",
                 _Attached);
         }
-        public static void GetmasterUpdateToCSV(DataTable Results)
+        public static void SQ01(DataTable Results)
         {
-
             DataTable dt = new DataTable();
             dt.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
                 new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
-            new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
-            new DataColumn(@"Text for a table entry CLHP-CR_STATUS_TEXT"),
-            new DataColumn(@"Characteristic value description CAWNT-ATWTB(01)"),
+                new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
+                new DataColumn(@"Text for a table entry CLHP-CR_STATUS_TEXT"),
+                new DataColumn(@"Characteristic value description CAWNT-ATWTB(01)"),
+            });
+            DataTable listMat = new DataTable();
+            listMat.Columns.AddRange(new DataColumn[] { new DataColumn (@"Characteristic Name txtSP$00005-LOW.text"),
+            new DataColumn(@"txtSP$00003 - LOW.text"),
+            });
+            foreach (DataRow row in Results.Rows)
+            {
+                dt.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString()),
+                string.Format("{0}", row["Changed_Charname"].ToString()),
+                string.Format("{0}", row["id"].ToString()),
+                string.Format("{0}", row["Old_Description"].ToString()),
+                string.Format("{0}", row["Description"].ToString()));
+                listMat.Rows.Add(string.Format("{0}", row["Changed_Charname"].ToString()),
+                string.Format("{0}", row["Old_Description"].ToString()));
+            }
+            if (listMat.Rows.Count > 0)
+            {
+                string file = @"D:\SAPInterfaces\Outbound\SQ01_ListMat" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                CNService.ToCSV(listMat, file);
+            }
+        }
+        public static void CT04(DataTable Results)
+        {
+            DataTable dtCT04Insert = new DataTable();
+            DataTable dtCT04Update = new DataTable();
+            DataTable dtCT04Remove = new DataTable();
+            dtCT04Insert.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
+                new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
+                new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
+                new DataColumn(@"Characteristic value description CAWNT-ATWTB(01)"),
+            });
+            dtCT04Update.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
+                new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
+                new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
+                new DataColumn(@"Text for a table entry CLHP-CR_STATUS_TEXT"),
+                new DataColumn(@"Characteristic value description CAWNT-ATWTB(01)"),
+            });
+            dtCT04Remove.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
+                new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
+                new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
+                new DataColumn(@"Text for a table entry CLHP-CR_STATUS_TEXT"),
+            });
+            foreach (DataRow row in Results.Rows)
+            {
+                switch (row["Changed_Action"].ToString())
+                {
+                    case "Insert":
+                        dtCT04Insert.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString().Replace("Insert", "I")),
+                            string.Format("{0}", row["Changed_Charname"].ToString()),
+                            string.Format("{0}", row["id"].ToString()),
+                            string.Format("{0}", row["Description"].ToString()));
+                        break;
+                    case "Update":
+                        dtCT04Update.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString()),
+                           string.Format("{0}", row["Changed_Charname"].ToString()),
+                           string.Format("{0}", row["id"].ToString()),
+                           string.Format("{0}", row["Old_Description"].ToString()),
+                           string.Format("{0}", row["Description"].ToString()));
+                        break;
+                    case "Remove":
+                        dtCT04Remove.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString().Replace("Remove", "D")),
+                           string.Format("{0}", row["Changed_Charname"].ToString()),
+                           string.Format("{0}", row["Description"].ToString()));
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (dtCT04Insert.Rows.Count > 0)
+            {
+                string file = @"D:\SAPInterfaces\Outbound\CT04_Insert_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                CNService.ToCSV(dtCT04Insert, file);
+            }
+            if (dtCT04Update.Rows.Count > 0)
+            {
+                string file = @"D:\SAPInterfaces\Outbound\CT04_Update_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                CNService.ToCSV(dtCT04Update, file);
+            }
+            if (dtCT04Remove.Rows.Count > 0)
+            {
+                string file = @"D:\SAPInterfaces\Outbound\CT04_Remove_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                CNService.ToCSV(dtCT04Remove, file);
+            }
+        }
+        public static void GetmasterUpdateToCSV(DataTable Results)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
+                new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
+                new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
+                new DataColumn(@"Text for a table entry CLHP-CR_STATUS_TEXT"),
+                new DataColumn(@"Characteristic value description CAWNT-ATWTB(01)"),
             });
             DataTable listMat = new DataTable();
             listMat.Columns.AddRange(new DataColumn[] { new DataColumn (@"Characteristic Name txtSP$00005-LOW.text"),
@@ -344,35 +437,115 @@ namespace z.SendToCSV
                 string file = @"D:\SAPInterfaces\Outbound\SQ01_ListMat" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
                 CNService.ToCSV(listMat, file);
             }
-            string[] ColumnsToBeDeleted = { "Insert", "Update", "Remove" };
-            if (dt.Rows.Count > 0)
-                foreach (string ColName in ColumnsToBeDeleted)
-                {
-                    var dtclone = new DataTable();
-                    if (dt.Select("IfColumn='" + ColName + "'").ToList().Count > 0)
-                    {
-                        if (ColName == "Update")
-                        {
-                            dtclone = dt.Select("IfColumn='" + ColName + "'").CopyToDataTable();
-                        }
-                        else if (ColName == "Insert")
-                        {
-                            dtclone = dt.Select("IfColumn='" + ColName + "'").CopyToDataTable();
-                            dtclone.Columns.Remove(@"Text for a table entry CLHP-CR_STATUS_TEXT");
-                        }
-                        else if (ColName == "Remove")
-                        {
-                            dtclone = dt.Select("IfColumn='" + ColName + "'").CopyToDataTable();
-                            dtclone.Columns.Remove(@"Characteristic Value CAWN-ATWRT(01)");
-                            dtclone.Columns.Remove(@"Characteristic value description CAWNT-ATWTB(01)");
-                        }
-                        //string file = HttpContext.Current.Server.MapPath("~/ExcelFiles/CT04_" + ColName + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv");
-                        string file = @"D:\SAPInterfaces\Outbound\CT04_" + ColName + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
 
-                        CNService.ToCSV(dtclone, file);
-                    }
+            DataTable dtCT04Insert = new DataTable();
+            DataTable dtCT04Update = new DataTable();
+            DataTable dtCT04Remove = new DataTable();
+            dtCT04Insert.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
+                new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
+                new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
+                new DataColumn(@"Characteristic value description CAWNT-ATWTB(01)"),
+            });
+            dtCT04Update.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
+                new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
+                new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
+                new DataColumn(@"Text for a table entry CLHP-CR_STATUS_TEXT"),
+                new DataColumn(@"Characteristic value description CAWNT-ATWTB(01)"),
+            });
+            dtCT04Remove.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
+                new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
+                new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
+                new DataColumn(@"Text for a table entry CLHP-CR_STATUS_TEXT"),                
+            });
+            foreach (DataRow row in Results.Rows)
+            {
+                switch (row["Changed_Action"].ToString())
+                {
+                    case "Insert":
+                        dtCT04Insert.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString().Replace("Insert","I")),
+                            string.Format("{0}", row["Changed_Charname"].ToString()),
+                            string.Format("{0}", row["id"].ToString()),                           
+                            string.Format("{0}", row["Description"].ToString()));
+                        break;
+                    case "Update":
+                        dtCT04Update.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString()),
+                           string.Format("{0}", row["Changed_Charname"].ToString()),
+                           string.Format("{0}", row["id"].ToString()),
+                           string.Format("{0}", row["Old_Description"].ToString()),
+                           string.Format("{0}", row["Description"].ToString()));
+                        break;
+                    case "Remove":
+                        dtCT04Remove.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString().Replace("Remove", "D")),
+                           string.Format("{0}", row["Changed_Charname"].ToString()),                           
+                           string.Format("{0}", row["Description"].ToString()));
+                        break;
+                    default:
+                        break;
                 }
-           
+            }
+            if (dtCT04Insert.Rows.Count > 0)
+            {              
+                string file = @"D:\SAPInterfaces\Outbound\CT04_Insert_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                CNService.ToCSV(dtCT04Insert, file);
+            }
+            if (dtCT04Update.Rows.Count > 0)
+            {
+                string file = @"D:\SAPInterfaces\Outbound\CT04_Update_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                CNService.ToCSV(dtCT04Update, file);
+            }
+            if (dtCT04Remove.Rows.Count > 0)
+            {
+                string file = @"D:\SAPInterfaces\Outbound\CT04_Remove_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                CNService.ToCSV(dtCT04Remove, file);
+            }
+
+
+            //string[] ColumnsToBeDeleted = { "Insert", "Update", "Remove" };
+            //if (dt.Rows.Count > 0)
+            //    foreach (string ColName in ColumnsToBeDeleted)
+            //    {
+            //        foreach(DataRow row in dt.Rows)
+            //        {
+            //            row[0].ToString();
+            //        }
+            //         //DataRow["IfColumn"][1].ToString().Replace(ColName, "I");
+            //        //dt.Rows.Add(dt.Rows[][0].ToString().Replace("Insert", "I")
+            //            //);
+
+            //        //dt.Rows.Add(row["DocumentNo"].ToString(),
+            //        //    row["DocumentNo"].ToString()
+            //        //    );
+
+            //        //var dtclone = new DataTable();
+            //        //if (dt.Select("IfColumn='" + ColName + "'").ToList().Count > 0)
+            //        //{
+            //        //    //if (ColName == "Update")
+            //        //    //{
+            //        //    //    dtclone = dt.Select("IfColumn='" + ColName + "'").CopyToDataTable();
+            //        //    //}
+            //        //    //else if (ColName == "Insert")
+            //        //    //{
+            //        //    //    dtclone = dt.Select("IfColumn='" + ColName + "'").CopyToDataTable();
+            //        //    //    //dtclone = dt.Select("IfColumn='Insert'").CopyToDataTable();
+            //        //    //    //dtclone.Columns[0]..ItemArray[0].ToString().Replace("a","I");
+            //        //    //    //dtclone.Rows[0].ItemArray[0].ToString().Replace('Insert', 'I');
+            //        //    //    //dtclone = dt.Rows[0][0].ToString().CopyToDataTable();
+            //        //    //    dtclone.Rows[0][0].ToString().Replace(ColName, "I");
+            //        //    //    dtclone.Columns.Remove(@"Text for a table entry CLHP-CR_STATUS_TEXT");
+            //        //    //}
+            //        //    //else if (ColName == "Remove")
+            //        //    //{
+            //        //    //    dtclone = dt.Select("IfColumn='" + ColName + "'").CopyToDataTable();
+            //        //    //    dtclone.Columns.Remove(@"Characteristic Value CAWN-ATWRT(01)");
+            //        //    //    dtclone.Columns.Remove(@"Characteristic value description CAWNT-ATWTB(01)");
+            //        //    //}
+            //        //    //string file = HttpContext.Current.Server.MapPath("~/ExcelFiles/CT04_" + ColName + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv");
+            //        //    string file = @"D:\SAPInterfaces\Outbound\CT04_" + ColName + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+
+            //        //    CNService.ToCSV(dtclone, file);
+            //        //}
+            //    }
+
 
         }
         public static void GetImpactmat(string sName)
@@ -403,31 +576,31 @@ namespace z.SendToCSV
                 DataTable dtImpactMatDesc = new DataTable(); 
                 dtImpactMatDesc.Columns.AddRange(new DataColumn[] { new DataColumn (@"Material Number RMMG1 - MATNR"),
                 new DataColumn(@"Material description MAKT - MAKTX"),});
-                foreach (DataRow row in oDataset.Tables[0].Rows)
-                {
-                    dt.Rows.Add(string.Format("{0}", row["Char_Name"].ToString()),
-               string.Format("{0}", row["Char_OldValue"].ToString()),
-               string.Format("{0}", row["Char_NewValue"].ToString()),
-               string.Format("{0}", row["Material"].ToString()),
-               string.Format("{0}", row["Description"].ToString()));
+               // foreach (DataRow row in oDataset.Tables[0].Rows)
+               // {
+               //     dt.Rows.Add(string.Format("{0}", row["Char_Name"].ToString()),
+               //string.Format("{0}", row["Char_OldValue"].ToString()),
+               //string.Format("{0}", row["Char_NewValue"].ToString()),
+               //string.Format("{0}", row["Material"].ToString()),
+               //string.Format("{0}", row["Description"].ToString()));
 
 
-                    dtImpactMatDesc.Rows.Add(
-               string.Format("{0}", row["Material"].ToString()),
-               string.Format("{0}", row["Description"].ToString()));
-                }
-                if (dt.Rows.Count > 0)
-                {
-                    string file = @"D:\SAPInterfaces\Outbound\CLMM_ChangeMatClass" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                    CNService.ToCSV(dt, file);
-                }
+               //     dtImpactMatDesc.Rows.Add(
+               //string.Format("{0}", row["Material"].ToString()),
+               //string.Format("{0}", row["Description"].ToString()));
+               // }
+                //if (dt.Rows.Count > 0)
+                //{
+                //    string file = @"D:\SAPInterfaces\Outbound\CLMM_ChangeMatClass" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                //    CNService.ToCSV(dt, file);
+                //}
                 
                 
-                if (dtImpactMatDesc.Rows.Count > 0)
-                {
-                    string file = @"D:\SAPInterfaces\Outbound\MM02_ImpactMatDesc" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                    CNService.ToCSV(dtImpactMatDesc, file);
-                }
+                //if (dtImpactMatDesc.Rows.Count > 0)
+                //{
+                //    string file = @"D:\SAPInterfaces\Outbound\MM02_ImpactMatDesc" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                //    CNService.ToCSV(dtImpactMatDesc, file);
+                //}
             }
         }
         public static void GetQuery(string sName)
@@ -568,3 +741,4 @@ namespace z.SendToCSV
         }
     }
 }
+
