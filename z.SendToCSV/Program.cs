@@ -12,82 +12,422 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using System.Collections;
 
 namespace z.SendToCSV
 {
     public class Program
     {
-        public static string InterfacePathInbound = ConfigurationSettings.AppSettings["InterfacePathInbound"];
-        public static string InterfacePathOutbound = ConfigurationSettings.AppSettings["InterfacePathOutbound"];
+        public static string strConn = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
+        public static string InterfacePathInbound = ConfigurationManager.AppSettings["InterfacePathInbound"];
+        public static string InterfacePathOutbound = ConfigurationManager.AppSettings["InterfacePathOutbound"];
         static void Main(string[] args)
         {
+            //Outbound
+            #region Outbound
+            //try
+            //{
+            //    using (SqlConnection con = new SqlConnection(strConn))
+            //    {
+            //        SqlCommand cmd = new SqlCommand();
+            //        cmd.CommandType = CommandType.StoredProcedure;
+            //        cmd.CommandText = "spGetMasterData";
+            //        cmd.Parameters.AddWithValue("@Active", "X");
+            //        cmd.Connection = con;
+            //        con.Open();
+            //        DataSet oDataset = new DataSet();
+            //        SqlDataAdapter da = new SqlDataAdapter(cmd);
+            //        da.Fill(oDataset);
+            //        con.Close();
+
+            //        SQ01(oDataset.Tables[0]);
+            //        CT04(oDataset.Tables[0]);
+            //    }
+
+            //    using (SqlConnection con = new SqlConnection(strConn))
+            //    {
+            //        SqlCommand cmd = new SqlCommand();
+            //        cmd.CommandType = CommandType.StoredProcedure;
+            //        cmd.CommandText = "spQuery";
+            //        cmd.Parameters.AddWithValue("@Material", "X");
+            //        cmd.Connection = con;
+            //        con.Open();
+            //        DataSet oDataset = new DataSet();
+            //        SqlDataAdapter da = new SqlDataAdapter(cmd);
+            //        da.Fill(oDataset);
+            //        con.Close();
+
+            //        MM01(oDataset.Tables[0]);
+            //        BAPI_UpdateMATCharacteristics(oDataset.Tables[0]);
+            //    }
+
+            //    using (SqlConnection con = new SqlConnection(strConn))
+            //    {
+            //        SqlCommand cmd = new SqlCommand();
+            //        cmd.CommandType = CommandType.StoredProcedure;
+            //        cmd.CommandText = "spGetImpactmat";
+            //        cmd.Parameters.AddWithValue("@Active", "X");
+            //        cmd.Connection = con;
+            //        con.Open();
+            //        DataSet oDataset = new DataSet();
+            //        SqlDataAdapter da = new SqlDataAdapter(cmd);
+            //        da.Fill(oDataset);
+            //        con.Close();
+
+            //        CLMM_ChangeMatClass(oDataset.Tables[0]);
+            //        MM02(oDataset.Tables[0]);
+            //    }
+            //}
+            //catch (HttpRequestException e)
+            //{
+            //    Console.WriteLine("\nException Caught!");
+            //    Console.WriteLine($"Message :{e.Message} ");
+            //}
+            
+            #endregion
+
+            ////Inbound
             try
             {
-                using (SqlConnection con = new SqlConnection(CNService.strConn))
+                //var dir = @"D:\SAPInterfaces\Inbound";
+                //    var filePaths = Directory.GetFiles(dir, "CT04*_Result*.csv");
+                //    CT04_Inbound();
+
+                string imported = "";
+                string bodyMsg = "";
+                FileInfo fileI = null;
+                string fileN = "";
+
+                // IMPORT DOWNLOADED FILES
+                var filesToImport = Directory.GetFiles(InterfacePathInbound, "*_Result.csv");
+                if (filesToImport != null)
                 {
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandText = "spGetMasterData";
-                    cmd.Parameters.AddWithValue("@Active", "X");
-                    cmd.Connection = con;
-                    con.Open();
-                    DataSet oDataset = new DataSet();
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(oDataset);
-                    con.Close();
+                    foreach (string file in filesToImport)
+                    {                        
+                        fileI = new FileInfo(file);
+                        fileN = fileI.Name;
+                        switch (fileN.Substring(0,6))
+                        {
+                            case "SQ01_L":
+                                imported = Import_SQ01(file);                               
+                                break;
+                            case "CT04_I":
+                                //imported = Import_MM17(fileI.FullName, out bodyMsg);
+                                break;
+                            case "CT04_R":
+                                //imported = Import_QM25(fileI.FullName, out bodyMsg);
+                                break;
+                            //case "MM01_C":
+                            //    imported = Import_MM02(fileI.FullName, out bodyMsg);
+                            //    break;
+                            //case "BAPI_U":
+                            //    imported = Import_PP01(fileI.FullName, out bodyMsg);
+                            //    break;
+                            //case "CLMM_C":
+                            //    imported = Import_SD21(fileI.FullName, out bodyMsg);
+                            //    break;
+                            //case "MM02":
+                            //    imported = Import_PP21(fileI.FullName, out bodyMsg);
+                            //    break;
+                                                    
+                        }
 
-                    SQ01(oDataset.Tables[0]);
-                    CT04(oDataset.Tables[0]);
+                        //if (imported == "")
+                        //{
+                        //    //GeneralTools.MoveFile(fileI.FullName, dr["InterfaceFolder"] + "\\IMPORTED\\" + fileN, false);
+
+                        //    //if ((AppKeys.SAP_WS_NotifySuccessImport + "").ToLower() == "true")
+                        //    //    ITF_Data.SendNotification(dr["OkMessage"] + "", bodyMsg, dr["InterfaceCode"] + "");
+
+                        //    //StreamWriter sw = new StreamWriter(dr["InterfaceFolder"] + "\\IMPORTED\\" + fileN + ".ok");
+                        //    //sw.Write("");
+                        //    //sw.Close();
+                        //    //sw.Dispose();
+
+                        //    //if (dr["FtpSuccessFolderPath"] + "" != "")
+                        //    //{
+                        //    //    GeneralTools.UploadLocalFileToFTP(dr["InterfaceFolder"] + "\\IMPORTED\\" + fileN + ".ok", dr["FtpSuccessFolderPath"] + "", dr["FtpUsername"] + "", dr["FtpPassword"] + "");
+                        //    //}
+
+                        //}
+                        //else
+                        //{
+                        //    //GeneralTools.MoveFile(fileI.FullName, dr["InterfaceFolder"] + "\\ERROR\\" + fileN, false);
+
+
+
+                        //    ////if (imported == "ACTIVE_NOTIFY")
+                        //    ////{
+                        //    ////    ITF_Data.SendNotification("WISEUp - Error Importing " + fileN + " (New Retry)", "", "");
+                        //    ////}
+                        //    ////else
+                        //    ////{
+                        //    ////    if (imported != "ACTIVE")
+                        //    ////    {
+                        //    ////        // SAVE ERROR / SEND EMAIL
+                        //    ////        ITF_Data.SendNotification("WISEUp - Error Importing " + fileN, imported, "");
+                        //    ////        ITF_Data.InsertReceivedError(dr["InterfaceCode"] + "", fileN, "ACTIVE", imported, 1);
+                        //    ////    }
+                        //    ////}
+
+                        //    //StreamWriter sw = new StreamWriter(dr["InterfaceFolder"] + "\\ERROR\\" + fileN + ".notok");
+                        //    //sw.Write("");
+                        //    //sw.Close();
+                        //    //sw.Dispose();
+
+                        //    //if (dr["FtpSuccessFolderPath"] + "" != "")
+                        //    //{
+                        //    //    GeneralTools.UploadLocalFileToFTP(dr["InterfaceFolder"] + "\\ERROR\\" + fileN + ".notok", dr["FtpSuccessFolderPath"] + "", dr["FtpUsername"] + "", dr["FtpPassword"] + "");
+                        //    //}
+
+                        //    //ErrorLogger.LOGGER.Error("Error Import " + dr["InterfaceCode"] + "", new Exception("Error: " + imported));
+                        //}
+                    }
+
+                    //// Move MM01 & BAPI_UpdateMATCharacteristics
+                    //filePaths = Directory.GetFiles(dir, "MM01*_Result*.csv");
+                    //foreach (string s in filePaths)
+                    //{
+                    //    try
+                    //    {
+                    //        using (var reader = new StreamReader(s))
+                    //        {
+                    //            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                    //            {
+                    //                while (csv.Read())
+                    //                {//This will advance the reader to the next record.
+
+                    //                    //You can use an indexer to get by position or name. 
+                    //                    //This will return the field as a string
+
+                    //                    // By position
+                    //                    var field = csv[0];
+                    //                    //var AppID = csv["AppID"];
+                    //                    // By header name
+                    //                    //csv.Read();
+                    //                    csv.ReadHeader();
+                    //                    string[] headerRow = csv.Context.Reader.HeaderRecord;
+                    //                    string[] filteredValues = Array.FindAll(headerRow, x => x.Contains("Result"));
+                    //                    var Condition = "";// csv["Condition TypeRV13A-KSCHL"];
+                    //                    if (filteredValues.Length > 0)
+                    //                        if (csv["Result"] == "Condition records saved")
+                    //                        {
+                    //                        }
+                    //                }
+                    //            }
+                    //        }
+                    //        //File.Move(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s));
+                    //        //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
+                    //        // Copy the file and overwrite if it exists
+                    //        File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
+
+                    //        // Delete the source file
+                    //        File.Delete(s);
+                    //    }
+                    //    catch (IOException iox)
+                    //    {
+                    //        Console.WriteLine(iox.Message);
+                    //    }
+                    //}
+
                 }
-
-                using (SqlConnection con = new SqlConnection(CNService.strConn))
-                {
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandText = "spQuery";
-                    cmd.Parameters.AddWithValue("@Material", "X");
-                    cmd.Connection = con;
-                    con.Open();
-                    DataSet oDataset = new DataSet();
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(oDataset);
-                    con.Close();
-
-                    MM01(oDataset.Tables[0]);
-                    BAPI_UpdateMATCharacteristics(oDataset.Tables[0]);                    
-                }
-
-                using (SqlConnection con = new SqlConnection(CNService.strConn))
-                {
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandText = "spGetImpactmat";
-                    cmd.Parameters.AddWithValue("@Active", "X");
-                    cmd.Connection = con;
-                    con.Open();
-                    DataSet oDataset = new DataSet();
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(oDataset);
-                    con.Close();
-
-                    CLMM_ChangeMatClass(oDataset.Tables[0]);
-                    MM02(oDataset.Tables[0]);
-                }
-
-                //GetQuery("X"); //BAPI_UpdateMATCharacteristics, MM01
-                GetImpactmat("X"); //CLMM, MM02
-                GetUpdateTOSQL("X"); //ReadCSVToIgrid
             }
-            catch (HttpRequestException e)
+            catch (Exception e)
             {
                 Console.WriteLine("\nException Caught!");
                 Console.WriteLine($"Message :{e.Message} ");
+                //ErrorLogger.LOGGER.Error(ex.Message, ex);
+                //ITF_Data.SendNotification("SAP Import Service - Error Executing Interface", ex.Message + "<br />" + ex.StackTrace, "");
             }
+
         }
-        public static void GetUpdateTOSQL(string data)
+
+        #region IMPORT METHODS
+        public static void ImportFileInterface()
+        {
+           
+        }
+        public static void CT04_Inbound(string data)
         {
             var dir = @"D:\SAPInterfaces\Inbound";
-            //HttpContext.Current.Server.MapPath("~/ExcelFiles");
+            var filePaths = Directory.GetFiles(dir, "CT04*_Result*.csv");
+            foreach (string s in filePaths)
+            {
+                using (var reader = new StreamReader(s))
+                {
+                    using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                    {
+                        while (csv.Read())
+                        {//This will advance the reader to the next record.
+
+                            //You can use an indexer to get by position or name. 
+                            //This will return the field as a string
+
+                            // By position
+                            var field = csv[0];
+                            //var AppID = csv["AppID"];
+                            // By header name
+                            //csv.Read();
+                            csv.ReadHeader();
+                            string[] headerRow = csv.Context.Reader.HeaderRecord;
+                            string[] filteredValues = Array.FindAll(headerRow, x => x.Contains("Result"));
+                            var Condition = "";// csv["Condition TypeRV13A-KSCHL"];
+                            if (filteredValues.Length > 0)
+                                if (csv["Result"] == "Condition records saved")
+                                {
+                                    string Changed_Id = "";
+                                    string Changed_Action = "";
+                                    string Material = "";
+                                    string Description = "";
+                                    string DMSNo = "";
+                                    string New_Material = "";
+                                    string New_Description = "";
+                                    string Status = "";
+                                    string Reason = "";
+                                    string NewMat_JobId = "";
+                                    string Char_Name = "";
+                                    string Char_OldValue = "";
+                                    string Char_NewValue = "";
+                                    //SendEmailUpdateMaster("U" + Material);
+                                    using (SqlConnection con = new SqlConnection(CNService.strConn))
+                                    {
+                                        SqlCommand cmd = new SqlCommand();
+                                        cmd.CommandType = CommandType.StoredProcedure;
+                                        cmd.CommandText = "spUpdateImpactedmat";
+
+                                        cmd.Parameters.AddWithValue("@Changed_Id", Changed_Id);
+                                        cmd.Parameters.AddWithValue("@Changed_Action", Changed_Action);
+                                        cmd.Parameters.AddWithValue("@Material", Material);
+                                        cmd.Parameters.AddWithValue("@Description", Description);
+                                        cmd.Parameters.AddWithValue("@DMSNo", DMSNo);
+                                        cmd.Parameters.AddWithValue("@New_Material", New_Material);
+                                        cmd.Parameters.AddWithValue("@New_Description", New_Description);
+                                        cmd.Parameters.AddWithValue("@Status", Status);
+                                        cmd.Parameters.AddWithValue("@Reason", Reason);
+                                        cmd.Parameters.AddWithValue("@NewMat_JobId", NewMat_JobId);
+                                        cmd.Parameters.AddWithValue("@Char_Name", Char_Name);
+                                        cmd.Parameters.AddWithValue("@Char_OldValue", Char_OldValue);
+                                        cmd.Parameters.AddWithValue("@Char_NewValue", Char_NewValue);
+
+
+                                        cmd.Connection = con;
+                                        con.Open();
+                                        DataTable dtResult = new DataTable();
+                                        SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
+                                        oAdapter.Fill(dtResult);
+                                        con.Close();
+                                    }
+                                    //    using (SqlConnection con = new SqlConnection(strConn))
+                                    //    {
+                                    //        SqlCommand cmd = new SqlCommand();
+                                    //        cmd.CommandType = CommandType.StoredProcedure;
+                                    //        cmd.CommandText = "spUpdateQuotationfromJob";
+                                    //        cmd.Parameters.AddWithValue("@MinPrice", string.Format("{0}", 0));
+                                    //        cmd.Parameters.AddWithValue("@subID", string.Format("{0}", Condition.ToString() == "zpm1" ? "0" : AppID.ToString()));
+                                    //        cmd.Parameters.AddWithValue("@ID", AppID.ToString());
+                                    //        cmd.Connection = con;
+                                    //        con.Open();
+                                    //        cmd.ExecuteNonQuery();
+                                    //        con.Close();
+                                    //    }
+                                    //}
+                                }
+                            //var records = csv.GetRecords<dynamic>();
+                            //foreach (var item in records)
+                            //{
+                            //    var da = item.Result;
+                            //    var condition = item[@"Condition Type RV13A-KSCHL"];  
+                            //}
+                            //foreach (dynamic record in records.ToList())
+                            //{
+                            //    var data = record["IfColumn"];
+                            //}
+                        }
+                    }
+                }
+                try
+                {
+                    //File.Move(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s));
+                    //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
+                    // Copy the file and overwrite if it exists
+                    File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
+
+                    // Delete the source file
+                    File.Delete(s);
+                }
+                catch (IOException iox)
+                {
+                    Console.WriteLine(iox.Message);
+                }
+            }
+            // Move MM01 & BAPI_UpdateMATCharacteristics
+            filePaths = Directory.GetFiles(dir, "MM01*_Result*.csv");
+            foreach (string s in filePaths)
+            {
+                try
+                {
+                    using (var reader = new StreamReader(s))
+                    {
+                        using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                        {
+                            while (csv.Read())
+                            {//This will advance the reader to the next record.
+
+                                //You can use an indexer to get by position or name. 
+                                //This will return the field as a string
+
+                                // By position
+                                var field = csv[0];
+                                //var AppID = csv["AppID"];
+                                // By header name
+                                //csv.Read();
+                                csv.ReadHeader();
+                                string[] headerRow = csv.Context.Reader.HeaderRecord;
+                                string[] filteredValues = Array.FindAll(headerRow, x => x.Contains("Result"));
+                                var Condition = "";// csv["Condition TypeRV13A-KSCHL"];
+                                if (filteredValues.Length > 0)
+                                    if (csv["Result"] == "Condition records saved")
+                                    {
+                                    }
+                            }
+                        }
+                    }
+                    //File.Move(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s));
+                    //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
+                    // Copy the file and overwrite if it exists
+                    File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
+
+                    // Delete the source file
+                    File.Delete(s);
+                }
+                catch (IOException iox)
+                {
+                    Console.WriteLine(iox.Message);
+                }
+            }
+            // Move BAPI_UpdateMATCharacteristics
+            filePaths = Directory.GetFiles(dir, "BAPI*_Result*.csv");
+            foreach (string s in filePaths)
+            {
+                try
+                {
+                    //File.Move(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s));
+                    //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
+                    // Copy the file and overwrite if it exists
+                    File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
+
+                    // Delete the source file
+                    File.Delete(s);
+                }
+                catch (IOException iox)
+                {
+                    Console.WriteLine(iox.Message);
+                }
+            }
+        }
+        public static void Inbound(string data)
+        {
+            var dir = @"D:\SAPInterfaces\Inbound";
             var filePaths = Directory.GetFiles(dir, "CT04*_Result*.csv");
             foreach (string s in filePaths)
             {
@@ -189,9 +529,9 @@ namespace z.SendToCSV
                     //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
                     // Copy the file and overwrite if it exists
                     File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
-                         
-                        // Delete the source file
-                        File.Delete(s);
+
+                    // Delete the source file
+                    File.Delete(s);
                 }
                 catch (IOException iox)
                 {
@@ -230,10 +570,10 @@ namespace z.SendToCSV
                             }
                         }
                     }
-                                        //File.Move(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s));
-                                        //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
-                                        // Copy the file and overwrite if it exists
-                                        File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
+                    //File.Move(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s));
+                    //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
+                    // Copy the file and overwrite if it exists
+                    File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
 
                     // Delete the source file
                     File.Delete(s);
@@ -263,95 +603,411 @@ namespace z.SendToCSV
                 }
             }
         }
-        public static void localProcessKill(string processName)
+        #endregion
+
+        #region IMPORT INTERFACES
+        public static string Import_SQ01(string file)
         {
-            foreach (Process p in Process.GetProcessesByName(processName))
+            using (var reader = new StreamReader(file))
             {
-                p.Kill();
+                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                {
+                    while (csv.Read())
+                    {
+                        //This will advance the reader to the next record.
+                        //You can use an indexer to get by position or name. 
+                        //This will return the field as a string
+                        // By position
+                        var field = csv[0];
+                        //var AppID = csv["AppID"];
+                        // By header name
+                        //csv.Read();
+                        csv.ReadHeader();
+                        string[] headerRow = csv.Context.Reader.HeaderRecord;
+                        string[] filteredValues = Array.FindAll(headerRow, x => x.Contains("Result"));
+                        var Condition = "";// csv["Condition TypeRV13A-KSCHL"];
+                        if (filteredValues.Length > 0)
+                        {
+                            if (csv["Result"] == "Condition records saved")
+                            {
+                                string Changed_Id = "";
+                                string Changed_Action = "";
+                                string Material = "";
+                                string Description = "";
+                                string DMSNo = "";
+                                string New_Material = "";
+                                string New_Description = "";
+                                string Status = "";
+                                string Reason = "";
+                                string NewMat_JobId = "";
+                                string Char_Name = "";
+                                string Char_OldValue = "";
+                                string Char_NewValue = "";
+
+                                //SendEmailUpdateMaster("U" + Material);
+
+                                //using (SqlConnection con = new SqlConnection(strConn))
+                                //{
+                                //    SqlCommand cmd = new SqlCommand();
+                                //    cmd.CommandType = CommandType.StoredProcedure;
+                                //    cmd.CommandText = "spUpdateImpactedmat";
+
+                                //    cmd.Parameters.AddWithValue("@Changed_Id", Changed_Id);
+                                //    cmd.Parameters.AddWithValue("@Changed_Action", Changed_Action);
+                                //    cmd.Parameters.AddWithValue("@Material", Material);
+                                //    cmd.Parameters.AddWithValue("@Description", Description);
+                                //    cmd.Parameters.AddWithValue("@DMSNo", DMSNo);
+                                //    cmd.Parameters.AddWithValue("@New_Material", New_Material);
+                                //    cmd.Parameters.AddWithValue("@New_Description", New_Description);
+                                //    cmd.Parameters.AddWithValue("@Status", Status);
+                                //    cmd.Parameters.AddWithValue("@Reason", Reason);
+                                //    cmd.Parameters.AddWithValue("@NewMat_JobId", NewMat_JobId);
+                                //    cmd.Parameters.AddWithValue("@Char_Name", Char_Name);
+                                //    cmd.Parameters.AddWithValue("@Char_OldValue", Char_OldValue);
+                                //    cmd.Parameters.AddWithValue("@Char_NewValue", Char_NewValue);
+
+
+                                //    cmd.Connection = con;
+                                //    con.Open();
+                                //    DataTable dtResult = new DataTable();
+                                //    SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
+                                //    oAdapter.Fill(dtResult);
+                                //    con.Close();
+                                //}
+
+                                //using (SqlConnection con = new SqlConnection(strConn))
+                                //{
+                                //    SqlCommand cmd = new SqlCommand();
+                                //    cmd.CommandType = CommandType.StoredProcedure;
+                                //    cmd.CommandText = "spUpdateQuotationfromJob";
+                                //    cmd.Parameters.AddWithValue("@MinPrice", string.Format("{0}", 0));
+                                //    cmd.Parameters.AddWithValue("@subID", string.Format("{0}", Condition.ToString() == "zpm1" ? "0" : AppID.ToString()));
+                                //    cmd.Parameters.AddWithValue("@ID", AppID.ToString());
+                                //    cmd.Connection = con;
+                                //    con.Open();
+                                //    cmd.ExecuteNonQuery();
+                                //    con.Close();
+                                //}
+                            }
+                        }
+                     }
+                
+                        //var records = csv.GetRecords<dynamic>();
+                        //foreach (var item in records)
+                        //{
+                        //    var da = item.Result;
+                        //    var condition = item[@"Condition Type RV13A-KSCHL"];  
+                        //}
+                        //foreach (dynamic record in records.ToList())
+                        //{
+                        //    var data = record["IfColumn"];
+                        //}
+                    
+
+                    //try
+                    //{
+                    //    //File.Move(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s));
+                    //    //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
+                    //    // Copy the file and overwrite if it exists
+                    //    File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
+
+                    //    // Delete the source file
+                    //    File.Delete(s);
+                    //}
+                    //catch (IOException iox)
+                    //{
+                    //    Console.WriteLine(iox.Message);
+                    //}
+                }
             }
-        }
-        public static void testsendmaster(string SubChanged_Id)
-        {
-            string strSQL = " select Id,Changed_Charname,Description,Changed_Action,Old_Description from TransMaster where Changed_id ='" + SubChanged_Id + "'";
-            DataTable dt = CNService.builditems(strSQL);
-            foreach (DataRow dr in dt.Rows)
-            {
-                string _Id = dr["Id"].ToString();
-                string _Description = dr["Description"].ToString();
-                string _Changed_Action = dr["Changed_Action"].ToString();
-                string _old_id = dr["Old_Description"].ToString();
-                string[] value = { dr["Changed_Charname"].ToString(), _Description, _Id, _Changed_Action, _old_id };
-                CNService.master_artwork(value);
-            }
-        }
-        public static void SendEmailUpdateMaster(string _name)
-        {
-            //string datapath = "~/FileTest/" + _name;
-            string _email = "";
-            string _Id = "";
-            string _Description = "";
-            string _Body = "";
-            string _Attached = "";
-            string SubChanged_Id = CNService.ReadItems(@"select cast(substring('"
-            + _name.ToString() + "',2,len('" + _name.ToString() + "')-1) as nvarchar(max)) value");
-            testsendmaster(SubChanged_Id);
-            DataTable dt = new DataTable();
-            using (SqlConnection con = new SqlConnection(CNService.strConn))
-            {
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "spsendemail_upm";
-                cmd.Parameters.AddWithValue("@Changed_Id", _name.ToString());
-                cmd.Connection = con;
-                con.Open();
-                SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
-                oAdapter.Fill(dt);
-                con.Close();
-            }
-            foreach (DataRow dr in dt.Rows)
-            {
-                _email = dr["Email"].ToString();
-                _Id = dr["Id"].ToString();
-                _Description = dr["Description"].ToString();
-                _Body = dr["Body"].ToString();
-                _Attached = dr["attached"].ToString();
-            }
-            //        MailMessage msg = new MailMessage();
-            //        string[] words = _email.Split(';');
-            //        foreach (string word in words)
+
+            return "test";
+
+            //try
+            //{
+            //    XmlDocument xDoc = new XmlDocument();
+            //    xDoc.Load(file);
+            //    XmlNamespaceManager ns = new XmlNamespaceManager(xDoc.NameTable);
+            //    ns.AddNamespace("ns1", "http://Microsoft.LobServices.Sap/2007/03/Idoc/3/ZPP_LOIPRO01//751/Receive");
+            //    ns.AddNamespace("ns2", "http://Microsoft.LobServices.Sap/2007/03/Types/Idoc/3/ZPP_LOIPRO01//751");
+
+            //    body = "";
+
+            //    if (!xDoc.InnerXml.Contains(ns.LookupNamespace("ns1")) || !xDoc.InnerXml.Contains(ns.LookupNamespace("ns2")))
+            //    {
+            //        ErrorLogger.LOGGER.Error("Error: Namespace not found in file content!", new Exception("Error: Namespace not found in file content!"));
+            //        return "Error: Namespace not found in file content!";
+            //    }
+
+            //    ITF_ProcessOrder po = new ITF_ProcessOrder();
+
+            //    XmlNodeList nodeList = xDoc.SelectNodes("/ns1:Receive/ns1:idocData/ns2:E2AFKOL004GRP/ns2:E2AFKOL004", ns);
+
+            //    foreach (XmlNode node in nodeList)
+            //    {
+            //        foreach (XmlNode subNode in node.ChildNodes)
             //        {
-            //            msg.To.Add(new MailAddress(word));
-            //            //Console.WriteLine(word);
+            //            switch (subNode.Name)
+            //            {
+            //                case "AUFNR": po.OrderNumber = subNode.InnerText; break;
+            //                case "AUART": po.OrderType = subNode.InnerText; break;
+            //                case "GAMNG": po.Quantity = (double)GeneralTools.toDecimal(subNode.InnerText, 0); break;
+            //                case "GLTRP": po.OrderEndDate = GeneralTools.toInt(subNode.InnerText, 0); break;
+            //                case "GSTRP": po.OrderStartDate = GeneralTools.toInt(subNode.InnerText, 0); break;
+            //                case "GMEIN": po.Unit = subNode.InnerText; break;
+            //                case "MATNR": po.MaterialNumber = subNode.InnerText; break;
+            //                case "PLNAL": po.RecipeLine = subNode.InnerText; break;
+            //                case "PLNNR": po.RecipeHeader = subNode.InnerText; break;
+            //                case "PRUEFLOS": po.InspectionLot = (long)GeneralTools.toLong(subNode.InnerText, 0) > 0 ? subNode.InnerText : ""; break;
+            //            }
             //        }
-            //        //msg.To.Add(new MailAddress(_email));
-            //        msg.From = new MailAddress("wshuttleadm@thaiunion.com");
-            //        msg.Subject = "Maintained characteristic master data in SAP" + "[" + _Body.Substring(0, 6) + "]";
-            //        //msg.Body = "Id  " + _Id.ToString() + "Description  " + _Description.ToString() + " Changed";
-            //        //msg.Body = "Maintained characteristic master completed";
-            //        msg.Body = _Body;
-            //        //msg.Attachments.Add(new System.Net.Mail.Attachment(_Attached));
-            //        msg.IsBodyHtml = true;
-            //
-            //        SmtpClient client = new SmtpClient();
-            //        client.UseDefaultCredentials = false;
-            //        client.Credentials = new System.Net.NetworkCredential("wshuttleadm@thaiunion.com", "WSP@ss2018");
-            //        client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
-            //        client.Host = "smtp.office365.com";
-            //        client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            //        client.EnableSsl = true;
-            //        try
+            //    }
+
+            //    nodeList = xDoc.SelectNodes("/ns1:Receive/ns1:idocData/ns2:Z2PPIO_E1AFKOL1000", ns);
+
+            //    foreach (XmlNode node in nodeList)
+            //    {
+            //        foreach (XmlNode subNode in node.ChildNodes)
             //        {
-            //            client.Send(msg);
-            //            Context.Response.Write("Message Sent Succesfully");
+            //            switch (subNode.Name)
+            //            {
+            //                case "Z_FGORDIND": po.IsFinishedGood = subNode.InnerText; break;
+            //                case "Z_DLFL": po.ToDelete = subNode.InnerText; break;
+            //                case "Z_PPORD_NOGR": po.ProductionClosed = subNode.InnerText; break;
+            //                case "Z_PPORD_NOGI": po.ConsumptionClosed = subNode.InnerText; break;
+            //                case "Z_TXT": po.OrderTypeDescription = subNode.InnerText; break;
+            //                case "Z_FEVOR": po.ProductionType = subNode.InnerText; break;
+            //                case "Z_FEVOR_TXT": po.ProductionTypeDescription = subNode.InnerText; break;
+            //                case "INSMK":
+            //                    if (subNode.InnerText == "X")
+            //                        po.PostInspection = true;
+            //                    else
+            //                        po.PostInspection = false;
+
+            //                    break;
+            //            }
             //        }
-            //        catch (Exception ex)
+            //    }
+
+            //    nodeList = xDoc.SelectNodes("/ns1:Receive/ns1:idocData/ns2:E2AFKOL004GRP/ns2:E2AFFLLGRP/ns2:E2AFFLL", ns);
+
+            //    foreach (XmlNode node in nodeList)
+            //    {
+            //        foreach (XmlNode subNode in node.ChildNodes)
             //        {
-            //            Context.Response.Write(ex.ToString());
+            //            switch (subNode.Name)
+            //            {
+            //                case "APLZL": po.InternalCounter = GeneralTools.toInt(subNode.InnerText, 0); break;
+            //            }
             //        }
-            CNService.sendemail(_email, "", _Body,
-                "PRD Characteristic master is maintained in SAP " + "[" + _Body.Substring(0, 6) + "]",
-                _Attached);
+            //    }
+
+            //    nodeList = xDoc.SelectNodes("/ns1:Receive/ns1:idocData/ns2:E2AFKOL004GRP/ns2:E2AFPOL006", ns);
+
+            //    foreach (XmlNode node in nodeList)
+            //    {
+            //        foreach (XmlNode subNode in node.ChildNodes)
+            //        {
+            //            switch (subNode.Name)
+            //            {
+            //                case "LGORT": po.StorageLocation = subNode.InnerText; break;
+            //                case "CHARG": po.BatchNumber = subNode.InnerText; break;
+            //            }
+            //        }
+            //    }
+
+            //    DataTable dtActivities = new DataTable("Activities");
+            //    dtActivities.Columns.Add("ActivityNumber");
+            //    dtActivities.Columns.Add("ActivityDescription");
+            //    dtActivities.Columns.Add("ControlKey");
+            //    dtActivities.Columns.Add("WorkCenter");
+            //    dtActivities.Columns.Add("Quantity", typeof(decimal));
+            //    dtActivities.Columns.Add("Unit");
+
+            //    nodeList = xDoc.SelectNodes("/ns1:Receive/ns1:idocData/ns2:E2AFKOL004GRP/ns2:E2AFFLLGRP/ns2:E2AFVOL004GRP", ns);
+
+            //    foreach (XmlNode node in nodeList)
+            //    {
+
+            //        DataRow row = dtActivities.NewRow();
+
+            //        foreach (XmlNode subnode in node.ChildNodes)
+            //        {
+            //            if (subnode.Name + "" == "E2AFVOL004")
+            //            {
+            //                foreach (XmlNode subsubNode in subnode.ChildNodes)
+            //                {
+            //                    switch (subsubNode.Name)
+            //                    {
+            //                        case "VORNR": row["ActivityNumber"] = subsubNode.InnerText + "" == "" ? DBNull.Value : (object)subsubNode.InnerText; break;
+            //                        case "LTXA1": row["ActivityDescription"] = subsubNode.InnerText + "" == "" ? DBNull.Value : (object)subsubNode.InnerText; break;
+            //                        case "STEUS": row["ControlKey"] = subsubNode.InnerText + "" == "" ? DBNull.Value : (object)subsubNode.InnerText; break;
+            //                        case "ARBPL": row["WorkCenter"] = subsubNode.InnerText + "" == "" ? DBNull.Value : (object)subsubNode.InnerText; break;
+            //                    }
+            //                }
+            //            }
+            //            else if (subnode.Name + "" == "Z2PPIO_E1KBEDL000")
+            //            {
+            //                foreach (XmlNode subsubNode in subnode.ChildNodes)
+            //                {
+            //                    switch (subsubNode.Name)
+            //                    {
+            //                        case "Z_KABRSOLL": row["Quantity"] = GeneralTools.toDBDecimal(subsubNode.InnerText, 0); break;
+            //                        case "Z_KEINH": row["Unit"] = subsubNode.InnerText + "" == "" ? DBNull.Value : (object)subsubNode.InnerText; break;
+            //                    }
+            //                }
+            //            }
+            //        }
+
+            //        dtActivities.Rows.Add(row);
+            //    }
+
+
+            //    DataTable dtComponents = new DataTable("Components");
+            //    dtComponents.Columns.Add("RequirementDate", typeof(int));
+            //    dtComponents.Columns.Add("BatchNumber");
+            //    dtComponents.Columns.Add("StorageLocation");
+            //    dtComponents.Columns.Add("MaterialNumber");
+            //    dtComponents.Columns.Add("MovementType");
+            //    dtComponents.Columns.Add("ItemNumber");
+            //    dtComponents.Columns.Add("Quantity", typeof(decimal));
+            //    dtComponents.Columns.Add("Unit");
+            //    dtComponents.Columns.Add("Description");
+            //    dtComponents.Columns.Add("ReservationHeader", typeof(int));
+            //    dtComponents.Columns.Add("ReservationLine", typeof(int));
+            //    dtComponents.Columns.Add("ItemCategory");
+            //    dtComponents.Columns.Add("CoProdItemNo", typeof(string));
+
+
+            //    nodeList = xDoc.SelectNodes("/ns1:Receive/ns1:idocData/ns2:E2AFKOL004GRP/ns2:E2AFFLLGRP/ns2:Z2PPIO_E1RESBL2000", ns);
+
+            //    foreach (XmlNode node in nodeList)
+            //    {
+            //        DataRow row = dtComponents.NewRow();
+
+            //        foreach (XmlNode subNode in node.ChildNodes)
+            //        {
+            //            switch (subNode.Name)
+            //            {
+            //                case "BDTER": row["RequirementDate"] = GeneralTools.toDBInt(subNode.InnerText, 0); break;
+            //                case "CHARG": row["BatchNumber"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
+            //                case "LGORT": row["StorageLocation"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
+            //                case "MATNR": row["MaterialNumber"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
+            //                case "BWART": row["MovementType"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
+            //                case "POSNR": row["ItemNumber"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
+            //                case "ERFMG": row["Quantity"] = GeneralTools.toDBDecimal(subNode.InnerText, 0); break;
+            //                case "ERFME": row["Unit"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
+            //                case "POTX1": row["Description"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
+            //                case "RSNUM": row["ReservationHeader"] = GeneralTools.toDBInt(subNode.InnerText, 0); break;
+            //                case "RSPOS": row["ReservationLine"] = GeneralTools.toDBInt(subNode.InnerText, 0); break;
+            //                case "POSTP": row["ItemCategory"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
+            //                case "Z_POSNR": row["CoProdItemNo"] = subNode.InnerText; break;
+            //            }
+            //        }
+
+            //        dtComponents.Rows.Add(row);
+            //    }
+
+            //    po.Activities = dtActivities;
+            //    po.Components = dtComponents;
+
+            //    string ret = ITF_ReceivedFiles.Insert_PP01(file, po, 1);
+
+            //    if (GeneralTools.toInt(ret, 0) <= 0)
+            //    {
+            //        body = "PP01 Error in procedure: " + ret + "";
+            //        ITF_Data.InsertGeneralError("PP01", "", body, 1);
+            //        ITF_Data.SendNotification("SAP Import Service - Error Executing Interface PP01 (" + ret + ")", body, "");
+            //        return "PP01 Error in procedure: " + ret + "";
+
+            //        //ITF_Data.SendNotification("WISEUp - Error Getting Orders (New Retry)", "", "");
+            //    }
+            //    else
+            //    {
+            //        body = "Process Order (" + po.IsFinishedGood + "" == "X" ? "FG" : "SFG" + "): No." + po.OrderNumber + ", From: " + po.OrderStartDate + " to " + po.OrderEndDate;
+            //        return "";
+            //    }
+
+                //if (ret == "ACTIVE" || ret == "ACTIVE_NOTIFY")
+                //{
+                //    return ret;
+                //}
+                //else
+                //{
+                //    if (GeneralTools.toInt(ret, 0) <= 0)
+                //        return "Error in procedure: " + ret + "";
+                //}
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    ErrorLogger.LOGGER.Error(ex.Message, ex);
+            //    ITF_Data.InsertGeneralError("PP01", "", ex.StackTrace, 1);
+            //    ITF_Data.SendNotification("SAP Import Service - Error Executing Interface PP01", ex.Message + "<br />" + ex.StackTrace, "");
+            //    body = ex.StackTrace;
+            //    return ex.Message;
+            //}
         }
+        #endregion
+
+        #region INSERT INTERFACES
+    //    public static string Insert_PP01(string p_FileName, ITF_ProcessOrder p_Po, int p_UserID)
+    //    {
+    //        //try
+    //        //{
+    //        //    SqlDataObject sql = new SqlDataObject(AppKeys.DatabaseConnection, "ITF_PP01_Insert", false);
+
+    //        //    sql.AddInputParameter(false, "@FileName", p_FileName);
+    //        //    sql.AddInputParameter(false, "@OrderNumber", p_Po.OrderNumber);
+    //        //    sql.AddInputParameter(false, "@IsFinishedGood", p_Po.IsFinishedGood);
+    //        //    sql.AddInputParameter(false, "@ToDelete", p_Po.ToDelete);
+    //        //    sql.AddInputParameter(false, "@ProductionClosed", p_Po.ProductionClosed);
+    //        //    sql.AddInputParameter(false, "@ConsumptionClosed", p_Po.ConsumptionClosed);
+    //        //    sql.AddInputParameter(false, "@OrderTypeDescription", p_Po.OrderTypeDescription);
+    //        //    sql.AddInputParameter(false, "@OrderType", p_Po.OrderType);
+    //        //    sql.AddInputParameter(false, "@Quantity", p_Po.Quantity);
+    //        //    sql.AddInputParameter(false, "@Unit", p_Po.Unit);
+    //        //    sql.AddInputParameter(false, "@OrderStartDate", p_Po.OrderStartDate);
+
+    //        //    if (p_Po.OrderEndDate > 0)
+    //        //        sql.AddInputParameter(false, "@OrderEndDate", p_Po.OrderEndDate);
+
+    //        //    sql.AddInputParameter(false, "@MaterialNumber", p_Po.MaterialNumber);
+
+    //        //    if (p_Po.RecipeHeader + "" != "")
+    //        //        sql.AddInputParameter(false, "@RecipeHeader", p_Po.RecipeHeader);
+    //        //    if (p_Po.RecipeLine + "" != "")
+    //        //        sql.AddInputParameter(false, "@RecipeLine", p_Po.RecipeLine);
+    //        //    if (p_Po.InspectionLot + "" != "")
+    //        //        sql.AddInputParameter(false, "@InspectionLot", p_Po.InspectionLot);
+    //        //    if (p_Po.StorageLocation + "" != "")
+    //        //        sql.AddInputParameter(false, "@StorageLocation", p_Po.StorageLocation);
+    //        //    if (p_Po.BatchNumber + "" != "")
+    //        //        sql.AddInputParameter(false, "@BatchNumber", p_Po.BatchNumber);
+    //        //    if (GeneralTools.toInt(p_Po.InternalCounter, 0) > 0)
+    //        //        sql.AddInputParameter(false, "@InternalCounter", p_Po.InternalCounter);
+
+    //        //    sql.AddInputParameter(false, "@ProductionType", p_Po.ProductionType);
+    //        //    sql.AddInputParameter(false, "@ProductionTypeDescription", p_Po.ProductionTypeDescription);
+    //        //    sql.AddInputParameter(false, "@Components", p_Po.Components);
+    //        //    sql.AddInputParameter(false, "@Activities", p_Po.Activities);
+    //        //    sql.AddInputParameter(false, "@UserID", p_UserID);
+    //        //    sql.AddInputParameter(false, "@SapPostInspection", p_Po.PostInspection);
+
+    //        //    return sql.ExecuteScalar() + "";
+    //        //}
+    //        //catch (Exception ex)
+    //        //{
+    //        //    ErrorLogger.LOGGER.Error(ex.Message, ex);
+    //        //    ITF_Data.SendNotification("SAP Import Service - Error Inserting Interface PP01", ex.Message + "<br />" + ex.StackTrace, "");
+    //        //    return ex.Message;
+    //        //}
+        
+    //}
+
+        #endregion
+
+        #region EXPORTTOCSV METHODS
         public static void SQ01(DataTable Results)
         {
             try
@@ -606,6 +1262,50 @@ namespace z.SendToCSV
             }
 
         }
+        #endregion
+
+        #region Util METHODS
+        public static void ToCSV(DataTable dtDataTable, string strFilePath)
+        {
+            StreamWriter sw = new StreamWriter(strFilePath, false, new UTF8Encoding(true));
+            //headers
+            for (int i = 0; i < dtDataTable.Columns.Count; i++)
+            {
+                sw.Write(dtDataTable.Columns[i]);
+                if (i < dtDataTable.Columns.Count - 1)
+                {
+                    sw.Write(",");
+                }
+            }
+            sw.Write(sw.NewLine);
+            foreach (DataRow dr in dtDataTable.Rows)
+            {
+                for (int i = 0; i < dtDataTable.Columns.Count; i++)
+                {
+                    if (!Convert.IsDBNull(dr[i]))
+                    {
+                        string value = dr[i].ToString();
+                        if (value.Contains(','))
+                        {
+                            value = String.Format("\"{0}\"", value);
+                            sw.Write(value);
+                        }
+                        else
+                        {
+                            sw.Write(dr[i].ToString());
+                        }
+                    }
+                    if (i < dtDataTable.Columns.Count - 1)
+                    {
+                        sw.Write(",");
+                    }
+                }
+                sw.Write(sw.NewLine);
+            }
+            sw.Close();
+        }
+        #endregion
+
         public static void GetmasterUpdateToCSV(DataTable Results)
         {
             DataTable dt = new DataTable();
@@ -937,44 +1637,273 @@ namespace z.SendToCSV
                 }
             }
         }
-        public static void ToCSV(DataTable dtDataTable, string strFilePath)
+        public static void GetUpdateTOSQL(string data)
         {
-            StreamWriter sw = new StreamWriter(strFilePath, false, new UTF8Encoding(true));
-            //headers
-            for (int i = 0; i < dtDataTable.Columns.Count; i++)
+            var dir = @"D:\SAPInterfaces\Inbound";
+            //HttpContext.Current.Server.MapPath("~/ExcelFiles");
+            var filePaths = Directory.GetFiles(dir, "CT04*_Result*.csv");
+            foreach (string s in filePaths)
             {
-                sw.Write(dtDataTable.Columns[i]);
-                if (i < dtDataTable.Columns.Count - 1)
+                using (var reader = new StreamReader(s))
                 {
-                    sw.Write(",");
-                }
-            }
-            sw.Write(sw.NewLine);
-            foreach (DataRow dr in dtDataTable.Rows)
-            {
-                for (int i = 0; i < dtDataTable.Columns.Count; i++)
-                {
-                    if (!Convert.IsDBNull(dr[i]))
+                    using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                     {
-                        string value = dr[i].ToString();
-                        if (value.Contains(','))
-                        {
-                            value = String.Format("\"{0}\"", value);
-                            sw.Write(value);
-                        }
-                        else
-                        {
-                            sw.Write(dr[i].ToString());
+                        while (csv.Read())
+                        {//This will advance the reader to the next record.
+
+                            //You can use an indexer to get by position or name. 
+                            //This will return the field as a string
+
+                            // By position
+                            var field = csv[0];
+                            //var AppID = csv["AppID"];
+                            // By header name
+                            //csv.Read();
+                            csv.ReadHeader();
+                            string[] headerRow = csv.Context.Reader.HeaderRecord;
+                            string[] filteredValues = Array.FindAll(headerRow, x => x.Contains("Result"));
+                            var Condition = "";// csv["Condition TypeRV13A-KSCHL"];
+                            if (filteredValues.Length > 0)
+                                if (csv["Result"] == "Condition records saved")
+                                {
+                                    string Changed_Id = "";
+                                    string Changed_Action = "";
+                                    string Material = "";
+                                    string Description = "";
+                                    string DMSNo = "";
+                                    string New_Material = "";
+                                    string New_Description = "";
+                                    string Status = "";
+                                    string Reason = "";
+                                    string NewMat_JobId = "";
+                                    string Char_Name = "";
+                                    string Char_OldValue = "";
+                                    string Char_NewValue = "";
+                                    SendEmailUpdateMaster("U" + Material);
+                                    using (SqlConnection con = new SqlConnection(CNService.strConn))
+                                    {
+                                        SqlCommand cmd = new SqlCommand();
+                                        cmd.CommandType = CommandType.StoredProcedure;
+                                        cmd.CommandText = "spUpdateImpactedmat";
+
+                                        cmd.Parameters.AddWithValue("@Changed_Id", Changed_Id);
+                                        cmd.Parameters.AddWithValue("@Changed_Action", Changed_Action);
+                                        cmd.Parameters.AddWithValue("@Material", Material);
+                                        cmd.Parameters.AddWithValue("@Description", Description);
+                                        cmd.Parameters.AddWithValue("@DMSNo", DMSNo);
+                                        cmd.Parameters.AddWithValue("@New_Material", New_Material);
+                                        cmd.Parameters.AddWithValue("@New_Description", New_Description);
+                                        cmd.Parameters.AddWithValue("@Status", Status);
+                                        cmd.Parameters.AddWithValue("@Reason", Reason);
+                                        cmd.Parameters.AddWithValue("@NewMat_JobId", NewMat_JobId);
+                                        cmd.Parameters.AddWithValue("@Char_Name", Char_Name);
+                                        cmd.Parameters.AddWithValue("@Char_OldValue", Char_OldValue);
+                                        cmd.Parameters.AddWithValue("@Char_NewValue", Char_NewValue);
+
+
+                                        cmd.Connection = con;
+                                        con.Open();
+                                        DataTable dtResult = new DataTable();
+                                        SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
+                                        oAdapter.Fill(dtResult);
+                                        con.Close();
+                                    }
+                                    //    using (SqlConnection con = new SqlConnection(strConn))
+                                    //    {
+                                    //        SqlCommand cmd = new SqlCommand();
+                                    //        cmd.CommandType = CommandType.StoredProcedure;
+                                    //        cmd.CommandText = "spUpdateQuotationfromJob";
+                                    //        cmd.Parameters.AddWithValue("@MinPrice", string.Format("{0}", 0));
+                                    //        cmd.Parameters.AddWithValue("@subID", string.Format("{0}", Condition.ToString() == "zpm1" ? "0" : AppID.ToString()));
+                                    //        cmd.Parameters.AddWithValue("@ID", AppID.ToString());
+                                    //        cmd.Connection = con;
+                                    //        con.Open();
+                                    //        cmd.ExecuteNonQuery();
+                                    //        con.Close();
+                                    //    }
+                                    //}
+                                }
+                            //var records = csv.GetRecords<dynamic>();
+                            //foreach (var item in records)
+                            //{
+                            //    var da = item.Result;
+                            //    var condition = item[@"Condition Type RV13A-KSCHL"];  
+                            //}
+                            //foreach (dynamic record in records.ToList())
+                            //{
+                            //    var data = record["IfColumn"];
+                            //}
                         }
                     }
-                    if (i < dtDataTable.Columns.Count - 1)
-                    {
-                        sw.Write(",");
-                    }
                 }
-                sw.Write(sw.NewLine);
+                try
+                {
+                    //File.Move(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s));
+                    //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
+                    // Copy the file and overwrite if it exists
+                    File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
+
+                    // Delete the source file
+                    File.Delete(s);
+                }
+                catch (IOException iox)
+                {
+                    Console.WriteLine(iox.Message);
+                }
             }
-            sw.Close();
+            // Move MM01 & BAPI_UpdateMATCharacteristics
+            filePaths = Directory.GetFiles(dir, "MM01*_Result*.csv");
+            foreach (string s in filePaths)
+            {
+                try
+                {
+                    using (var reader = new StreamReader(s))
+                    {
+                        using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                        {
+                            while (csv.Read())
+                            {//This will advance the reader to the next record.
+
+                                //You can use an indexer to get by position or name. 
+                                //This will return the field as a string
+
+                                // By position
+                                var field = csv[0];
+                                //var AppID = csv["AppID"];
+                                // By header name
+                                //csv.Read();
+                                csv.ReadHeader();
+                                string[] headerRow = csv.Context.Reader.HeaderRecord;
+                                string[] filteredValues = Array.FindAll(headerRow, x => x.Contains("Result"));
+                                var Condition = "";// csv["Condition TypeRV13A-KSCHL"];
+                                if (filteredValues.Length > 0)
+                                    if (csv["Result"] == "Condition records saved")
+                                    {
+                                    }
+                            }
+                        }
+                    }
+                    //File.Move(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s));
+                    //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
+                    // Copy the file and overwrite if it exists
+                    File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
+
+                    // Delete the source file
+                    File.Delete(s);
+                }
+                catch (IOException iox)
+                {
+                    Console.WriteLine(iox.Message);
+                }
+            }
+            // Move BAPI_UpdateMATCharacteristics
+            filePaths = Directory.GetFiles(dir, "BAPI*_Result*.csv");
+            foreach (string s in filePaths)
+            {
+                try
+                {
+                    //File.Move(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s));
+                    //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
+                    // Copy the file and overwrite if it exists
+                    File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
+
+                    // Delete the source file
+                    File.Delete(s);
+                }
+                catch (IOException iox)
+                {
+                    Console.WriteLine(iox.Message);
+                }
+            }
+        }
+        public static void localProcessKill(string processName)
+        {
+            foreach (Process p in Process.GetProcessesByName(processName))
+            {
+                p.Kill();
+            }
+        }
+        public static void testsendmaster(string SubChanged_Id)
+        {
+            string strSQL = " select Id,Changed_Charname,Description,Changed_Action,Old_Description from TransMaster where Changed_id ='" + SubChanged_Id + "'";
+            DataTable dt = CNService.builditems(strSQL);
+            foreach (DataRow dr in dt.Rows)
+            {
+                string _Id = dr["Id"].ToString();
+                string _Description = dr["Description"].ToString();
+                string _Changed_Action = dr["Changed_Action"].ToString();
+                string _old_id = dr["Old_Description"].ToString();
+                string[] value = { dr["Changed_Charname"].ToString(), _Description, _Id, _Changed_Action, _old_id };
+                CNService.master_artwork(value);
+            }
+        }
+        public static void SendEmailUpdateMaster(string _name)
+        {
+            //string datapath = "~/FileTest/" + _name;
+            string _email = "";
+            string _Id = "";
+            string _Description = "";
+            string _Body = "";
+            string _Attached = "";
+            string SubChanged_Id = CNService.ReadItems(@"select cast(substring('"
+            + _name.ToString() + "',2,len('" + _name.ToString() + "')-1) as nvarchar(max)) value");
+            testsendmaster(SubChanged_Id);
+            DataTable dt = new DataTable();
+            using (SqlConnection con = new SqlConnection(CNService.strConn))
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "spsendemail_upm";
+                cmd.Parameters.AddWithValue("@Changed_Id", _name.ToString());
+                cmd.Connection = con;
+                con.Open();
+                SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
+                oAdapter.Fill(dt);
+                con.Close();
+            }
+            foreach (DataRow dr in dt.Rows)
+            {
+                _email = dr["Email"].ToString();
+                _Id = dr["Id"].ToString();
+                _Description = dr["Description"].ToString();
+                _Body = dr["Body"].ToString();
+                _Attached = dr["attached"].ToString();
+            }
+            //        MailMessage msg = new MailMessage();
+            //        string[] words = _email.Split(';');
+            //        foreach (string word in words)
+            //        {
+            //            msg.To.Add(new MailAddress(word));
+            //            //Console.WriteLine(word);
+            //        }
+            //        //msg.To.Add(new MailAddress(_email));
+            //        msg.From = new MailAddress("wshuttleadm@thaiunion.com");
+            //        msg.Subject = "Maintained characteristic master data in SAP" + "[" + _Body.Substring(0, 6) + "]";
+            //        //msg.Body = "Id  " + _Id.ToString() + "Description  " + _Description.ToString() + " Changed";
+            //        //msg.Body = "Maintained characteristic master completed";
+            //        msg.Body = _Body;
+            //        //msg.Attachments.Add(new System.Net.Mail.Attachment(_Attached));
+            //        msg.IsBodyHtml = true;
+            //
+            //        SmtpClient client = new SmtpClient();
+            //        client.UseDefaultCredentials = false;
+            //        client.Credentials = new System.Net.NetworkCredential("wshuttleadm@thaiunion.com", "WSP@ss2018");
+            //        client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
+            //        client.Host = "smtp.office365.com";
+            //        client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            //        client.EnableSsl = true;
+            //        try
+            //        {
+            //            client.Send(msg);
+            //            Context.Response.Write("Message Sent Succesfully");
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            Context.Response.Write(ex.ToString());
+            //        }
+            CNService.sendemail(_email, "", _Body,
+                "PRD Characteristic master is maintained in SAP " + "[" + _Body.Substring(0, 6) + "]",
+                _Attached);
         }
     }
 }
