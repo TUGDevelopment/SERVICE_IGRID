@@ -350,20 +350,22 @@ namespace z.SendToCSV
         }
         public static void CT04(DataTable Results)
         {
+            //Cancel CT04Update
+
             DataTable dtCT04Insert = new DataTable();
-            DataTable dtCT04Update = new DataTable();
+            //DataTable dtCT04Update = new DataTable();
             DataTable dtCT04Remove = new DataTable();
             dtCT04Insert.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
                 new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
                 new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
                 new DataColumn(@"Characteristic value description CAWNT-ATWTB(01)"),
             });
-            dtCT04Update.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
-                new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
-                new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
-                new DataColumn(@"Text for a table entry CLHP-CR_STATUS_TEXT"),
-                new DataColumn(@"Characteristic value description CAWNT-ATWTB(01)"),
-            });
+            //dtCT04Update.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
+            //    new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
+            //    new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
+            //    new DataColumn(@"Text for a table entry CLHP-CR_STATUS_TEXT"),
+            //    new DataColumn(@"Characteristic value description CAWNT-ATWTB(01)"),
+            //});
             dtCT04Remove.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
                 new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
                 new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
@@ -379,13 +381,13 @@ namespace z.SendToCSV
                             string.Format("{0}", row["id"].ToString()),
                             string.Format("{0}", row["Description"].ToString()));
                         break;
-                    case "Update":
-                        dtCT04Update.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString()),
-                           string.Format("{0}", row["Changed_Charname"].ToString()),
-                           string.Format("{0}", row["id"].ToString()),
-                           string.Format("{0}", row["Old_Description"].ToString()),
-                           string.Format("{0}", row["Description"].ToString()));
-                        break;
+                    //case "Update":
+                    //    dtCT04Update.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString()),
+                    //       string.Format("{0}", row["Changed_Charname"].ToString()),
+                    //       string.Format("{0}", row["id"].ToString()),
+                    //       string.Format("{0}", row["Old_Description"].ToString()),
+                    //       string.Format("{0}", row["Description"].ToString()));
+                    //    break;
                     case "Remove":
                         dtCT04Remove.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString().Replace("Remove", "D")),
                            string.Format("{0}", row["Changed_Charname"].ToString()),
@@ -399,12 +401,12 @@ namespace z.SendToCSV
             {
                 string file = @"D:\SAPInterfaces\Outbound\CT04_Insert_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
                 CNService.ToCSV(dtCT04Insert, file);
-            }
-            if (dtCT04Update.Rows.Count > 0)
-            {
-                string file = @"D:\SAPInterfaces\Outbound\CT04_Update_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                CNService.ToCSV(dtCT04Update, file);
-            }
+            }            
+            //if (dtCT04Update.Rows.Count > 0)
+            //{
+            //    string file = @"D:\SAPInterfaces\Outbound\CT04_Update_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+            //    CNService.ToCSV(dtCT04Update, file);
+            //}
             if (dtCT04Remove.Rows.Count > 0)
             {
                 string file = @"D:\SAPInterfaces\Outbound\CT04_Remove_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
