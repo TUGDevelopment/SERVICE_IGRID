@@ -11,11 +11,14 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace z.SendToCSV
 {
-    class Program
+    public class Program
     {
+        public static string InterfacePathInbound = ConfigurationSettings.AppSettings["InterfacePathInbound"];
+        public static string InterfacePathOutbound = ConfigurationSettings.AppSettings["InterfacePathOutbound"];
         static void Main(string[] args)
         {
             try
@@ -341,7 +344,7 @@ namespace z.SendToCSV
             }
             if (listMat.Rows.Count > 0)
             {
-                string file = @"D:\SAPInterfaces\Outbound\SQ01_ListMat" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                string file = InterfacePathOutbound + "SQ01_ListMat" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";                
                 CNService.ToCSV(listMat, file);
             }
         }
