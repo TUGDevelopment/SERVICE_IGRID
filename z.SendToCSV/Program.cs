@@ -81,8 +81,8 @@ namespace z.SendToCSV
                     da.Fill(oDataset);
                     con.Close();
 
-                    CLMM_ChangeMatClass(oDataset.Tables[0]);
-                    MM02(oDataset.Tables[0]);
+                    CLMM_ChangeMatClass(oDataset.Tables[0]);//done
+                    MM02_ImpactMatDesc(oDataset.Tables[0]);//done
                 }
             }
             catch (HttpRequestException e)
@@ -1158,7 +1158,6 @@ namespace z.SendToCSV
                 new DataColumn(@"New Value ctxtG_CHAR_TAB - NEWATWRT"),
                 new DataColumn(@"Table cell -TextField txtG_TARGET_TAB - OBJECT"),
              });
-
             foreach (DataRow row in Results.Rows)
             {
                 dt.Rows.Add(
@@ -1174,42 +1173,22 @@ namespace z.SendToCSV
                 ToCSV(dt, file);
             }
         }
-        public static void MM02(DataTable Results)
+        public static void MM02_ImpactMatDesc(DataTable Results)
         {
-            //Char.Name ctxtG_CHAR_TAB - ATNAM[0, 0].text
-            //Old Value ctxtG_CHAR_TAB - OLDATWRT[1, 0].text
-            //New Value ctxtG_CHAR_TAB - NEWATWRT[2, 0].text
-            //Table cell -TextField txtG_TARGET_TAB - OBJECT[0, 0].text
-
             DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[] { new DataColumn (@"Char.Name ctxtG_CHAR_TAB - ATNAM"),
-            new DataColumn(@"Old Value ctxtG_CHAR_TAB - OLDATWRT"),
-            new DataColumn(@"New Value ctxtG_CHAR_TAB - NEWATWRT"),
-            new DataColumn(@"Table cell -TextField txtG_TARGET_TAB - OBJECT"),
-            });
-
-            DataTable dtImpactMatDesc = new DataTable();
-            dtImpactMatDesc.Columns.AddRange(new DataColumn[] { new DataColumn (@"Material Number RMMG1 - MATNR"),
+            dt.Columns.AddRange(new DataColumn[] { new DataColumn (@"Material Number RMMG1 - MATNR"),
             new DataColumn(@"Material description MAKT - MAKTX"),});
             foreach (DataRow row in Results.Rows)
             {
-                dt.Rows.Add(string.Format("{0}", row["Char_Name"].ToString()),
-                string.Format("{0}", row["Char_OldValue"].ToString()),
-                string.Format("{0}", row["Char_NewValue"].ToString()),
-                string.Format("{0}", row["Material"].ToString()),
-                string.Format("{0}", row["Description"].ToString()));
-
-                dtImpactMatDesc.Rows.Add(
+                dt.Rows.Add(
                 string.Format("{0}", row["Material"].ToString()),
                 string.Format("{0}", row["Description"].ToString()));
             }
-
-            if (dtImpactMatDesc.Rows.Count > 0)
+            if (dt.Rows.Count > 0)
             {
                 string file = InterfacePathOutbound + "MM02_ImpactMatDesc" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                ToCSV(dtImpactMatDesc, file);
+                ToCSV(dt, file);
             }
-
         }
         #endregion
 
