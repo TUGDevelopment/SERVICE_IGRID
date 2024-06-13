@@ -23,70 +23,77 @@ namespace z.SendToCSV
         public static string InterfacePathOutbound = ConfigurationManager.AppSettings["InterfacePathOutbound"];
         static void Main(string[] args)
         {
-            //Outbound
-            #region Outbound
-            //try
-            //{
-            //    using (SqlConnection con = new SqlConnection(strConn))
-            //    {
-            //        SqlCommand cmd = new SqlCommand();
-            //        cmd.CommandType = CommandType.StoredProcedure;
-            //        cmd.CommandText = "spGetMasterData";
-            //        cmd.Parameters.AddWithValue("@Active", "X");
-            //        cmd.Connection = con;
-            //        con.Open();
-            //        DataSet oDataset = new DataSet();
-            //        SqlDataAdapter da = new SqlDataAdapter(cmd);
-            //        da.Fill(oDataset);
-            //        con.Close();
-
-            //        SQ01(oDataset.Tables[0]);
-            //        CT04(oDataset.Tables[0]);
-            //    }
-
-            //    using (SqlConnection con = new SqlConnection(strConn))
-            //    {
-            //        SqlCommand cmd = new SqlCommand();
-            //        cmd.CommandType = CommandType.StoredProcedure;
-            //        cmd.CommandText = "spQuery";
-            //        cmd.Parameters.AddWithValue("@Material", "X");
-            //        cmd.Connection = con;
-            //        con.Open();
-            //        DataSet oDataset = new DataSet();
-            //        SqlDataAdapter da = new SqlDataAdapter(cmd);
-            //        da.Fill(oDataset);
-            //        con.Close();
-
-            //        MM01(oDataset.Tables[0]);
-            //        BAPI_UpdateMATCharacteristics(oDataset.Tables[0]);
-            //    }
-
-            //    using (SqlConnection con = new SqlConnection(strConn))
-            //    {
-            //        SqlCommand cmd = new SqlCommand();
-            //        cmd.CommandType = CommandType.StoredProcedure;
-            //        cmd.CommandText = "spGetImpactmat";
-            //        cmd.Parameters.AddWithValue("@Active", "X");
-            //        cmd.Connection = con;
-            //        con.Open();
-            //        DataSet oDataset = new DataSet();
-            //        SqlDataAdapter da = new SqlDataAdapter(cmd);
-            //        da.Fill(oDataset);
-            //        con.Close();
-
-            //        CLMM_ChangeMatClass(oDataset.Tables[0]);
-            //        MM02(oDataset.Tables[0]);
-            //    }
-            //}
-            //catch (HttpRequestException e)
-            //{
-            //    Console.WriteLine("\nException Caught!");
-            //    Console.WriteLine($"Message :{e.Message} ");
-            //}
             
+            #region Outbound
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(strConn))
+                {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "spGetMasterData";
+                    cmd.Parameters.AddWithValue("@Active", "X");
+                    cmd.Connection = con;
+                    con.Open();
+                    DataSet oDataset = new DataSet();
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(oDataset);
+                    con.Close();
+
+                    SQ01_ListMAT(oDataset.Tables[0]); //done
+                    CT04(oDataset.Tables[0]); //Insert,Remove //done                   
+                }
+
+                using (SqlConnection con = new SqlConnection(strConn))
+                {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "spQuery";
+                    cmd.Parameters.AddWithValue("@Material", "X");
+                    cmd.Connection = con;
+                    con.Open();
+                    DataSet oDataset = new DataSet();
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(oDataset);
+                    con.Close();
+
+                    // Implement : wait for k.Tony get structure and summary with SAP,CPI, how to condition get data for gen csv
+                    //add extend sale view
+                    //Use 3. BAPI_OBJCL_CREATE (Create Classification View),  BAPI_TRANSACTION_COMMIT(TU In Use),
+                    MM01(oDataset.Tables[0]);
+
+                    // Implement : Wait for K.Tony confirm structure and summary with SAP,CPI, how to condition get data gen csv 
+                    //Andy:(Update just only 1 mat/row)                     
+                    BAPI_UpdateMATCharacteristics(oDataset.Tables[0]); 
+                }
+
+                using (SqlConnection con = new SqlConnection(strConn))
+                {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "spGetImpactmat";
+                    cmd.Parameters.AddWithValue("@Active", "X");
+                    cmd.Connection = con;
+                    con.Open();
+                    DataSet oDataset = new DataSet();
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(oDataset);
+                    con.Close();
+
+                    CLMM_ChangeMatClass(oDataset.Tables[0]);
+                    MM02(oDataset.Tables[0]);
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine($"Message :{e.Message} ");
+            }
+
             #endregion
 
-            ////Inbound
+            #region Inbound
             try
             {
                 //var dir = @"D:\SAPInterfaces\Inbound";
@@ -239,7 +246,7 @@ namespace z.SendToCSV
                 //ErrorLogger.LOGGER.Error(ex.Message, ex);
                 //ITF_Data.SendNotification("SAP Import Service - Error Executing Interface", ex.Message + "<br />" + ex.StackTrace, "");
             }
-
+            #endregion
         }
 
         #region IMPORT METHODS
@@ -751,13 +758,6 @@ namespace z.SendToCSV
             //            {
             //                case "AUFNR": po.OrderNumber = subNode.InnerText; break;
             //                case "AUART": po.OrderType = subNode.InnerText; break;
-            //                case "GAMNG": po.Quantity = (double)GeneralTools.toDecimal(subNode.InnerText, 0); break;
-            //                case "GLTRP": po.OrderEndDate = GeneralTools.toInt(subNode.InnerText, 0); break;
-            //                case "GSTRP": po.OrderStartDate = GeneralTools.toInt(subNode.InnerText, 0); break;
-            //                case "GMEIN": po.Unit = subNode.InnerText; break;
-            //                case "MATNR": po.MaterialNumber = subNode.InnerText; break;
-            //                case "PLNAL": po.RecipeLine = subNode.InnerText; break;
-            //                case "PLNNR": po.RecipeHeader = subNode.InnerText; break;
             //                case "PRUEFLOS": po.InspectionLot = (long)GeneralTools.toLong(subNode.InnerText, 0) > 0 ? subNode.InnerText : ""; break;
             //            }
             //        }
@@ -773,11 +773,7 @@ namespace z.SendToCSV
             //            {
             //                case "Z_FGORDIND": po.IsFinishedGood = subNode.InnerText; break;
             //                case "Z_DLFL": po.ToDelete = subNode.InnerText; break;
-            //                case "Z_PPORD_NOGR": po.ProductionClosed = subNode.InnerText; break;
-            //                case "Z_PPORD_NOGI": po.ConsumptionClosed = subNode.InnerText; break;
-            //                case "Z_TXT": po.OrderTypeDescription = subNode.InnerText; break;
-            //                case "Z_FEVOR": po.ProductionType = subNode.InnerText; break;
-            //                case "Z_FEVOR_TXT": po.ProductionTypeDescription = subNode.InnerText; break;
+
             //                case "INSMK":
             //                    if (subNode.InnerText == "X")
             //                        po.PostInspection = true;
@@ -819,10 +815,7 @@ namespace z.SendToCSV
             //    DataTable dtActivities = new DataTable("Activities");
             //    dtActivities.Columns.Add("ActivityNumber");
             //    dtActivities.Columns.Add("ActivityDescription");
-            //    dtActivities.Columns.Add("ControlKey");
-            //    dtActivities.Columns.Add("WorkCenter");
-            //    dtActivities.Columns.Add("Quantity", typeof(decimal));
-            //    dtActivities.Columns.Add("Unit");
+
 
             //    nodeList = xDoc.SelectNodes("/ns1:Receive/ns1:idocData/ns2:E2AFKOL004GRP/ns2:E2AFFLLGRP/ns2:E2AFVOL004GRP", ns);
 
@@ -866,17 +859,7 @@ namespace z.SendToCSV
             //    DataTable dtComponents = new DataTable("Components");
             //    dtComponents.Columns.Add("RequirementDate", typeof(int));
             //    dtComponents.Columns.Add("BatchNumber");
-            //    dtComponents.Columns.Add("StorageLocation");
-            //    dtComponents.Columns.Add("MaterialNumber");
-            //    dtComponents.Columns.Add("MovementType");
-            //    dtComponents.Columns.Add("ItemNumber");
-            //    dtComponents.Columns.Add("Quantity", typeof(decimal));
-            //    dtComponents.Columns.Add("Unit");
-            //    dtComponents.Columns.Add("Description");
-            //    dtComponents.Columns.Add("ReservationHeader", typeof(int));
-            //    dtComponents.Columns.Add("ReservationLine", typeof(int));
-            //    dtComponents.Columns.Add("ItemCategory");
-            //    dtComponents.Columns.Add("CoProdItemNo", typeof(string));
+
 
 
             //    nodeList = xDoc.SelectNodes("/ns1:Receive/ns1:idocData/ns2:E2AFKOL004GRP/ns2:E2AFFLLGRP/ns2:Z2PPIO_E1RESBL2000", ns);
@@ -891,17 +874,7 @@ namespace z.SendToCSV
             //            {
             //                case "BDTER": row["RequirementDate"] = GeneralTools.toDBInt(subNode.InnerText, 0); break;
             //                case "CHARG": row["BatchNumber"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
-            //                case "LGORT": row["StorageLocation"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
-            //                case "MATNR": row["MaterialNumber"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
-            //                case "BWART": row["MovementType"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
-            //                case "POSNR": row["ItemNumber"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
-            //                case "ERFMG": row["Quantity"] = GeneralTools.toDBDecimal(subNode.InnerText, 0); break;
-            //                case "ERFME": row["Unit"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
-            //                case "POTX1": row["Description"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
-            //                case "RSNUM": row["ReservationHeader"] = GeneralTools.toDBInt(subNode.InnerText, 0); break;
-            //                case "RSPOS": row["ReservationLine"] = GeneralTools.toDBInt(subNode.InnerText, 0); break;
-            //                case "POSTP": row["ItemCategory"] = subNode.InnerText + "" == "" ? DBNull.Value : (object)subNode.InnerText; break;
-            //                case "Z_POSNR": row["CoProdItemNo"] = subNode.InnerText; break;
+
             //            }
             //        }
 
@@ -1008,39 +981,26 @@ namespace z.SendToCSV
         #endregion
 
         #region EXPORTTOCSV METHODS
-        public static void SQ01(DataTable Results)
+        public static void SQ01_ListMAT(DataTable Results)
         {
             try
-            {
-                DataTable dt = new DataTable();
-                dt.Columns.AddRange(new DataColumn[] 
-                { 
-                    new DataColumn (@"IfColumn"),
-                    new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
-                    new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
-                    new DataColumn(@"Text for a table entry CLHP-CR_STATUS_TEXT"),
-                    new DataColumn(@"Characteristic value description CAWNT-ATWTB(01)"),
-                });
-                DataTable listMat = new DataTable();
-                listMat.Columns.AddRange(new DataColumn[] 
+            {          
+                DataTable dtListMat = new DataTable();
+                dtListMat.Columns.AddRange(new DataColumn[] 
                 { 
                     new DataColumn (@"Characteristic Name txtSP$00005-LOW.text"),
                     new DataColumn(@"txtSP$00003 - LOW.text"),
                 });
                 foreach (DataRow row in Results.Rows)
-                {
-                    dt.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString()),
-                    string.Format("{0}", row["Changed_Charname"].ToString()),
-                    string.Format("{0}", row["id"].ToString()),
-                    string.Format("{0}", row["Old_Description"].ToString()),
-                    string.Format("{0}", row["Description"].ToString()));
-                    listMat.Rows.Add(string.Format("{0}", row["Changed_Charname"].ToString()),
-                    string.Format("{0}", row["Old_Description"].ToString()));
+                {                    
+                    dtListMat.Rows.Add(
+                        string.Format("{0}", row["Changed_Charname"].ToString()),
+                        string.Format("{0}", row["Old_Description"].ToString()));
                 }
-                if (listMat.Rows.Count > 0)
+                if (dtListMat.Rows.Count > 0)
                 {
                     string file = InterfacePathOutbound + "SQ01_ListMat" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                    ToCSV(listMat, file);
+                    ToCSV(dtListMat, file);
                 }
             }
             catch(Exception e)
@@ -1051,7 +1011,6 @@ namespace z.SendToCSV
         public static void CT04(DataTable Results)
         {
             //Cancel CT04Update
-
             DataTable dtCT04Insert = new DataTable();
             //DataTable dtCT04Update = new DataTable();
             DataTable dtCT04Remove = new DataTable();
@@ -1101,7 +1060,7 @@ namespace z.SendToCSV
             {
                 string file = InterfacePathOutbound + "CT04_Insert_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
                 ToCSV(dtCT04Insert, file);
-            }            
+            }
             //if (dtCT04Update.Rows.Count > 0)
             //{
             //    string file = @"D:\SAPInterfaces\Outbound\CT04_Update_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
@@ -1191,39 +1150,29 @@ namespace z.SendToCSV
         }
         public static void CLMM_ChangeMatClass(DataTable Results)
         {
-            //Char.Name ctxtG_CHAR_TAB - ATNAM[0, 0].text
-            //Old Value ctxtG_CHAR_TAB - OLDATWRT[1, 0].text
-            //New Value ctxtG_CHAR_TAB - NEWATWRT[2, 0].text
-            //Table cell -TextField txtG_TARGET_TAB - OBJECT[0, 0].text
- 
-                DataTable dt = new DataTable();
-                dt.Columns.AddRange(new DataColumn[] { new DataColumn (@"Char.Name ctxtG_CHAR_TAB - ATNAM"),
+            DataTable dt = new DataTable();
+            dt.Columns.AddRange(new DataColumn[] 
+            { 
+                new DataColumn (@"Char.Name ctxtG_CHAR_TAB - ATNAM"),
                 new DataColumn(@"Old Value ctxtG_CHAR_TAB - OLDATWRT"),
                 new DataColumn(@"New Value ctxtG_CHAR_TAB - NEWATWRT"),
                 new DataColumn(@"Table cell -TextField txtG_TARGET_TAB - OBJECT"),
-                });
+             });
 
-                DataTable dtImpactMatDesc = new DataTable();
-                dtImpactMatDesc.Columns.AddRange(new DataColumn[] { new DataColumn (@"Material Number RMMG1 - MATNR"),
-                new DataColumn(@"Material description MAKT - MAKTX"),});
-                foreach (DataRow row in Results.Rows)
-                {
-                    dt.Rows.Add(string.Format("{0}", row["Char_Name"].ToString()),
-               string.Format("{0}", row["Char_OldValue"].ToString()),
-               string.Format("{0}", row["Char_NewValue"].ToString()),
-               string.Format("{0}", row["Material"].ToString()),
-               string.Format("{0}", row["Description"].ToString()));
-
-
-                    dtImpactMatDesc.Rows.Add(
-               string.Format("{0}", row["Material"].ToString()),
-               string.Format("{0}", row["Description"].ToString()));
-                }
-                if (dt.Rows.Count > 0)
-                {
-                    string file = InterfacePathOutbound + "CLMM_ChangeMatClass" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                    ToCSV(dt, file);
-                }
+            foreach (DataRow row in Results.Rows)
+            {
+                dt.Rows.Add(
+                    string.Format("{0}", row["Char_Name"].ToString()),
+                    string.Format("{0}", row["Char_OldValue"].ToString()),
+                    string.Format("{0}", row["Char_NewValue"].ToString()),
+                    string.Format("{0}", row["Material"].ToString()),
+                    string.Format("{0}", row["Description"].ToString()));
+            }
+            if (dt.Rows.Count > 0)
+            {
+                string file = InterfacePathOutbound + "CLMM_ChangeMatClass" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                ToCSV(dt, file);
+            }
         }
         public static void MM02(DataTable Results)
         {
