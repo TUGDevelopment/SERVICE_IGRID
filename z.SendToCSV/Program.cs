@@ -247,6 +247,7 @@ namespace z.SendToCSV
                 //ITF_Data.SendNotification("SAP Import Service - Error Executing Interface", ex.Message + "<br />" + ex.StackTrace, "");
             }
             #endregion
+        
         }
 
         #region IMPORT METHODS
@@ -982,31 +983,24 @@ namespace z.SendToCSV
 
         #region EXPORTTOCSV METHODS
         public static void SQ01_ListMAT(DataTable Results)
-        {
-            try
-            {          
-                DataTable dtListMat = new DataTable();
-                dtListMat.Columns.AddRange(new DataColumn[] 
-                { 
-                    new DataColumn (@"Characteristic Name txtSP$00005-LOW.text"),
-                    new DataColumn(@"txtSP$00003 - LOW.text"),
-                });
-                foreach (DataRow row in Results.Rows)
-                {                    
-                    dtListMat.Rows.Add(
-                        string.Format("{0}", row["Changed_Charname"].ToString()),
-                        string.Format("{0}", row["Old_Description"].ToString()));
-                }
-                if (dtListMat.Rows.Count > 0)
-                {
-                    string file = InterfacePathOutbound + "SQ01_ListMat" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                    ToCSV(dtListMat, file);
-                }
+        {         
+            DataTable dtListMat = new DataTable();
+            dtListMat.Columns.AddRange(new DataColumn[] 
+            { 
+                new DataColumn (@"Characteristic Name txtSP$00005-LOW.text"),
+                new DataColumn(@"txtSP$00003 - LOW.text"),
+            });
+            foreach (DataRow row in Results.Rows)
+            {                    
+                dtListMat.Rows.Add(
+                    string.Format("{0}", row["Changed_Charname"].ToString()),
+                    string.Format("{0}", row["Old_Description"].ToString()));
             }
-            catch(Exception e)
+            if (dtListMat.Rows.Count > 0)
             {
-                Console.WriteLine(e.Message);
-            }            
+                string file = InterfacePathOutbound + "SQ01_ListMat" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                ToCSV(dtListMat, file);
+            }                 
         }
         public static void CT04(DataTable Results)
         {
