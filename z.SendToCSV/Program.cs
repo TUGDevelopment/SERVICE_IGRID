@@ -1069,37 +1069,35 @@ namespace z.SendToCSV
         public static void MM01(DataTable Results)
         {
             DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
+            dt.Columns.AddRange(new DataColumn[] 
+            { 
+                new DataColumn (@"IfColumn"),
                 new DataColumn(@"Material Number RMMG1-MATNR"),
-            new DataColumn(@"Material Description (Short Text) MAKT-MAKTX"),
-            new DataColumn(@"Reference material RMMG1_REF-MATNR"),
-            new DataColumn(@"IfColumn and Plant RMMG1-WERKS and Reference plant RMMG1_REF-WERKS"),
-            new DataColumn(@"IfColumn and Sales Organization RMMG1-VKORG and Reference sales organization RMMG1_REF-VKORG"),
-            new DataColumn(@"Distribution Channel RMMG1-VTWEG and Reference distribution channel RMMG1_REF-VTWEG"),
+                new DataColumn(@"Material Description (Short Text) MAKT-MAKTX"),
+                new DataColumn(@"Reference material RMMG1_REF-MATNR"),
+                new DataColumn(@"IfColumn and Plant RMMG1-WERKS and Reference plant RMMG1_REF-WERKS"),
+                new DataColumn(@"IfColumn and Sales Organization RMMG1-VKORG and Reference sales organization RMMG1_REF-VKORG"),
+                new DataColumn(@"Distribution Channel RMMG1-VTWEG and Reference distribution channel RMMG1_REF-VTWEG"),
             });
             foreach (DataRow row in Results.Rows)
             {
                 string[] split = string.Format("{0}", row["Plant"].ToString()).Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
                 foreach (string s in split)
                 {
-
                     if (s.Trim() != "")
                     {
                         string[] splitSOOrg = "DM;EX".Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
                         foreach (string o in splitSOOrg)
                         {
                             dt.Rows.Add(string.Format("{0}", row["DocumentNo"].ToString()),
-                string.Format("{0}", row["Material"].ToString()),
-                string.Format("{0}", row["Description"].ToString()),
-                string.Format("{0}", row["Ref"].ToString()),
-                string.Format("{0}", s),
-                string.Format("{0}", row["Plant"]).Substring(0, 3),
-                //string.Format("{0}", row["Plant"].ToString())
-
-                string.Format("{0}", o)
-                );
+                            string.Format("{0}", row["Material"].ToString()),
+                            string.Format("{0}", row["Description"].ToString()),
+                            string.Format("{0}", row["Ref"].ToString()),
+                            string.Format("{0}", s),
+                            string.Format("{0}", row["Plant"]).Substring(0, 3),
+                            //string.Format("{0}", row["Plant"].ToString())
+                            string.Format("{0}", o)
+                            );
                         }
                     }
                 }
@@ -1107,7 +1105,7 @@ namespace z.SendToCSV
             if (dt.Rows.Count > 0)
             {
                 string file = InterfacePathOutbound + "MM01_CreateMAT_ExtensionPlant_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                CNService.ToCSV(dt, file);
+                ToCSV(dt, file);
             }
         }
         public static void BAPI_UpdateMATCharacteristics(DataTable Results)
