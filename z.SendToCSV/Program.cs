@@ -41,8 +41,8 @@ namespace z.SendToCSV
                     da.Fill(oDataset);
                     con.Close();
 
-                    //SQ01_ListMAT(oDataset.Tables[0]); //done
-                    //CT04(oDataset.Tables[0]); //Insert,Remove //done                   
+                    SQ01_ListMAT(oDataset.Tables[0]); //done
+                    CT04(oDataset.Tables[0]); //Insert,Remove //done                   
                 }
 
                 using (SqlConnection con = new SqlConnection(strConn))
@@ -59,15 +59,14 @@ namespace z.SendToCSV
                     con.Close();
 
                     // Implement : wait for k.Tony get structure and summary with SAP,CPI, how to condition get data for gen csv
-                    //add extend sale view
-                    //Use 3. BAPI_OBJCL_CREATE (Create Classification View),  BAPI_TRANSACTION_COMMIT(TU In Use),
-                    //MM01(oDataset.Tables[0]);
+                    //add extend sale view                    
+                    MM01(oDataset.Tables[0]);
 
                     // Implement : Wait for K.Tony confirm structure and summary with SAP,CPI, how to condition get data gen csv 
-                    //Andy:(Update just only 1 mat/row)
-                    //*splite file name by "H"
-                    //*update filename > add _{ autonumber}
-                    BAPI_UpdateMATCharacteristics(oDataset.Tables[0]); 
+                    //Andy:(Update just only 1 mat/row) - done
+                    //*splite file name by "H" - done
+                    //*update filename > add _{ autonumber} - done
+                    BAPI_UpdateMATCharacteristics(oDataset.Tables[0]);  //done
                 }
 
                 using (SqlConnection con = new SqlConnection(strConn))
@@ -83,8 +82,8 @@ namespace z.SendToCSV
                     da.Fill(oDataset);
                     con.Close();
 
-                    //CLMM_ChangeMatClass(oDataset.Tables[0]);//done
-                    //MM02_ImpactMatDesc(oDataset.Tables[0]);//done
+                    CLMM_ChangeMatClass(oDataset.Tables[0]);//done
+                    MM02_ImpactMatDesc(oDataset.Tables[0]);//done
                 }
             }
             catch (HttpRequestException e)
@@ -118,7 +117,7 @@ namespace z.SendToCSV
                         switch (fileN.Substring(0,6))
                         {
                             case "SQ01_L":
-                                imported = Import_SQ01(file);                               
+                                //imported = Import_SQ01(file);                               
                                 break;
                             case "CT04_I":
                                 //imported = Import_MM17(fileI.FullName, out bodyMsg);
@@ -1160,8 +1159,9 @@ namespace z.SendToCSV
                     string.Format("{0}", row["Char_Name"].ToString()),
                     string.Format("{0}", row["Char_OldValue"].ToString()),
                     string.Format("{0}", row["Char_NewValue"].ToString()),
-                    string.Format("{0}", row["Material"].ToString()),
-                    string.Format("{0}", row["Description"].ToString()));
+                    string.Format("{0}", row["Material"].ToString())
+                    //string.Format("{0}", row["Description"].ToString())
+                    );
             }
             if (dt.Rows.Count > 0)
             {
