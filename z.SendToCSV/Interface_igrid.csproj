@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5986583E-C64C-4D0A-8253-62DB1065BA95}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>z.SendToCSV</RootNamespace>
-    <AssemblyName>z.SendToCSV</AssemblyName>
+    <RootNamespace>Interface_igrid</RootNamespace>
+    <AssemblyName>Interface_igrid</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

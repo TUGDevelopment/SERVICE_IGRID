@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "z.Dieline", "Dieline\z.Diel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADDSOTMP", "ADDSOTMP\ADDSOTMP.csproj", "{719FFC15-9EE7-4DBA-A04C-1C4CB91F995D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "z.SendToCSV", "z.SendToCSV\z.SendToCSV.csproj", "{5986583E-C64C-4D0A-8253-62DB1065BA95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interface_igrid", "z.SendToCSV\Interface_igrid.csproj", "{5986583E-C64C-4D0A-8253-62DB1065BA95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
