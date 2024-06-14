@@ -95,158 +95,160 @@ namespace z.SendToCSV
             #endregion
 
             #region Inbound
-            try
-            {
-                //var dir = @"D:\SAPInterfaces\Inbound";
-                //    var filePaths = Directory.GetFiles(dir, "CT04*_Result*.csv");
-                //    CT04_Inbound();
+            //try
+            //{
+            //    //var dir = @"D:\SAPInterfaces\Inbound";
+            //    //    var filePaths = Directory.GetFiles(dir, "CT04*_Result*.csv");
+            //    //    CT04_Inbound();
 
-                string imported = "";
-                string bodyMsg = "";
-                FileInfo fileI = null;
-                string fileN = "";
+            //    string imported = "";
+            //    string bodyMsg = "";
+            //    FileInfo fileI = null;
+            //    string fileN = "";
 
-                // IMPORT DOWNLOADED FILES
-                var filesToImport = Directory.GetFiles(InterfacePathInbound, "*_Result.csv");
-                if (filesToImport != null)
-                {
-                    foreach (string file in filesToImport)
-                    {                        
-                        fileI = new FileInfo(file);
-                        fileN = fileI.Name;
-                        switch (fileN.Substring(0,6))
-                        {
-                            case "SQ01_L":
-                                //imported = Import_SQ01(file);                               
-                                break;
-                            case "CT04_I":
-                                //imported = Import_MM17(fileI.FullName, out bodyMsg);
-                                break;
-                            case "CT04_R":
-                                //imported = Import_QM25(fileI.FullName, out bodyMsg);
-                                break;
-                            //case "MM01_C":
-                            //    imported = Import_MM02(fileI.FullName, out bodyMsg);
-                            //    break;
-                            //case "BAPI_U":
-                            //    imported = Import_PP01(fileI.FullName, out bodyMsg);
-                            //    break;
-                            //case "CLMM_C":
-                            //    imported = Import_SD21(fileI.FullName, out bodyMsg);
-                            //    break;
-                            //case "MM02":
-                            //    imported = Import_PP21(fileI.FullName, out bodyMsg);
-                            //    break;
+            //    // IMPORT DOWNLOADED FILES
+            //    var filesToImport = Directory.GetFiles(InterfacePathInbound, "*_Result.csv");
+            //    if (filesToImport != null)
+            //    {
+            //        foreach (string file in filesToImport)
+            //        {                        
+            //            fileI = new FileInfo(file);
+            //            fileN = fileI.Name;
+            //            switch (fileN.Substring(0,6))
+            //            {
+            //                case "SQ01_L":
+            //                    //imported = Import_SQ01(file);                               
+            //                    break;
+            //                case "CT04_I":
+            //                    //imported = Import_MM17(fileI.FullName, out bodyMsg);
+            //                    break;
+            //                case "CT04_R":
+            //                    //imported = Import_QM25(fileI.FullName, out bodyMsg);
+            //                    break;
+            //                //case "MM01_C":
+            //                //    imported = Import_MM02(fileI.FullName, out bodyMsg);
+            //                //    break;
+            //                //case "BAPI_U":
+            //                //    imported = Import_PP01(fileI.FullName, out bodyMsg);
+            //                //    break;
+            //                //case "CLMM_C":
+            //                //    imported = Import_SD21(fileI.FullName, out bodyMsg);
+            //                //    break;
+            //                //case "MM02":
+            //                //    imported = Import_PP21(fileI.FullName, out bodyMsg);
+            //                //    break;
                                                     
-                        }
+            //            }
 
-                        //if (imported == "")
-                        //{
-                        //    //GeneralTools.MoveFile(fileI.FullName, dr["InterfaceFolder"] + "\\IMPORTED\\" + fileN, false);
+            //            //if (imported == "")
+            //            //{
+            //            //    //GeneralTools.MoveFile(fileI.FullName, dr["InterfaceFolder"] + "\\IMPORTED\\" + fileN, false);
 
-                        //    //if ((AppKeys.SAP_WS_NotifySuccessImport + "").ToLower() == "true")
-                        //    //    ITF_Data.SendNotification(dr["OkMessage"] + "", bodyMsg, dr["InterfaceCode"] + "");
+            //            //    //if ((AppKeys.SAP_WS_NotifySuccessImport + "").ToLower() == "true")
+            //            //    //    ITF_Data.SendNotification(dr["OkMessage"] + "", bodyMsg, dr["InterfaceCode"] + "");
 
-                        //    //StreamWriter sw = new StreamWriter(dr["InterfaceFolder"] + "\\IMPORTED\\" + fileN + ".ok");
-                        //    //sw.Write("");
-                        //    //sw.Close();
-                        //    //sw.Dispose();
+            //            //    //StreamWriter sw = new StreamWriter(dr["InterfaceFolder"] + "\\IMPORTED\\" + fileN + ".ok");
+            //            //    //sw.Write("");
+            //            //    //sw.Close();
+            //            //    //sw.Dispose();
 
-                        //    //if (dr["FtpSuccessFolderPath"] + "" != "")
-                        //    //{
-                        //    //    GeneralTools.UploadLocalFileToFTP(dr["InterfaceFolder"] + "\\IMPORTED\\" + fileN + ".ok", dr["FtpSuccessFolderPath"] + "", dr["FtpUsername"] + "", dr["FtpPassword"] + "");
-                        //    //}
+            //            //    //if (dr["FtpSuccessFolderPath"] + "" != "")
+            //            //    //{
+            //            //    //    GeneralTools.UploadLocalFileToFTP(dr["InterfaceFolder"] + "\\IMPORTED\\" + fileN + ".ok", dr["FtpSuccessFolderPath"] + "", dr["FtpUsername"] + "", dr["FtpPassword"] + "");
+            //            //    //}
 
-                        //}
-                        //else
-                        //{
-                        //    //GeneralTools.MoveFile(fileI.FullName, dr["InterfaceFolder"] + "\\ERROR\\" + fileN, false);
+            //            //}
+            //            //else
+            //            //{
+            //            //    //GeneralTools.MoveFile(fileI.FullName, dr["InterfaceFolder"] + "\\ERROR\\" + fileN, false);
 
 
 
-                        //    ////if (imported == "ACTIVE_NOTIFY")
-                        //    ////{
-                        //    ////    ITF_Data.SendNotification("WISEUp - Error Importing " + fileN + " (New Retry)", "", "");
-                        //    ////}
-                        //    ////else
-                        //    ////{
-                        //    ////    if (imported != "ACTIVE")
-                        //    ////    {
-                        //    ////        // SAVE ERROR / SEND EMAIL
-                        //    ////        ITF_Data.SendNotification("WISEUp - Error Importing " + fileN, imported, "");
-                        //    ////        ITF_Data.InsertReceivedError(dr["InterfaceCode"] + "", fileN, "ACTIVE", imported, 1);
-                        //    ////    }
-                        //    ////}
+            //            //    ////if (imported == "ACTIVE_NOTIFY")
+            //            //    ////{
+            //            //    ////    ITF_Data.SendNotification("WISEUp - Error Importing " + fileN + " (New Retry)", "", "");
+            //            //    ////}
+            //            //    ////else
+            //            //    ////{
+            //            //    ////    if (imported != "ACTIVE")
+            //            //    ////    {
+            //            //    ////        // SAVE ERROR / SEND EMAIL
+            //            //    ////        ITF_Data.SendNotification("WISEUp - Error Importing " + fileN, imported, "");
+            //            //    ////        ITF_Data.InsertReceivedError(dr["InterfaceCode"] + "", fileN, "ACTIVE", imported, 1);
+            //            //    ////    }
+            //            //    ////}
 
-                        //    //StreamWriter sw = new StreamWriter(dr["InterfaceFolder"] + "\\ERROR\\" + fileN + ".notok");
-                        //    //sw.Write("");
-                        //    //sw.Close();
-                        //    //sw.Dispose();
+            //            //    //StreamWriter sw = new StreamWriter(dr["InterfaceFolder"] + "\\ERROR\\" + fileN + ".notok");
+            //            //    //sw.Write("");
+            //            //    //sw.Close();
+            //            //    //sw.Dispose();
 
-                        //    //if (dr["FtpSuccessFolderPath"] + "" != "")
-                        //    //{
-                        //    //    GeneralTools.UploadLocalFileToFTP(dr["InterfaceFolder"] + "\\ERROR\\" + fileN + ".notok", dr["FtpSuccessFolderPath"] + "", dr["FtpUsername"] + "", dr["FtpPassword"] + "");
-                        //    //}
+            //            //    //if (dr["FtpSuccessFolderPath"] + "" != "")
+            //            //    //{
+            //            //    //    GeneralTools.UploadLocalFileToFTP(dr["InterfaceFolder"] + "\\ERROR\\" + fileN + ".notok", dr["FtpSuccessFolderPath"] + "", dr["FtpUsername"] + "", dr["FtpPassword"] + "");
+            //            //    //}
 
-                        //    //ErrorLogger.LOGGER.Error("Error Import " + dr["InterfaceCode"] + "", new Exception("Error: " + imported));
-                        //}
-                    }
+            //            //    //ErrorLogger.LOGGER.Error("Error Import " + dr["InterfaceCode"] + "", new Exception("Error: " + imported));
+            //            //}
+            //        }
 
-                    //// Move MM01 & BAPI_UpdateMATCharacteristics
-                    //filePaths = Directory.GetFiles(dir, "MM01*_Result*.csv");
-                    //foreach (string s in filePaths)
-                    //{
-                    //    try
-                    //    {
-                    //        using (var reader = new StreamReader(s))
-                    //        {
-                    //            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-                    //            {
-                    //                while (csv.Read())
-                    //                {//This will advance the reader to the next record.
+            //        //// Move MM01 & BAPI_UpdateMATCharacteristics
+            //        //filePaths = Directory.GetFiles(dir, "MM01*_Result*.csv");
+            //        //foreach (string s in filePaths)
+            //        //{
+            //        //    try
+            //        //    {
+            //        //        using (var reader = new StreamReader(s))
+            //        //        {
+            //        //            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            //        //            {
+            //        //                while (csv.Read())
+            //        //                {//This will advance the reader to the next record.
 
-                    //                    //You can use an indexer to get by position or name. 
-                    //                    //This will return the field as a string
+            //        //                    //You can use an indexer to get by position or name. 
+            //        //                    //This will return the field as a string
 
-                    //                    // By position
-                    //                    var field = csv[0];
-                    //                    //var AppID = csv["AppID"];
-                    //                    // By header name
-                    //                    //csv.Read();
-                    //                    csv.ReadHeader();
-                    //                    string[] headerRow = csv.Context.Reader.HeaderRecord;
-                    //                    string[] filteredValues = Array.FindAll(headerRow, x => x.Contains("Result"));
-                    //                    var Condition = "";// csv["Condition TypeRV13A-KSCHL"];
-                    //                    if (filteredValues.Length > 0)
-                    //                        if (csv["Result"] == "Condition records saved")
-                    //                        {
-                    //                        }
-                    //                }
-                    //            }
-                    //        }
-                    //        //File.Move(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s));
-                    //        //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
-                    //        // Copy the file and overwrite if it exists
-                    //        File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
+            //        //                    // By position
+            //        //                    var field = csv[0];
+            //        //                    //var AppID = csv["AppID"];
+            //        //                    // By header name
+            //        //                    //csv.Read();
+            //        //                    csv.ReadHeader();
+            //        //                    string[] headerRow = csv.Context.Reader.HeaderRecord;
+            //        //                    string[] filteredValues = Array.FindAll(headerRow, x => x.Contains("Result"));
+            //        //                    var Condition = "";// csv["Condition TypeRV13A-KSCHL"];
+            //        //                    if (filteredValues.Length > 0)
+            //        //                        if (csv["Result"] == "Condition records saved")
+            //        //                        {
+            //        //                        }
+            //        //                }
+            //        //            }
+            //        //        }
+            //        //        //File.Move(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s));
+            //        //        //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
+            //        //        // Copy the file and overwrite if it exists
+            //        //        File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
 
-                    //        // Delete the source file
-                    //        File.Delete(s);
-                    //    }
-                    //    catch (IOException iox)
-                    //    {
-                    //        Console.WriteLine(iox.Message);
-                    //    }
-                    //}
+            //        //        // Delete the source file
+            //        //        File.Delete(s);
+            //        //    }
+            //        //    catch (IOException iox)
+            //        //    {
+            //        //        Console.WriteLine(iox.Message);
+            //        //    }
+            //        //}
 
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("\nException Caught!");
-                Console.WriteLine($"Message :{e.Message} ");
-                //ErrorLogger.LOGGER.Error(ex.Message, ex);
-                //ITF_Data.SendNotification("SAP Import Service - Error Executing Interface", ex.Message + "<br />" + ex.StackTrace, "");
-            }
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine("\nException Caught!");
+            //    Console.WriteLine($"Message :{e.Message} ");
+            //    //ErrorLogger.LOGGER.Error(ex.Message, ex);
+            //    //ITF_Data.SendNotification("SAP Import Service - Error Executing Interface", ex.Message + "<br />" + ex.StackTrace, "");
+            //}
+            
+            
             #endregion
         
         }
