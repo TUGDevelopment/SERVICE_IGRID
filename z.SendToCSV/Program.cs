@@ -41,8 +41,8 @@ namespace z.SendToCSV
                     da.Fill(oDataset);
                     con.Close();
 
-                    SQ01_ListMAT(oDataset.Tables[0]); //done
-                    CT04(oDataset.Tables[0]); //Insert,Remove //done                   
+                    //SQ01_ListMAT(oDataset.Tables[0]); //done
+                    //CT04(oDataset.Tables[0]); //Insert,Remove //done                   
                 }
 
                 using (SqlConnection con = new SqlConnection(strConn))
@@ -61,10 +61,12 @@ namespace z.SendToCSV
                     // Implement : wait for k.Tony get structure and summary with SAP,CPI, how to condition get data for gen csv
                     //add extend sale view
                     //Use 3. BAPI_OBJCL_CREATE (Create Classification View),  BAPI_TRANSACTION_COMMIT(TU In Use),
-                    MM01(oDataset.Tables[0]);
+                    //MM01(oDataset.Tables[0]);
 
                     // Implement : Wait for K.Tony confirm structure and summary with SAP,CPI, how to condition get data gen csv 
-                    //Andy:(Update just only 1 mat/row)                     
+                    //Andy:(Update just only 1 mat/row)
+                    //*splite file name by "H"
+                    //*update filename > add _{ autonumber}
                     BAPI_UpdateMATCharacteristics(oDataset.Tables[0]); 
                 }
 
@@ -81,8 +83,8 @@ namespace z.SendToCSV
                     da.Fill(oDataset);
                     con.Close();
 
-                    CLMM_ChangeMatClass(oDataset.Tables[0]);//done
-                    MM02_ImpactMatDesc(oDataset.Tables[0]);//done
+                    //CLMM_ChangeMatClass(oDataset.Tables[0]);//done
+                    //MM02_ImpactMatDesc(oDataset.Tables[0]);//done
                 }
             }
             catch (HttpRequestException e)
@@ -1115,15 +1117,15 @@ namespace z.SendToCSV
                 new DataColumn(@"Loop Id Column"),
                 new DataColumn(@"Characteristic Name ALLOCVALUESCHARNEW-CHARACT"),
                 new DataColumn(@"Characteristic Value ALLOCVALUESCHARNEW-VALUE_CHAR") });
+            int i = 1;
             foreach (DataRow row in Results.Rows)
-            {
+            {               
                 dtClass.Rows.Add(string.Format("{0}", row["Material"].ToString()),
                 string.Format("{0}", "H"),
                 string.Format("{0}", ""),
                 string.Format("{0}", "")
                 );
-                DataTable dtCharacteristic = CNService.builditems(@"select * from MasCharacteristic where MaterialType  like '%" +
-                    row["Material"].ToString().Substring(1, 1) + "%' order by Id");
+                DataTable dtCharacteristic = CNService.builditems(@"select * from MasCharacteristic where MaterialType  like '%" + row["Material"].ToString().Substring(1, 1) + "%' order by Id");
                 foreach (DataRow dr in dtCharacteristic.Rows)
                 {
                     string value = string.Format("{0}", dr["shortname"]);
@@ -1135,9 +1137,11 @@ namespace z.SendToCSV
                 }
                 if (dtClass.Rows.Count > 0)
                 {
-                    string file = InterfacePathOutbound + "BAPI_UpdateMATCharacteristics_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                    string file = InterfacePathOutbound + "BAPI_UpdateMATCharacteristics_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i  + ".csv";
                     ToCSV(dtClass, file);
                 }
+                dtClass.Clear();
+                i++;
             }
         }
         public static void CLMM_ChangeMatClass(DataTable Results)
