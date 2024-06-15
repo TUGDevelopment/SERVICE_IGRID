@@ -18,7 +18,7 @@ namespace Interface_igrid
 {
     public class Program
     {
-        public static string strConn = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
+        public static string ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         public static string InterfacePathInbound = ConfigurationManager.AppSettings["InterfacePathInbound"];
         public static string InterfacePathOutbound = ConfigurationManager.AppSettings["InterfacePathOutbound"];
 
@@ -29,7 +29,7 @@ namespace Interface_igrid
 
             try
             {
-                using (SqlConnection con = new SqlConnection(strConn))
+                using (SqlConnection con = new SqlConnection(ConnectionString))
                 {
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -46,7 +46,7 @@ namespace Interface_igrid
                     CT04(oDataset.Tables[0]); //Insert,Remove //done                   
                 }
 
-                using (SqlConnection con = new SqlConnection(strConn))
+                using (SqlConnection con = new SqlConnection(ConnectionString))
                 {
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -70,7 +70,7 @@ namespace Interface_igrid
                     BAPI_UpdateMATCharacteristics(oDataset.Tables[0]);  //done
                 }
 
-                using (SqlConnection con = new SqlConnection(strConn))
+                using (SqlConnection con = new SqlConnection(ConnectionString))
                 {
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -1199,7 +1199,7 @@ namespace Interface_igrid
         #region Util METHODS
         public static DataTable builditems(string data)
         {
-            using (SqlConnection oConn = new SqlConnection(strConn))
+            using (SqlConnection oConn = new SqlConnection(ConnectionString))
             {
                 oConn.Open();
                 string strQuery = data;
