@@ -96,162 +96,157 @@ namespace Interface_igrid
             #endregion
 
             #region Inbound
-            //try
-            //{
-            //    //var dir = @"D:\SAPInterfaces\Inbound";
-            //    //    var filePaths = Directory.GetFiles(dir, "CT04*_Result*.csv");
-            //    //    CT04_Inbound();
+            try
+            {
+                string imported = "";
+                string bodyMsg = "";
+                FileInfo fileI = null;
+                string fileN = "";
 
-            //    string imported = "";
-            //    string bodyMsg = "";
-            //    FileInfo fileI = null;
-            //    string fileN = "";
+                // IMPORT DOWNLOADED FILES
+                var filesToImport = Directory.GetFiles(InterfacePathInbound, "*_Result.csv");
+                if (filesToImport != null)
+                {
+                    foreach (string file in filesToImport)
+                    {
+                        fileI = new FileInfo(file);
+                        fileN = fileI.Name;
+                        switch (fileN.Substring(0, 6))
+                        {
+                            case "SQ01_L":
+                                imported = Import_SQ01(file);
+                                break;
+                            case "CT04_I":
+                                //imported = Import_CT04_I(fileI.FullName, out bodyMsg);
+                                break;
+                            case "CT04_R":
+                                //imported = Import_CT04_R(fileI.FullName, out bodyMsg);
+                                break;
+                            case "MM01_C":
+                                //imported = Import_MM01_C(fileI.FullName, out bodyMsg);
+                                break;
+                            case "BAPI_U":
+                                //imported = Import_BAPI_U(fileI.FullName, out bodyMsg);
+                                break;
+                            case "CLMM_C":
+                                //imported = Import_CLMM_C(fileI.FullName, out bodyMsg);
+                                break;
+                            case "MM02":
+                                //imported = Import_CMM02(fileI.FullName, out bodyMsg);
+                                break;
+                        }
 
-            //    // IMPORT DOWNLOADED FILES
-            //    var filesToImport = Directory.GetFiles(InterfacePathInbound, "*_Result.csv");
-            //    if (filesToImport != null)
-            //    {
-            //        foreach (string file in filesToImport)
-            //        {                        
-            //            fileI = new FileInfo(file);
-            //            fileN = fileI.Name;
-            //            switch (fileN.Substring(0,6))
-            //            {
-            //                case "SQ01_L":
-            //                    //imported = Import_SQ01(file);                               
-            //                    break;
-            //                case "CT04_I":
-            //                    //imported = Import_MM17(fileI.FullName, out bodyMsg);
-            //                    break;
-            //                case "CT04_R":
-            //                    //imported = Import_QM25(fileI.FullName, out bodyMsg);
-            //                    break;
-            //                //case "MM01_C":
-            //                //    imported = Import_MM02(fileI.FullName, out bodyMsg);
-            //                //    break;
-            //                //case "BAPI_U":
-            //                //    imported = Import_PP01(fileI.FullName, out bodyMsg);
-            //                //    break;
-            //                //case "CLMM_C":
-            //                //    imported = Import_SD21(fileI.FullName, out bodyMsg);
-            //                //    break;
-            //                //case "MM02":
-            //                //    imported = Import_PP21(fileI.FullName, out bodyMsg);
-            //                //    break;
-                                                    
-            //            }
+                        if (imported == "")
+                        {
+                            //GeneralTools.MoveFile(fileI.FullName, dr["InterfaceFolder"] + "\\IMPORTED\\" + fileN, false);
 
-            //            //if (imported == "")
-            //            //{
-            //            //    //GeneralTools.MoveFile(fileI.FullName, dr["InterfaceFolder"] + "\\IMPORTED\\" + fileN, false);
+                            //if ((AppKeys.SAP_WS_NotifySuccessImport + "").ToLower() == "true")
+                            //    ITF_Data.SendNotification(dr["OkMessage"] + "", bodyMsg, dr["InterfaceCode"] + "");
 
-            //            //    //if ((AppKeys.SAP_WS_NotifySuccessImport + "").ToLower() == "true")
-            //            //    //    ITF_Data.SendNotification(dr["OkMessage"] + "", bodyMsg, dr["InterfaceCode"] + "");
+                            StreamWriter sw = new StreamWriter(InterfacePathInbound + "\\Processed\\" + fileN + ".ok");
+                            sw.Write("");
+                            sw.Close();
+                            sw.Dispose();
 
-            //            //    //StreamWriter sw = new StreamWriter(dr["InterfaceFolder"] + "\\IMPORTED\\" + fileN + ".ok");
-            //            //    //sw.Write("");
-            //            //    //sw.Close();
-            //            //    //sw.Dispose();
+                            //if (dr["FtpSuccessFolderPath"] + "" != "")
+                            //{
+                            //    GeneralTools.UploadLocalFileToFTP(dr["InterfaceFolder"] + "\\IMPORTED\\" + fileN + ".ok", dr["FtpSuccessFolderPath"] + "", dr["FtpUsername"] + "", dr["FtpPassword"] + "");
+                            //}
 
-            //            //    //if (dr["FtpSuccessFolderPath"] + "" != "")
-            //            //    //{
-            //            //    //    GeneralTools.UploadLocalFileToFTP(dr["InterfaceFolder"] + "\\IMPORTED\\" + fileN + ".ok", dr["FtpSuccessFolderPath"] + "", dr["FtpUsername"] + "", dr["FtpPassword"] + "");
-            //            //    //}
-
-            //            //}
-            //            //else
-            //            //{
-            //            //    //GeneralTools.MoveFile(fileI.FullName, dr["InterfaceFolder"] + "\\ERROR\\" + fileN, false);
+                        }
+                        else
+                        {
+                            //GeneralTools.MoveFile(fileI.FullName, dr["InterfaceFolder"] + "\\ERROR\\" + fileN, false);
 
 
 
-            //            //    ////if (imported == "ACTIVE_NOTIFY")
-            //            //    ////{
-            //            //    ////    ITF_Data.SendNotification("WISEUp - Error Importing " + fileN + " (New Retry)", "", "");
-            //            //    ////}
-            //            //    ////else
-            //            //    ////{
-            //            //    ////    if (imported != "ACTIVE")
-            //            //    ////    {
-            //            //    ////        // SAVE ERROR / SEND EMAIL
-            //            //    ////        ITF_Data.SendNotification("WISEUp - Error Importing " + fileN, imported, "");
-            //            //    ////        ITF_Data.InsertReceivedError(dr["InterfaceCode"] + "", fileN, "ACTIVE", imported, 1);
-            //            //    ////    }
-            //            //    ////}
+                            ////if (imported == "ACTIVE_NOTIFY")
+                            ////{
+                            ////    ITF_Data.SendNotification("WISEUp - Error Importing " + fileN + " (New Retry)", "", "");
+                            ////}
+                            ////else
+                            ////{
+                            ////    if (imported != "ACTIVE")
+                            ////    {
+                            ////        // SAVE ERROR / SEND EMAIL
+                            ////        ITF_Data.SendNotification("WISEUp - Error Importing " + fileN, imported, "");
+                            ////        ITF_Data.InsertReceivedError(dr["InterfaceCode"] + "", fileN, "ACTIVE", imported, 1);
+                            ////    }
+                            ////}
 
-            //            //    //StreamWriter sw = new StreamWriter(dr["InterfaceFolder"] + "\\ERROR\\" + fileN + ".notok");
-            //            //    //sw.Write("");
-            //            //    //sw.Close();
-            //            //    //sw.Dispose();
+                            //StreamWriter sw = new StreamWriter(dr["InterfaceFolder"] + "\\ERROR\\" + fileN + ".notok");
+                            //sw.Write("");
+                            //sw.Close();
+                            //sw.Dispose();
 
-            //            //    //if (dr["FtpSuccessFolderPath"] + "" != "")
-            //            //    //{
-            //            //    //    GeneralTools.UploadLocalFileToFTP(dr["InterfaceFolder"] + "\\ERROR\\" + fileN + ".notok", dr["FtpSuccessFolderPath"] + "", dr["FtpUsername"] + "", dr["FtpPassword"] + "");
-            //            //    //}
+                            //if (dr["FtpSuccessFolderPath"] + "" != "")
+                            //{
+                            //    GeneralTools.UploadLocalFileToFTP(dr["InterfaceFolder"] + "\\ERROR\\" + fileN + ".notok", dr["FtpSuccessFolderPath"] + "", dr["FtpUsername"] + "", dr["FtpPassword"] + "");
+                            //}
 
-            //            //    //ErrorLogger.LOGGER.Error("Error Import " + dr["InterfaceCode"] + "", new Exception("Error: " + imported));
-            //            //}
-            //        }
+                            //ErrorLogger.LOGGER.Error("Error Import " + dr["InterfaceCode"] + "", new Exception("Error: " + imported));
+                        }
+                    }
 
-            //        //// Move MM01 & BAPI_UpdateMATCharacteristics
-            //        //filePaths = Directory.GetFiles(dir, "MM01*_Result*.csv");
-            //        //foreach (string s in filePaths)
-            //        //{
-            //        //    try
-            //        //    {
-            //        //        using (var reader = new StreamReader(s))
-            //        //        {
-            //        //            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            //        //            {
-            //        //                while (csv.Read())
-            //        //                {//This will advance the reader to the next record.
+                    //// Move MM01 & BAPI_UpdateMATCharacteristics
+                    //filePaths = Directory.GetFiles(dir, "MM01*_Result*.csv");
+                    //foreach (string s in filePaths)
+                    //{
+                    //    try
+                    //    {
+                    //        using (var reader = new StreamReader(s))
+                    //        {
+                    //            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                    //            {
+                    //                while (csv.Read())
+                    //                {//This will advance the reader to the next record.
 
-            //        //                    //You can use an indexer to get by position or name. 
-            //        //                    //This will return the field as a string
+                    //                    //You can use an indexer to get by position or name. 
+                    //                    //This will return the field as a string
 
-            //        //                    // By position
-            //        //                    var field = csv[0];
-            //        //                    //var AppID = csv["AppID"];
-            //        //                    // By header name
-            //        //                    //csv.Read();
-            //        //                    csv.ReadHeader();
-            //        //                    string[] headerRow = csv.Context.Reader.HeaderRecord;
-            //        //                    string[] filteredValues = Array.FindAll(headerRow, x => x.Contains("Result"));
-            //        //                    var Condition = "";// csv["Condition TypeRV13A-KSCHL"];
-            //        //                    if (filteredValues.Length > 0)
-            //        //                        if (csv["Result"] == "Condition records saved")
-            //        //                        {
-            //        //                        }
-            //        //                }
-            //        //            }
-            //        //        }
-            //        //        //File.Move(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s));
-            //        //        //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
-            //        //        // Copy the file and overwrite if it exists
-            //        //        File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
+                    //                    // By position
+                    //                    var field = csv[0];
+                    //                    //var AppID = csv["AppID"];
+                    //                    // By header name
+                    //                    //csv.Read();
+                    //                    csv.ReadHeader();
+                    //                    string[] headerRow = csv.Context.Reader.HeaderRecord;
+                    //                    string[] filteredValues = Array.FindAll(headerRow, x => x.Contains("Result"));
+                    //                    var Condition = "";// csv["Condition TypeRV13A-KSCHL"];
+                    //                    if (filteredValues.Length > 0)
+                    //                        if (csv["Result"] == "Condition records saved")
+                    //                        {
+                    //                        }
+                    //                }
+                    //            }
+                    //        }
+                    //        //File.Move(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s));
+                    //        //HttpContext.Current.Server.MapPath("~/ExcelFiles/Processed/" + Path.GetFileName(s)));
+                    //        // Copy the file and overwrite if it exists
+                    //        File.Copy(s, @"D:\SAPInterfaces\Inbound\Processed\" + Path.GetFileName(s), true);
 
-            //        //        // Delete the source file
-            //        //        File.Delete(s);
-            //        //    }
-            //        //    catch (IOException iox)
-            //        //    {
-            //        //        Console.WriteLine(iox.Message);
-            //        //    }
-            //        //}
+                    //        // Delete the source file
+                    //        File.Delete(s);
+                    //    }
+                    //    catch (IOException iox)
+                    //    {
+                    //        Console.WriteLine(iox.Message);
+                    //    }
+                    //}
 
-            //    }
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine("\nException Caught!");
-            //    Console.WriteLine($"Message :{e.Message} ");
-            //    //ErrorLogger.LOGGER.Error(ex.Message, ex);
-            //    //ITF_Data.SendNotification("SAP Import Service - Error Executing Interface", ex.Message + "<br />" + ex.StackTrace, "");
-            //}
-            
-            
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine($"Message :{e.Message} ");
+                //ErrorLogger.LOGGER.Error(ex.Message, ex);
+                //ITF_Data.SendNotification("SAP Import Service - Error Executing Interface", ex.Message + "<br />" + ex.StackTrace, "");
+            }
+
+
             #endregion
-        
+
         }
 
         #region IMPORT METHODS
@@ -929,63 +924,64 @@ namespace Interface_igrid
         #endregion
 
         #region INSERT INTERFACES
-    //    public static string Insert_PP01(string p_FileName, ITF_ProcessOrder p_Po, int p_UserID)
-    //    {
-    //        //try
-    //        //{
-    //        //    SqlDataObject sql = new SqlDataObject(AppKeys.DatabaseConnection, "ITF_PP01_Insert", false);
+        public static string Insert_SQ01(string p_FileName)
+        {
+            //Insert_SQ01(string p_FileName, ITF_ProcessOrder p_Po, int p_UserID)
+            try
+            {
+                //SqlDataObject sql = new SqlDataObject(AppKeys.DatabaseConnection, "ITF_PP01_Insert", false);
 
-    //        //    sql.AddInputParameter(false, "@FileName", p_FileName);
-    //        //    sql.AddInputParameter(false, "@OrderNumber", p_Po.OrderNumber);
-    //        //    sql.AddInputParameter(false, "@IsFinishedGood", p_Po.IsFinishedGood);
-    //        //    sql.AddInputParameter(false, "@ToDelete", p_Po.ToDelete);
-    //        //    sql.AddInputParameter(false, "@ProductionClosed", p_Po.ProductionClosed);
-    //        //    sql.AddInputParameter(false, "@ConsumptionClosed", p_Po.ConsumptionClosed);
-    //        //    sql.AddInputParameter(false, "@OrderTypeDescription", p_Po.OrderTypeDescription);
-    //        //    sql.AddInputParameter(false, "@OrderType", p_Po.OrderType);
-    //        //    sql.AddInputParameter(false, "@Quantity", p_Po.Quantity);
-    //        //    sql.AddInputParameter(false, "@Unit", p_Po.Unit);
-    //        //    sql.AddInputParameter(false, "@OrderStartDate", p_Po.OrderStartDate);
+                //sql.AddInputParameter(false, "@FileName", p_FileName);
+                //sql.AddInputParameter(false, "@OrderNumber", p_Po.OrderNumber);
+                //sql.AddInputParameter(false, "@IsFinishedGood", p_Po.IsFinishedGood);
+                //sql.AddInputParameter(false, "@ToDelete", p_Po.ToDelete);
+                //sql.AddInputParameter(false, "@ProductionClosed", p_Po.ProductionClosed);
+                //sql.AddInputParameter(false, "@ConsumptionClosed", p_Po.ConsumptionClosed);
+                //sql.AddInputParameter(false, "@OrderTypeDescription", p_Po.OrderTypeDescription);
+                //sql.AddInputParameter(false, "@OrderType", p_Po.OrderType);
+                //sql.AddInputParameter(false, "@Quantity", p_Po.Quantity);
+                //sql.AddInputParameter(false, "@Unit", p_Po.Unit);
+                //sql.AddInputParameter(false, "@OrderStartDate", p_Po.OrderStartDate);
 
-    //        //    if (p_Po.OrderEndDate > 0)
-    //        //        sql.AddInputParameter(false, "@OrderEndDate", p_Po.OrderEndDate);
+                //if (p_Po.OrderEndDate > 0)
+                //    sql.AddInputParameter(false, "@OrderEndDate", p_Po.OrderEndDate);
 
-    //        //    sql.AddInputParameter(false, "@MaterialNumber", p_Po.MaterialNumber);
+                //sql.AddInputParameter(false, "@MaterialNumber", p_Po.MaterialNumber);
 
-    //        //    if (p_Po.RecipeHeader + "" != "")
-    //        //        sql.AddInputParameter(false, "@RecipeHeader", p_Po.RecipeHeader);
-    //        //    if (p_Po.RecipeLine + "" != "")
-    //        //        sql.AddInputParameter(false, "@RecipeLine", p_Po.RecipeLine);
-    //        //    if (p_Po.InspectionLot + "" != "")
-    //        //        sql.AddInputParameter(false, "@InspectionLot", p_Po.InspectionLot);
-    //        //    if (p_Po.StorageLocation + "" != "")
-    //        //        sql.AddInputParameter(false, "@StorageLocation", p_Po.StorageLocation);
-    //        //    if (p_Po.BatchNumber + "" != "")
-    //        //        sql.AddInputParameter(false, "@BatchNumber", p_Po.BatchNumber);
-    //        //    if (GeneralTools.toInt(p_Po.InternalCounter, 0) > 0)
-    //        //        sql.AddInputParameter(false, "@InternalCounter", p_Po.InternalCounter);
+                //if (p_Po.RecipeHeader + "" != "")
+                //    sql.AddInputParameter(false, "@RecipeHeader", p_Po.RecipeHeader);
+                //if (p_Po.RecipeLine + "" != "")
+                //    sql.AddInputParameter(false, "@RecipeLine", p_Po.RecipeLine);
+                //if (p_Po.InspectionLot + "" != "")
+                //    sql.AddInputParameter(false, "@InspectionLot", p_Po.InspectionLot);
+                //if (p_Po.StorageLocation + "" != "")
+                //    sql.AddInputParameter(false, "@StorageLocation", p_Po.StorageLocation);
+                //if (p_Po.BatchNumber + "" != "")
+                //    sql.AddInputParameter(false, "@BatchNumber", p_Po.BatchNumber);
+                //if (GeneralTools.toInt(p_Po.InternalCounter, 0) > 0)
+                //    sql.AddInputParameter(false, "@InternalCounter", p_Po.InternalCounter);
 
-    //        //    sql.AddInputParameter(false, "@ProductionType", p_Po.ProductionType);
-    //        //    sql.AddInputParameter(false, "@ProductionTypeDescription", p_Po.ProductionTypeDescription);
-    //        //    sql.AddInputParameter(false, "@Components", p_Po.Components);
-    //        //    sql.AddInputParameter(false, "@Activities", p_Po.Activities);
-    //        //    sql.AddInputParameter(false, "@UserID", p_UserID);
-    //        //    sql.AddInputParameter(false, "@SapPostInspection", p_Po.PostInspection);
+                //sql.AddInputParameter(false, "@ProductionType", p_Po.ProductionType);
+                //sql.AddInputParameter(false, "@ProductionTypeDescription", p_Po.ProductionTypeDescription);
+                //sql.AddInputParameter(false, "@Components", p_Po.Components);
+                //sql.AddInputParameter(false, "@Activities", p_Po.Activities);
+                //sql.AddInputParameter(false, "@UserID", p_UserID);
+                //sql.AddInputParameter(false, "@SapPostInspection", p_Po.PostInspection);
 
-    //        //    return sql.ExecuteScalar() + "";
-    //        //}
-    //        //catch (Exception ex)
-    //        //{
-    //        //    ErrorLogger.LOGGER.Error(ex.Message, ex);
-    //        //    ITF_Data.SendNotification("SAP Import Service - Error Inserting Interface PP01", ex.Message + "<br />" + ex.StackTrace, "");
-    //        //    return ex.Message;
-    //        //}
-        
-    //}
+                //return sql.ExecuteScalar() + "";
+                return "";
+            }
+            catch (Exception ex)
+            {
+                //ErrorLogger.LOGGER.Error(ex.Message, ex);
+                //ITF_Data.SendNotification("SAP Import Service - Error Inserting Interface PP01", ex.Message + "<br />" + ex.StackTrace, "");
+                return ex.Message;
+            }
+        }
 
         #endregion
 
-        #region EXPORTTOCSV METHODS
+        #region EXPORT METHODS
         public static void SQ01_ListMAT(DataTable Results)
         {         
             DataTable dtListMat = new DataTable();
