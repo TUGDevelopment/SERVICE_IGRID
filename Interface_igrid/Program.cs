@@ -21,13 +21,13 @@ namespace Interface_igrid
         public static string ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         public static string InterfacePathInbound = ConfigurationManager.AppSettings["InterfacePathInbound"];
         public static string InterfacePathOutbound = ConfigurationManager.AppSettings["InterfacePathOutbound"];
+        public static string runFlageOutbound = ConfigurationManager.AppSettings["runFlageOutbound"];
+        public static string runFlageInbound = ConfigurationManager.AppSettings["runFlageInbound"];
 
         static void Main(string[] args)
-        {            
+        {
             #region Outbound
-            bool runFlage;
-            runFlage=true; // flage for run or not run
-            if (runFlage == true)
+            if (bool.Parse(runFlageOutbound) == true) // flage for true run or false not run
             {
                 try
                 {                 
@@ -54,10 +54,8 @@ namespace Interface_igrid
 
             #endregion
 
-            #region Inbound
-            bool runFlageInbound;
-            runFlageInbound = false; // flage for run or not run
-            if (runFlageInbound == true)
+            #region Inbound        
+            if (bool.Parse(runFlageInbound) == true) // flage for true run or false not run
             {
                 try
                 {
