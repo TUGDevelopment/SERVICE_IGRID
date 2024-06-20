@@ -316,10 +316,9 @@ namespace Interface_igrid
                             dt.Rows.Add(string.Format("{0}", row["DocumentNo"].ToString()),
                             string.Format("{0}", row["Material"].ToString()),
                             string.Format("{0}", row["Description"].ToString()),
-                            string.Format("{0}", row["Ref"].ToString()),
-                            string.Format("{0}", s),
+                            string.Format("{0}", row["Ref"].ToString().Trim()),
+                            string.Format("{0}", s.ToString().Trim()),
                             string.Format("{0}", row["Plant"]).Substring(0, 3),
-                            //string.Format("{0}", row["Plant"].ToString())
                             string.Format("{0}", o)
                             );
                         }
