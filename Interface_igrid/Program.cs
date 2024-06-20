@@ -26,17 +26,17 @@ namespace Interface_igrid
         {            
             #region Outbound
             bool runFlage;
-            runFlage=false; // flage for run or not run
+            runFlage=true; // flage for run or not run
             if (runFlage == true)
             {
                 try
                 {                 
-                    DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X"); 
+                    DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
                     SQ01_ListMAT(dsspGetMasterData.Tables[0]); //done
                     CT04(dsspGetMasterData.Tables[0]); //Insert,Remove //done
 
                     DataSet dsspQuery = GetData("spQuery", "@Material", "X");
-                    MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
+                    MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]); //done
                     BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]); //done
 
                     DataSet dsspGetImpactmat = GetData("spGetImpactmat", "@Active", "X");
@@ -50,59 +50,64 @@ namespace Interface_igrid
                     Console.WriteLine("\nException Caught!");
                     Console.WriteLine($"Message :{e.Message} ");
                 }
-            }            
+            }
 
             #endregion
 
             #region Inbound
-            try
+            bool runFlageInbound;
+            runFlageInbound = false; // flage for run or not run
+            if (runFlageInbound == true)
             {
-                string imported = "";
-                string bodyMsg = "";
-                FileInfo fileI = null;
-                string fileN = "";
-                var filesToImport = Directory.GetFiles(InterfacePathInbound, "*_Result.csv");
-                if (filesToImport != null)
+                try
                 {
-                    foreach (string file in filesToImport)
+                    string imported = "";
+                    string bodyMsg = "";
+                    FileInfo fileI = null;
+                    string fileN = "";
+                    var filesToImport = Directory.GetFiles(InterfacePathInbound, "*_Result.csv");
+                    if (filesToImport != null)
                     {
-                        fileI = new FileInfo(file);
-                        fileN = fileI.Name;
-                        switch (fileN.Substring(0, 6))
+                        foreach (string file in filesToImport)
                         {
-                            case "SQ01_L":
-                                imported = Import_SQ01(file);
-                                break;
-                            case "CT04_I":
-                                //imported = Import_CT04_I(fileI.FullName, out bodyMsg);
-                                break;
-                            case "CT04_R":
-                                //imported = Import_CT04_R(fileI.FullName, out bodyMsg);
-                                break;
-                            case "MM01_C":
-                                //imported = Import_MM01_C(fileI.FullName, out bodyMsg);
-                                break;
-                            case "BAPI_U":
-                                //imported = Import_BAPI_U(fileI.FullName, out bodyMsg);
-                                break;
-                            case "CLMM_C":
-                                //imported = Import_CLMM_C(fileI.FullName, out bodyMsg);
-                                break;
-                            case "MM02":
-                                //imported = Import_CMM02(fileI.FullName, out bodyMsg);
-                                break;
+                            fileI = new FileInfo(file);
+                            fileN = fileI.Name;
+                            switch (fileN.Substring(0, 6))
+                            {
+                                case "SQ01_L":
+                                    imported = Import_SQ01(file);
+                                    break;
+                                case "CT04_I":
+                                    //imported = Import_CT04_I(fileI.FullName, out bodyMsg);
+                                    break;
+                                case "CT04_R":
+                                    //imported = Import_CT04_R(fileI.FullName, out bodyMsg);
+                                    break;
+                                case "MM01_C":
+                                    //imported = Import_MM01_C(fileI.FullName, out bodyMsg);
+                                    break;
+                                case "BAPI_U":
+                                    //imported = Import_BAPI_U(fileI.FullName, out bodyMsg);
+                                    break;
+                                case "CLMM_C":
+                                    //imported = Import_CLMM_C(fileI.FullName, out bodyMsg);
+                                    break;
+                                case "MM02":
+                                    //imported = Import_CMM02(fileI.FullName, out bodyMsg);
+                                    break;
+                            }
+                            Console.WriteLine(imported);
                         }
-                        Console.WriteLine(imported);
                     }
+                    Console.WriteLine("Inbound Completed");
                 }
-                Console.WriteLine("Inbound Completed");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("\nException Caught!");
-                Console.WriteLine($"Message :{e.Message} ");
-                //ErrorLogger.LOGGER.Error(ex.Message, ex);
-                //ITF_Data.SendNotification("SAP Import Service - Error Executing Interface", ex.Message + "<br />" + ex.StackTrace, "");
+                catch (Exception e)
+                {
+                    Console.WriteLine("\nException Caught!");
+                    Console.WriteLine($"Message :{e.Message} ");
+                    //ErrorLogger.LOGGER.Error(ex.Message, ex);
+                    //ITF_Data.SendNotification("SAP Import Service - Error Executing Interface", ex.Message + "<br />" + ex.StackTrace, "");
+                }
             }
             #endregion
         }
@@ -333,16 +338,16 @@ namespace Interface_igrid
         {
             DataTable dtClass = new DataTable();
             dtClass.Columns.AddRange(new DataColumn[] { new DataColumn(@"Material Number RMMG1-MATNR"),
+                new DataColumn(@"CLASSNUM"), //MasInfo.Class
                 new DataColumn(@"Loop Id Column"),
                 new DataColumn(@"Characteristic Name ALLOCVALUESCHARNEW-CHARACT"),
-                //new DataColumn(@"Characteristic Value ALLOCVALUESCHARNEW-VALUE_CHAR"),
-                new DataColumn(@"CLASSNUM"),
-                new DataColumn(@"VALUE_NEUTRAL")
+                new DataColumn(@"Characteristic Value ALLOCVALUESCHARNEW-VALUE_CHAR")
             });
             int i = 1;
             foreach (DataRow row in Results.Rows)
             {               
                 dtClass.Rows.Add(string.Format("{0}", row["Material"].ToString()),
+                string.Format("{0}", row["ClassType"].ToString()),
                 string.Format("{0}", "H"),
                 string.Format("{0}", ""),
                 string.Format("{0}", "")
@@ -351,12 +356,12 @@ namespace Interface_igrid
                 foreach (DataRow dr in dtCharacteristic.Rows)
                 {
                     string value = string.Format("{0}", dr["shortname"]);
-                    dtClass.Rows.Add(string.Format("{0}", ""),
+                    dtClass.Rows.Add(
+                        string.Format("{0}", ""),
+                        string.Format("{0}", ""),
                     string.Format("{0}", "D"),
                     string.Format("{0}", dr["Title"]),
-                    //string.Format("{0}", row[value])
-                    string.Format("{0}", dr["CLASSNUM"]),
-                    string.Format("{0}", dr["VALUE_NEUTRAL"])
+                    string.Format("{0}", row[value])
                     );
                 }
                 if (dtClass.Rows.Count > 0)
@@ -439,7 +444,6 @@ namespace Interface_igrid
                 string strQuery = data;
                 DataTable dt = new DataTable();
                 SqlDataAdapter oAdapter = new SqlDataAdapter(strQuery, oConn);
-                // Fill the dataset.
                 oAdapter.Fill(dt);
                 oConn.Close();
                 oConn.Dispose();
