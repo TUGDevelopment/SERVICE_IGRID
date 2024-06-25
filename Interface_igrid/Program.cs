@@ -49,6 +49,7 @@ namespace Interface_igrid
                 {
                     Console.WriteLine("\nException Caught!");
                     Console.WriteLine($"Message :{e.Message} ");
+                    Console.WriteLine("Not success");
                 }
             }
 
