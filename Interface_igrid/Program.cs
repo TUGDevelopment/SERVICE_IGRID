@@ -31,17 +31,17 @@ namespace Interface_igrid
             {
                 try
                 {                 
-                    DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
-                    SQ01_ListMAT(dsspGetMasterData.Tables[0]); 
-                    CT04(dsspGetMasterData.Tables[0]); //Insert,Remove 
+                    //DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
+                    //SQ01_ListMAT(dsspGetMasterData.Tables[0]); 
+                    //CT04(dsspGetMasterData.Tables[0]); //Insert,Remove 
 
                     DataSet dsspQuery = GetData("spQuery", "@Material", "X");
-                    MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]); 
+                    //MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]); 
                     BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]); 
 
-                    DataSet dsspGetImpactmat = GetData("spGetImpactmat", "@Active", "X");
-                    CLMM_ChangeMatClass(dsspGetImpactmat.Tables[0]);
-                    MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
+                    //DataSet dsspGetImpactmat = GetData("spGetImpactmat", "@Active", "X");
+                    //CLMM_ChangeMatClass(dsspGetImpactmat.Tables[0]);
+                    //MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
 
                     Console.WriteLine("Outbound Completed");
                 }
@@ -354,13 +354,30 @@ namespace Interface_igrid
                 foreach (DataRow dr in dtCharacteristic.Rows)
                 {
                     string value = string.Format("{0}", dr["shortname"]);
-                    dtClass.Rows.Add(
+                    if (dr["Title"].ToString() == "ZPKG_SEC_PRODUCTION_PLANT")
+                    {
+                        string[] splitPlant = string.Format("{0}", row[value].ToString()).Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (string pl in splitPlant)
+                        {
+                            dtClass.Rows.Add(
+                                string.Format("{0}", ""),
+                                string.Format("{0}", ""),
+                            string.Format("{0}", "D"),
+                            string.Format("{0}", dr["Title"]),
+                            string.Format("{0}", pl)
+                            );
+                        }
+                    }                   
+                    else
+                    {
+                        dtClass.Rows.Add(
                         string.Format("{0}", ""),
                         string.Format("{0}", ""),
-                    string.Format("{0}", "D"),
-                    string.Format("{0}", dr["Title"]),
-                    string.Format("{0}", row[value])
-                    );
+                        string.Format("{0}", "D"),
+                        string.Format("{0}", dr["Title"]),
+                        string.Format("{0}", row[value])
+                        );
+                    }
                 }
                 if (dtClass.Rows.Count > 0)
                 {
