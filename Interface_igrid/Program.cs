@@ -30,7 +30,7 @@ namespace Interface_igrid
             if (bool.Parse(runFlageOutbound) == true) // flage for true run or false not run
             {
                 try
-                {                 
+                {
                     //DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
                     //SQ01_ListMAT(dsspGetMasterData.Tables[0]); 
                     //CT04(dsspGetMasterData.Tables[0]); //Insert,Remove 
@@ -391,28 +391,64 @@ namespace Interface_igrid
         public static void CLMM_ChangeMatClass(DataTable Results)
         {
             DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[] 
-            { 
-                new DataColumn (@"Char.Name ctxtG_CHAR_TAB - ATNAM"),
-                new DataColumn(@"Old Value ctxtG_CHAR_TAB - OLDATWRT"),
-                new DataColumn(@"New Value ctxtG_CHAR_TAB - NEWATWRT"),
+            dt.Columns.AddRange(new DataColumn[]
+            {
+                new DataColumn (@"Char.Name ctxtG_CHAR_TAB - ATNAM"),               
                 new DataColumn(@"Table cell -TextField txtG_TARGET_TAB - OBJECT"),
+                new DataColumn(@"Loop Id Column"),
+                new DataColumn(@"Characteristic Name ALLOCVALUESCHARNEW-CHARACT"),
+                new DataColumn(@"New Value ctxtG_CHAR_TAB - NEWATWRT"),
              });
+            int i = 1;
             foreach (DataRow row in Results.Rows)
             {
+                dt.Rows.Add(string.Format("{0}", row["Material"].ToString()),
+                string.Format("{0}", row["Changed_Charname"].ToString()),
+                string.Format("{0}", "H"),
+                string.Format("{0}", ""),
+                string.Format("{0}", "")
+                );
                 dt.Rows.Add(
-                    string.Format("{0}", row["Char_Name"].ToString()),
-                    string.Format("{0}", row["Char_OldValue"].ToString()),
-                    string.Format("{0}", row["Char_NewValue"].ToString()),
-                    string.Format("{0}", row["Material"].ToString())
-                    //string.Format("{0}", row["Description"].ToString())
-                    );
+                       string.Format("{0}", ""),
+                       string.Format("{0}", ""),
+                       string.Format("{0}", "D"),
+                       string.Format("{0}", row["Char_Name"]),
+                       string.Format("{0}", row["Char_NewValue"])
+                       );
+
+
+                if (dt.Rows.Count > 0)
+                {
+                    string file = InterfacePathOutbound + "CLMM_ChangeMatClass" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";                  
+                    ToCSV(dt, file);
+                }
+                dt.Clear();
+                i++;
             }
-            if (dt.Rows.Count > 0)
-            {
-                string file = InterfacePathOutbound + "CLMM_ChangeMatClass" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                ToCSV(dt, file);
-            }
+
+            //DataTable dt = new DataTable();
+            //dt.Columns.AddRange(new DataColumn[] 
+            //{ 
+            //    new DataColumn (@"Char.Name ctxtG_CHAR_TAB - ATNAM"),
+            //    new DataColumn(@"Old Value ctxtG_CHAR_TAB - OLDATWRT"),
+            //    new DataColumn(@"New Value ctxtG_CHAR_TAB - NEWATWRT"),
+            //    new DataColumn(@"Table cell -TextField txtG_TARGET_TAB - OBJECT"),
+            // });
+            //foreach (DataRow row in Results.Rows)
+            //{
+            //    dt.Rows.Add(
+            //        string.Format("{0}", row["Char_Name"].ToString()),
+            //        string.Format("{0}", row["Char_OldValue"].ToString()),
+            //        string.Format("{0}", row["Char_NewValue"].ToString()),
+            //        string.Format("{0}", row["Material"].ToString())
+            //        //string.Format("{0}", row["Description"].ToString())
+            //        );
+            //}
+            //if (dt.Rows.Count > 0)
+            //{
+            //    string file = InterfacePathOutbound + "CLMM_ChangeMatClass" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+            //    ToCSV(dt, file);
+            //}
         }
         public static void MM02_ImpactMatDesc(DataTable Results)
         {
