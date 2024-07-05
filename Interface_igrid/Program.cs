@@ -35,13 +35,13 @@ namespace Interface_igrid
                     //SQ01_ListMAT(dsspGetMasterData.Tables[0]); 
                     //CT04(dsspGetMasterData.Tables[0]); //Insert,Remove 
 
-                    DataSet dsspQuery = GetData("spQuery", "@Material", "X");
-                    MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
-                    BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
+                    //DataSet dsspQuery = GetData("spQuery", "@Material", "X");
+                    //MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
+                    //BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
 
                     DataSet dsspGetImpactmat = GetData("spGetImpactmat", "@Active", "X");
                     CLMM_ChangeMatClass(dsspGetImpactmat.Tables[0]);
-                    MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
+                    //MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
 
                     Console.WriteLine("Outbound Completed");
                 }
@@ -392,9 +392,9 @@ namespace Interface_igrid
         {
             DataTable dt = new DataTable();
             dt.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn (@"Char.Name ctxtG_CHAR_TAB - ATNAM"),               
+            {                       
                 new DataColumn(@"Table cell -TextField txtG_TARGET_TAB - OBJECT"),
+                new DataColumn (@"Char.Name ctxtG_CHAR_TAB - ATNAM"),
                 new DataColumn(@"Loop Id Column"),
                 new DataColumn(@"Characteristic Name ALLOCVALUESCHARNEW-CHARACT"),
                 new DataColumn(@"New Value ctxtG_CHAR_TAB - NEWATWRT"),
@@ -408,15 +408,44 @@ namespace Interface_igrid
                 string.Format("{0}", ""),
                 string.Format("{0}", "")
                 );
-                dt.Rows.Add(
-                       string.Format("{0}", ""),
-                       string.Format("{0}", ""),
-                       string.Format("{0}", "D"),
-                       string.Format("{0}", row["Char_Name"]),
-                       string.Format("{0}", row["Char_NewValue"])
-                       );
-
-
+                //dt.Rows.Add(
+                //       string.Format("{0}", ""),
+                //       string.Format("{0}", ""),
+                //       string.Format("{0}", "D"),
+                //       string.Format("{0}", row["Char_Name"]),
+                //       string.Format("{0}", row["Char_NewValue"])
+                //       );
+                //same as BAPI_UpdateMATCharacteristics
+                DataTable dtCharacteristic = builditems(@"select * from MasCharacteristic where MaterialType  like '%" + row["Material"].ToString().Substring(1, 1) + "%' order by Id");
+                foreach (DataRow dr in dtCharacteristic.Rows)
+                {
+                    string value = string.Format("{0}", dr["shortname"]);
+                    if (dr["Title"].ToString() == "ZPKG_SEC_PRODUCTION_PLANT")
+                    {
+                        //string[] splitPlant = string.Format("{0}", row[value].ToString()).Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        //foreach (string pl in splitPlant)
+                        //{
+                        //    dt.Rows.Add(
+                        //        string.Format("{0}", ""),
+                        //        string.Format("{0}", ""),
+                        //    string.Format("{0}", "D"),
+                        //    string.Format("{0}", dr["Title"]),
+                        //    string.Format("{0}", pl)
+                        //    );
+                        //}
+                    }
+                    else
+                    {
+                        dt.Rows.Add(
+                        string.Format("{0}", ""),
+                        string.Format("{0}", ""),
+                        string.Format("{0}", "D"),
+                        string.Format("{0}", row["Char_Name"]),
+                        string.Format("{0}", row["Char_NewValue"])
+                         //string.Format("{0}", "")
+                        );
+                    }
+                }
                 if (dt.Rows.Count > 0)
                 {
                     string file = InterfacePathOutbound + "CLMM_ChangeMatClass" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";                  
@@ -425,30 +454,6 @@ namespace Interface_igrid
                 dt.Clear();
                 i++;
             }
-
-            //DataTable dt = new DataTable();
-            //dt.Columns.AddRange(new DataColumn[] 
-            //{ 
-            //    new DataColumn (@"Char.Name ctxtG_CHAR_TAB - ATNAM"),
-            //    new DataColumn(@"Old Value ctxtG_CHAR_TAB - OLDATWRT"),
-            //    new DataColumn(@"New Value ctxtG_CHAR_TAB - NEWATWRT"),
-            //    new DataColumn(@"Table cell -TextField txtG_TARGET_TAB - OBJECT"),
-            // });
-            //foreach (DataRow row in Results.Rows)
-            //{
-            //    dt.Rows.Add(
-            //        string.Format("{0}", row["Char_Name"].ToString()),
-            //        string.Format("{0}", row["Char_OldValue"].ToString()),
-            //        string.Format("{0}", row["Char_NewValue"].ToString()),
-            //        string.Format("{0}", row["Material"].ToString())
-            //        //string.Format("{0}", row["Description"].ToString())
-            //        );
-            //}
-            //if (dt.Rows.Count > 0)
-            //{
-            //    string file = InterfacePathOutbound + "CLMM_ChangeMatClass" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-            //    ToCSV(dt, file);
-            //}
         }
         public static void MM02_ImpactMatDesc(DataTable Results)
         {
@@ -899,6 +904,34 @@ namespace Interface_igrid
                 }
             }
         }
+        public static void CLMM_ChangeMatClassold(DataTable Results)
+        {
+
+            //DataTable dt = new DataTable();
+            //dt.Columns.AddRange(new DataColumn[] 
+            //{ 
+            //    new DataColumn (@"Char.Name ctxtG_CHAR_TAB - ATNAM"),
+            //    new DataColumn(@"Old Value ctxtG_CHAR_TAB - OLDATWRT"),
+            //    new DataColumn(@"New Value ctxtG_CHAR_TAB - NEWATWRT"),
+            //    new DataColumn(@"Table cell -TextField txtG_TARGET_TAB - OBJECT"),
+            // });
+            //foreach (DataRow row in Results.Rows)
+            //{
+            //    dt.Rows.Add(
+            //        string.Format("{0}", row["Char_Name"].ToString()),
+            //        string.Format("{0}", row["Char_OldValue"].ToString()),
+            //        string.Format("{0}", row["Char_NewValue"].ToString()),
+            //        string.Format("{0}", row["Material"].ToString())
+            //        //string.Format("{0}", row["Description"].ToString())
+            //        );
+            //}
+            //if (dt.Rows.Count > 0)
+            //{
+            //    string file = InterfacePathOutbound + "CLMM_ChangeMatClass" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+            //    ToCSV(dt, file);
+            //}
+        }
+
         #endregion
 
         //public static void GetmasterUpdateToCSV(DataTable Results)
