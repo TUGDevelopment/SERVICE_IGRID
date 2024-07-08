@@ -403,18 +403,11 @@ namespace Interface_igrid
             foreach (DataRow row in Results.Rows)
             {
                 dt.Rows.Add(string.Format("{0}", row["Material"].ToString()),
-                string.Format("{0}", row["Changed_Charname"].ToString()),
+                string.Format("{0}", row["ClassType"].ToString()),
                 string.Format("{0}", "H"),
                 string.Format("{0}", ""),
                 string.Format("{0}", "")
                 );
-                //dt.Rows.Add(
-                //       string.Format("{0}", ""),
-                //       string.Format("{0}", ""),
-                //       string.Format("{0}", "D"),
-                //       string.Format("{0}", row["Char_Name"]),
-                //       string.Format("{0}", row["Char_NewValue"])
-                //       );
                 //same as BAPI_UpdateMATCharacteristics
                 DataTable dtCharacteristic = builditems(@"select * from MasCharacteristic where MaterialType  like '%" + row["Material"].ToString().Substring(1, 1) + "%' order by Id");
                 foreach (DataRow dr in dtCharacteristic.Rows)
@@ -422,19 +415,19 @@ namespace Interface_igrid
                     string value = string.Format("{0}", dr["shortname"]);
                     if (dr["Title"].ToString() == "ZPKG_SEC_PRODUCTION_PLANT")
                     {
-                        //string[] splitPlant = string.Format("{0}", row[value].ToString()).Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                        //foreach (string pl in splitPlant)
-                        //{
-                        //    dt.Rows.Add(
-                        //        string.Format("{0}", ""),
-                        //        string.Format("{0}", ""),
-                        //    string.Format("{0}", "D"),
-                        //    string.Format("{0}", dr["Title"]),
-                        //    string.Format("{0}", pl)
-                        //    );
-                        //}
+                        string[] splitPlant = string.Format("{0}", row[value].ToString()).Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (string pl in splitPlant)
+                        {
+                            dt.Rows.Add(
+                                string.Format("{0}", ""),
+                                string.Format("{0}", ""),
+                            string.Format("{0}", "D"),
+                            string.Format("{0}", dr["Title"]),
+                            string.Format("{0}", pl)
+                            );
+                        }
                     }
-                    else
+                    else if (dr["Title"].ToString() == row["Char_Name"].ToString())
                     {
                         dt.Rows.Add(
                         string.Format("{0}", ""),
@@ -442,7 +435,16 @@ namespace Interface_igrid
                         string.Format("{0}", "D"),
                         string.Format("{0}", row["Char_Name"]),
                         string.Format("{0}", row["Char_NewValue"])
-                         //string.Format("{0}", "")
+                        );
+                    }
+                    else
+                    {
+                        dt.Rows.Add(
+                        string.Format("{0}", ""),
+                        string.Format("{0}", ""),
+                        string.Format("{0}", "D"),
+                        string.Format("{0}", dr["Title"]),
+                        string.Format("{0}", row[value])
                         );
                     }
                 }
