@@ -336,7 +336,7 @@ namespace Interface_igrid
         {
             DataTable dtClass = new DataTable();
             dtClass.Columns.AddRange(new DataColumn[] { new DataColumn(@"Material Number RMMG1-MATNR"),
-                new DataColumn(@"CLASSNUM"), //MasInfo.Class
+                new DataColumn(@"CLASSNUM"),
                 new DataColumn(@"Loop Id Column"),
                 new DataColumn(@"Characteristic Name ALLOCVALUESCHARNEW-CHARACT"),
                 new DataColumn(@"Characteristic Value ALLOCVALUESCHARNEW-VALUE_CHAR")
@@ -354,7 +354,7 @@ namespace Interface_igrid
                 foreach (DataRow dr in dtCharacteristic.Rows)
                 {
                     string value = string.Format("{0}", dr["shortname"]);
-                    if (dr["Title"].ToString() == "ZPKG_SEC_PRODUCTION_PLANT")
+                    if (dr["Single_Value"].ToString() != "X")
                     {
                         string[] splitPlant = string.Format("{0}", row[value].ToString()).Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (string pl in splitPlant)
