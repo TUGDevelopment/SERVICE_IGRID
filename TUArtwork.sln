@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31129.286
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PLL", "PLL\PLL.csproj", "{36B9D39D-0EE9-42A7-A601-5B6B5890B7F8}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADDSOTMP", "ADDSOTMP\ADDSOTMP.csproj", "{719FFC15-9EE7-4DBA-A04C-1C4CB91F995D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interface_igrid", "Interface_igrid\Interface_igrid.csproj", "{5986583E-C64C-4D0A-8253-62DB1065BA95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interface_igrid_Test", "Interface_igrid_Test\Interface_igrid_Test.csproj", "{6C834559-967B-45B8-8068-57F967092ED1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{5986583E-C64C-4D0A-8253-62DB1065BA95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5986583E-C64C-4D0A-8253-62DB1065BA95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5986583E-C64C-4D0A-8253-62DB1065BA95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C834559-967B-45B8-8068-57F967092ED1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C834559-967B-45B8-8068-57F967092ED1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C834559-967B-45B8-8068-57F967092ED1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C834559-967B-45B8-8068-57F967092ED1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
