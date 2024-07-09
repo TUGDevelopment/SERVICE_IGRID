@@ -354,7 +354,17 @@ namespace Interface_igrid
                 foreach (DataRow dr in dtCharacteristic.Rows)
                 {
                     string value = string.Format("{0}", dr["shortname"]);
-                    if (dr["Single_Value"].ToString() != "X")
+                    if (dr["Single_Value"].ToString() == "X")
+                    {
+                        dtClass.Rows.Add(
+                        string.Format("{0}", ""),
+                        string.Format("{0}", ""),
+                        string.Format("{0}", "D"),
+                        string.Format("{0}", dr["Title"]),
+                        string.Format("{0}", row[value])
+                        );
+                    }                   
+                    else
                     {
                         string[] splitPlant = string.Format("{0}", row[value].ToString()).Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (string pl in splitPlant)
@@ -367,16 +377,6 @@ namespace Interface_igrid
                             string.Format("{0}", pl)
                             );
                         }
-                    }                   
-                    else
-                    {
-                        dtClass.Rows.Add(
-                        string.Format("{0}", ""),
-                        string.Format("{0}", ""),
-                        string.Format("{0}", "D"),
-                        string.Format("{0}", dr["Title"]),
-                        string.Format("{0}", row[value])
-                        );
                     }
                 }
                 if (dtClass.Rows.Count > 0)
