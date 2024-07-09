@@ -140,6 +140,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".github\workflows\dotnet-desktop.yml" />
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
@@ -161,5 +162,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
