@@ -408,13 +408,14 @@ namespace Interface_igrid
                 string.Format("{0}", ""),
                 string.Format("{0}", "")
                 );
-                //same as BAPI_UpdateMATCharacteristics
                 DataTable dtCharacteristic = builditems(@"select * from MasCharacteristic where MaterialType  like '%" + row["Material"].ToString().Substring(1, 1) + "%' order by Id");
                 foreach (DataRow dr in dtCharacteristic.Rows)
                 {
-                    string value = string.Format("{0}", dr["shortname"]);
-                    if (dr["Title"].ToString() == "ZPKG_SEC_PRODUCTION_PLANT")
+                    string value = (dr["Title"].ToString() == row["Char_Name"].ToString()) ? string.Format("{0}", row["Char_NewValue"]) : string.Format("{0}", dr["shortname"]);
+
+                    if (dr["Single_Value"].ToString() == "X")
                     {
+                        //multi
                         string[] splitPlant = string.Format("{0}", row[value].ToString()).Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (string pl in splitPlant)
                         {
@@ -427,18 +428,9 @@ namespace Interface_igrid
                             );
                         }
                     }
-                    else if (dr["Title"].ToString() == row["Char_Name"].ToString())
-                    {
-                        dt.Rows.Add(
-                        string.Format("{0}", ""),
-                        string.Format("{0}", ""),
-                        string.Format("{0}", "D"),
-                        string.Format("{0}", row["Char_Name"]),
-                        string.Format("{0}", row["Char_NewValue"])
-                        );
-                    }
                     else
                     {
+                        //single
                         dt.Rows.Add(
                         string.Format("{0}", ""),
                         string.Format("{0}", ""),
