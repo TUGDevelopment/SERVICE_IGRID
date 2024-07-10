@@ -35,9 +35,9 @@ namespace Interface_igrid
                     //SQ01_ListMAT(dsspGetMasterData.Tables[0]); 
                     //CT04(dsspGetMasterData.Tables[0]); //Insert,Remove 
 
-                    //DataSet dsspQuery = GetData("spQuery", "@Material", "X");
+                    DataSet dsspQuery = GetData("spQuery", "@Material", "X");
                     //MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
-                    //BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
+                    BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
 
                     DataSet dsspGetImpactmat = GetData("spGetImpactmat", "@Active", "X");
                     CLMM_ChangeMatClass(dsspGetImpactmat.Tables[0]);
