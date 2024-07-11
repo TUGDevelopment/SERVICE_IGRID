@@ -31,17 +31,17 @@ namespace Interface_igrid
             {
                 try
                 {
-                    //DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
-                    //SQ01_ListMAT(dsspGetMasterData.Tables[0]); 
-                    //CT04(dsspGetMasterData.Tables[0]); //Insert,Remove 
+                    DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
+                    SQ01_ListMAT(dsspGetMasterData.Tables[0]);
+                    CT04(dsspGetMasterData.Tables[0]); //Insert,Remove 
 
-                    //DataSet dsspQuery = GetData("spQuery", "@Material", "X");
-                    //MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
-                    //BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
+                    DataSet dsspQuery = GetData("spQuery", "@Material", "X");
+                    MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
+                    BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
 
                     DataSet dsspGetImpactmat = GetData("spGetImpactmat", "@Active", "X");
                     CLMM_ChangeMatClass(dsspGetImpactmat.Tables[0]);
-                    //MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
+                    MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
 
                     Console.WriteLine("Outbound Completed");
                 }
@@ -49,7 +49,7 @@ namespace Interface_igrid
                 {
                     Console.WriteLine("\nException Caught!");
                     Console.WriteLine($"Message :{e.Message} ");
-                    Console.WriteLine("Not success");
+                    Console.WriteLine("Outbound - Not success");
                 }
             }
 
