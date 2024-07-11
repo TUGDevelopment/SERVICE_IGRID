@@ -31,17 +31,17 @@ namespace Interface_igrid
             {
                 try
                 {
-                    //DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
-                    //SQ01_ListMAT(dsspGetMasterData.Tables[0]); 
-                    //CT04(dsspGetMasterData.Tables[0]); //Insert,Remove 
+                    DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
+                    SQ01_ListMAT(dsspGetMasterData.Tables[0]);
+                    CT04(dsspGetMasterData.Tables[0]); //Insert,Remove 
 
                     DataSet dsspQuery = GetData("spQuery", "@Material", "X");
-                    //MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
+                    MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
                     BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
 
                     DataSet dsspGetImpactmat = GetData("spGetImpactmat", "@Active", "X");
                     CLMM_ChangeMatClass(dsspGetImpactmat.Tables[0]);
-                    //MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
+                    MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
 
                     Console.WriteLine("Outbound Completed");
                 }
@@ -49,7 +49,7 @@ namespace Interface_igrid
                 {
                     Console.WriteLine("\nException Caught!");
                     Console.WriteLine($"Message :{e.Message} ");
-                    Console.WriteLine("Not success");
+                    Console.WriteLine("Outbound - Not success");
                 }
             }
 
@@ -411,13 +411,31 @@ namespace Interface_igrid
                 DataTable dtCharacteristic = builditems(@"select * from MasCharacteristic where MaterialType  like '%" + row["Material"].ToString().Substring(1, 1) + "%' order by Id");
                 foreach (DataRow dr in dtCharacteristic.Rows)
                 {
-                    string value = string.Format("{0}", dr["shortname"]);
-                    //string value = (dr["Title"].ToString() == row["Char_Name"].ToString()) ? string.Format("{0}", row["Char_NewValue"]) : string.Format("{0}", dr["shortname"]);
-
+                    string value,shortname;
+                    if (dr["Title"].ToString() == row["Char_Name"].ToString())
+                    {
+                        value = string.Format("{0}", row["Char_NewValue"]);
+                    }
+                    else
+                    {
+                        shortname = string.Format("{0}", dr["shortname"]);
+                        value = string.Format("{0}", row[shortname]);
+                    }
                     if (dr["Single_Value"].ToString() == "X")
                     {
-                        //multi                        
-                        string[] splitPlant = string.Format("{0}", row[value].ToString()).Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                       dt.Rows.Add(
+                       string.Format("{0}", ""),
+                       string.Format("{0}", ""),
+                       string.Format("{0}", "D"),
+                       string.Format("{0}", dr["Title"]),
+                       string.Format("{0}", value)
+                       );
+
+
+                    }
+                    else
+                    {                   
+                        string[] splitPlant = string.Format("{0}", value).Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (string pl in splitPlant)
                         {
                             dt.Rows.Add(
@@ -428,17 +446,6 @@ namespace Interface_igrid
                             string.Format("{0}", pl)
                             );
                         }
-                    }
-                    else
-                    {
-                        //single
-                        dt.Rows.Add(
-                        string.Format("{0}", ""),
-                        string.Format("{0}", ""),
-                        string.Format("{0}", "D"),
-                        string.Format("{0}", dr["Title"]),
-                        string.Format("{0}", row[value])
-                        );
                     }
                 }
                 if (dt.Rows.Count > 0)
