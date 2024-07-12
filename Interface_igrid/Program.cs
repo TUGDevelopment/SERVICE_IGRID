@@ -60,13 +60,15 @@ namespace Interface_igrid
             {
                 try
                 {
-                    string imported = "";
-                    string bodyMsg = "";
-                    FileInfo fileI = null;
-                    string fileN = "";
+                    
+                    //string bodyMsg = "";
+                   
                     var filesToImport = Directory.GetFiles(InterfacePathInbound, "*_Result.csv");
                     if (filesToImport != null)
                     {
+                        string imported = "";
+                        FileInfo fileI = null;
+                        string fileN = "";
                         foreach (string file in filesToImport)
                         {
                             fileI = new FileInfo(file);
@@ -86,7 +88,7 @@ namespace Interface_igrid
                                     //imported = Import_MM01_C(fileI.FullName, out bodyMsg);
                                     break;
                                 case "BAPI_U":
-                                    //imported = Import_BAPI_U(fileI.FullName, out bodyMsg);
+                                    imported = Import_BAPI_U(fileI.FullName);
                                     break;
                                 case "CLMM_C":
                                     //imported = Import_CLMM_C(fileI.FullName, out bodyMsg);
@@ -104,9 +106,9 @@ namespace Interface_igrid
                 {
                     Console.WriteLine("\nException Caught!");
                     Console.WriteLine($"Message :{e.Message} ");
-                    //ErrorLogger.LOGGER.Error(ex.Message, ex);
-                    //ITF_Data.SendNotification("SAP Import Service - Error Executing Interface", ex.Message + "<br />" + ex.StackTrace, "");
+                    Console.WriteLine("Inbound - Not success");                   
                 }
+             
             }
             #endregion
         }
@@ -204,6 +206,99 @@ namespace Interface_igrid
                 return e.Message;
             }
         }
+        public static string Import_BAPI_U(string file)
+        {
+            try
+            {
+                using (var sr = new StreamReader(file))
+                {
+                    string[] headers = sr.ReadLine().Split(',');
+                    foreach (string header in headers)
+                    {
+                        Console.WriteLine(header);
+
+
+                        if (header.Length > 0)
+                        {
+                            if (header == "Condition records saved")
+                            {
+                                string Changed_Id = "";
+                                string Changed_Action = "";
+                                string Material = "";
+                                string Description = "";
+                                string DMSNo = "";
+                                string New_Material = "";
+                                string New_Description = "";
+                                string Status = "";
+                                string Reason = "";
+                                string NewMat_JobId = "";
+                                string Char_Name = "";
+                                string Char_OldValue = "";
+                                string Char_NewValue = "";
+
+                                //send email
+                                //SendEmailUpdateMaster("U" + Material);
+
+                                //update impactedmat
+                                using (SqlConnection con = new SqlConnection(ConnectionString))
+                                {
+                                    SqlCommand cmd = new SqlCommand();
+                                    cmd.CommandType = CommandType.StoredProcedure;
+                                    cmd.CommandText = "spUpdateImpactedmat";
+                                    cmd.Parameters.AddWithValue("@Changed_Id", Changed_Id);
+                                    cmd.Parameters.AddWithValue("@Changed_Action", Changed_Action);
+                                    cmd.Parameters.AddWithValue("@Material", Material);
+                                    cmd.Parameters.AddWithValue("@Description", Description);
+                                    cmd.Parameters.AddWithValue("@DMSNo", DMSNo);
+                                    cmd.Parameters.AddWithValue("@New_Material", New_Material);
+                                    cmd.Parameters.AddWithValue("@New_Description", New_Description);
+                                    cmd.Parameters.AddWithValue("@Status", Status);
+                                    cmd.Parameters.AddWithValue("@Reason", Reason);
+                                    cmd.Parameters.AddWithValue("@NewMat_JobId", NewMat_JobId);
+                                    cmd.Parameters.AddWithValue("@Char_Name", Char_Name);
+                                    cmd.Parameters.AddWithValue("@Char_OldValue", Char_OldValue);
+                                    cmd.Parameters.AddWithValue("@Char_NewValue", Char_NewValue);
+                                    cmd.Connection = con;
+                                    con.Open();
+                                    DataTable dtResult = new DataTable();
+                                    SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
+                                    oAdapter.Fill(dtResult);
+                                    con.Close();
+                                }
+                            }
+                        }
+                    }
+
+                    while (!sr.EndOfStream)
+                    {
+                        string[] rows = sr.ReadLine().Split(',');
+                        foreach (string row in rows)
+                        {
+                            Console.WriteLine(row);
+                        }
+
+
+                        foreach (string item in rows)
+                        {
+
+                            string a = item[0].ToString();
+                        }
+                        foreach (dynamic record in rows.ToList())
+                        {
+                            var data = record["IfColumn"];
+                        }
+                    }
+                }
+
+                File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                return "Success";
+            }
+            catch (IOException e)
+            {
+                return e.Message;
+            }
+        }
+
         #endregion
 
         #region EXPORT INTERFACES
