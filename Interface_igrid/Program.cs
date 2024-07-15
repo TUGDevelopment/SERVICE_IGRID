@@ -206,6 +206,88 @@ namespace Interface_igrid
                 return e.Message;
             }
         }
+        public static string Import_CT04_I(string file)
+        {
+            try
+            {
+                using (var sr = new StreamReader(file))
+                {
+                    string[] headers = sr.ReadLine().Split(',');
+                    foreach (string header in headers)
+                    {
+                        Console.WriteLine(header);
+
+
+                        if (header.Length > 0)
+                        {
+                            if (header == "Condition records saved")
+                            {
+                                string Changed_Id = "";
+                                string Changed_Action = "";
+                                string Material = "";
+
+                                //send email
+                                //SendEmailUpdateMaster("U" + Material);
+
+                                //update impactedmat
+                                using (SqlConnection con = new SqlConnection(ConnectionString))
+                                {
+                                    //SqlCommand cmd = new SqlCommand();
+                                    //cmd.CommandType = CommandType.StoredProcedure;
+                                    //cmd.CommandText = "spUpdateImpactedmat";
+                                    //cmd.Parameters.AddWithValue("@Changed_Id", Changed_Id);
+                                    //cmd.Parameters.AddWithValue("@Changed_Action", Changed_Action);
+                                    //cmd.Parameters.AddWithValue("@Material", Material);
+                                    //cmd.Parameters.AddWithValue("@Description", Description);
+                                    //cmd.Parameters.AddWithValue("@DMSNo", DMSNo);
+                                    //cmd.Parameters.AddWithValue("@New_Material", New_Material);
+                                    //cmd.Parameters.AddWithValue("@New_Description", New_Description);
+                                    //cmd.Parameters.AddWithValue("@Status", Status);
+                                    //cmd.Parameters.AddWithValue("@Reason", Reason);
+                                    //cmd.Parameters.AddWithValue("@NewMat_JobId", NewMat_JobId);
+                                    //cmd.Parameters.AddWithValue("@Char_Name", Char_Name);
+                                    //cmd.Parameters.AddWithValue("@Char_OldValue", Char_OldValue);
+                                    //cmd.Parameters.AddWithValue("@Char_NewValue", Char_NewValue);
+                                    //cmd.Connection = con;
+                                    //con.Open();
+                                    //DataTable dtResult = new DataTable();
+                                    //SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
+                                    //oAdapter.Fill(dtResult);
+                                    //con.Close();
+                                }
+                            }
+                        }
+                    }
+
+                    while (!sr.EndOfStream)
+                    {
+                        string[] rows = sr.ReadLine().Split(',');
+                        foreach (string row in rows)
+                        {
+                            Console.WriteLine(row);
+                        }
+
+
+                        foreach (string item in rows)
+                        {
+
+                            string a = item[0].ToString();
+                        }
+                        foreach (dynamic record in rows.ToList())
+                        {
+                            var data = record["IfColumn"];
+                        }
+                    }
+                }
+
+                File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                return "Success";
+            }
+            catch (IOException e)
+            {
+                return e.Message;
+            }
+        }
         public static string Import_BAPI_U(string file)
         {
             try
