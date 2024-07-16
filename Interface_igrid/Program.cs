@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using System.Collections;
 using System.Net.Mail;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Interface_igrid
 {
@@ -83,7 +84,7 @@ namespace Interface_igrid
                                     imported = Import_CT04_I(file);
                                     break;
                                 case "CT04_R":
-                                    //imported = Import_CT04_R(fileI.FullName, out bodyMsg);
+                                    //imported = Import_CT04_R(fileI.FullName);
                                     break;
                                 case "MM01_C":
                                     //imported = Import_MM01_C(fileI.FullName, out bodyMsg);
@@ -94,7 +95,7 @@ namespace Interface_igrid
                                 case "CLMM_C":
                                     //imported = Import_CLMM_C(fileI.FullName, out bodyMsg);
                                     break;
-                                case "MM02":
+                                case "MM02_I":
                                     //imported = Import_CMM02(fileI.FullName, out bodyMsg);
                                     break;
                             }
@@ -217,18 +218,13 @@ namespace Interface_igrid
                     foreach (string header in headers)
                     {
                         Console.WriteLine(header);
-
-
                         if (header.Length > 0)
                         {
-                            if (header == "Condition records saved")
+                            if (header == "Resultx")
                             {
                                 string Changed_Id = "";
                                 string Changed_Action = "";
                                 string Material = "";
-
-                                //send email
-                                CT04_SendEmail("U" + Material);
 
                                 //update impactedmat
                                 using (SqlConnection con = new SqlConnection(ConnectionString))
@@ -256,10 +252,12 @@ namespace Interface_igrid
                                     //oAdapter.Fill(dtResult);
                                     //con.Close();
                                 }
+
+                                //send email
+                                //CT04_SendEmail("U" + Material);
                             }
                         }
                     }
-
                     while (!sr.EndOfStream)
                     {
                         string[] rows = sr.ReadLine().Split(',');
@@ -267,19 +265,9 @@ namespace Interface_igrid
                         {
                             Console.WriteLine(row);
                         }
-
-
-                        foreach (string item in rows)
-                        {
-
-                            string a = item[0].ToString();
-                        }
-                        foreach (dynamic record in rows.ToList())
-                        {
-                            var data = record["IfColumn"];
-                        }
                     }
                 }
+               
 
                 File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
                 return "Success";
@@ -288,6 +276,19 @@ namespace Interface_igrid
             {
                 return e.Message;
             }
+        }
+        public static string Import_CT04_R(string file)
+        {
+            try
+            {
+                File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                return "Success";
+            }
+            catch (IOException e)
+            {
+                return e.Message;
+            }   
+
         }
         public static string Import_BAPI_U(string file)
         {
