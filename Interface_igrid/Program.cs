@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using System.Collections;
+using System.Net.Mail;
 
 namespace Interface_igrid
 {
@@ -76,10 +77,10 @@ namespace Interface_igrid
                             switch (fileN.Substring(0, 6))
                             {
                                 case "SQ01_L":
-                                    imported = Import_SQ01(file);
+                                    //imported = Import_SQ01(file);
                                     break;
                                 case "CT04_I":
-                                    //imported = Import_CT04_I(fileI.FullName, out bodyMsg);
+                                    imported = Import_CT04_I(file);
                                     break;
                                 case "CT04_R":
                                     //imported = Import_CT04_R(fileI.FullName, out bodyMsg);
@@ -88,7 +89,7 @@ namespace Interface_igrid
                                     //imported = Import_MM01_C(fileI.FullName, out bodyMsg);
                                     break;
                                 case "BAPI_U":
-                                    imported = Import_BAPI_U(fileI.FullName);
+                                    //imported = Import_BAPI_U(fileI.FullName);
                                     break;
                                 case "CLMM_C":
                                     //imported = Import_CLMM_C(fileI.FullName, out bodyMsg);
@@ -227,7 +228,7 @@ namespace Interface_igrid
                                 string Material = "";
 
                                 //send email
-                                //SendEmailUpdateMaster("U" + Material);
+                                CT04_SendEmail("U" + Material);
 
                                 //update impactedmat
                                 using (SqlConnection con = new SqlConnection(ConnectionString))
@@ -685,6 +686,36 @@ namespace Interface_igrid
                 return dt;
             }
         }
+        public static string ReadItems(string strQuery)
+        {
+            string result = "";
+            // (ByVal FieldName As String, ByVal TableName As String, ByVal Cur As String, ByVal Value As String) As String
+            DataTable dt = new DataTable();
+            SqlConnection con = new SqlConnection(ConnectionString);
+            SqlDataAdapter sda = new SqlDataAdapter();
+            SqlCommand cmd = new SqlCommand(strQuery);
+            cmd.CommandType = CommandType.Text;
+            cmd.Connection = con;
+            con.Open();
+            sda.SelectCommand = cmd;
+            sda.Fill(dt);
+            con.Close();
+            con.Dispose();
+            StringBuilder sb = new StringBuilder();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    sb.Append(row[0] + ",");
+                }
+                if (result.Length < 2)
+                {
+                    result = sb.ToString();
+                    result = result.Substring(0, (result.Length - 1));
+                }
+            }
+            return result;
+        }
         public static void ToCSV(DataTable dtDataTable, string strFilePath)
         {
             StreamWriter sw = new StreamWriter(strFilePath, false, new UTF8Encoding(true));
@@ -724,6 +755,200 @@ namespace Interface_igrid
             }
             sw.Close();
         }
+        public static void CT04_SendEmail(string _name)
+        {
+            //string datapath = "~/FileTest/" + _name;
+            string _email = "";
+            string _Id = "";
+            string _Description = "";
+            string _Body = "";
+            string _Attached = "";
+            string SubChanged_Id = ReadItems(@"select cast(substring('"
+            + _name.ToString() + "',2,len('" + _name.ToString() + "')-1) as nvarchar(max)) value");
+
+            //validate
+            testsendmaster(SubChanged_Id);
+
+
+            DataTable dt = new DataTable();
+            using (SqlConnection con = new SqlConnection(ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "spsendemail_upm";
+                cmd.Parameters.AddWithValue("@Changed_Id", _name.ToString());
+                cmd.Connection = con;
+                con.Open();
+                SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
+                oAdapter.Fill(dt);
+                con.Close();
+            }
+            foreach (DataRow dr in dt.Rows)
+            {
+                _email = dr["Email"].ToString();
+                _Id = dr["Id"].ToString();
+                _Description = dr["Description"].ToString();
+                _Body = dr["Body"].ToString();
+                _Attached = dr["attached"].ToString();
+            }
+            //        MailMessage msg = new MailMessage();
+            //        string[] words = _email.Split(';');
+            //        foreach (string word in words)
+            //        {
+            //            msg.To.Add(new MailAddress(word));
+            //            //Console.WriteLine(word);
+            //        }
+            //        //msg.To.Add(new MailAddress(_email));
+            //        msg.From = new MailAddress("wshuttleadm@thaiunion.com");
+            //        msg.Subject = "Maintained characteristic master data in SAP" + "[" + _Body.Substring(0, 6) + "]";
+            //        //msg.Body = "Id  " + _Id.ToString() + "Description  " + _Description.ToString() + " Changed";
+            //        //msg.Body = "Maintained characteristic master completed";
+            //        msg.Body = _Body;
+            //        //msg.Attachments.Add(new System.Net.Mail.Attachment(_Attached));
+            //        msg.IsBodyHtml = true;
+            //
+            //        SmtpClient client = new SmtpClient();
+            //        client.UseDefaultCredentials = false;
+            //        client.Credentials = new System.Net.NetworkCredential("wshuttleadm@thaiunion.com", "WSP@ss2018");
+            //        client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
+            //        client.Host = "smtp.office365.com";
+            //        client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            //        client.EnableSsl = true;
+            //        try
+            //        {
+            //            client.Send(msg);
+            //            Context.Response.Write("Message Sent Succesfully");
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            Context.Response.Write(ex.ToString());
+            //        }
+            SendEmail(_email, "", _Body,
+                "PRD Characteristic master is maintained in SAP " + "[" + _Body.Substring(0, 6) + "]",
+                _Attached);
+        }
+        public static void testsendmaster(string SubChanged_Id)
+        {
+            string strSQL = " select Id,Changed_Charname,Description,Changed_Action,Old_Description from TransMaster where Changed_id ='" + SubChanged_Id + "'";
+            DataTable dt = builditems(strSQL);
+            foreach (DataRow dr in dt.Rows)
+            {
+                string _Id = dr["Id"].ToString();
+                string _Description = dr["Description"].ToString();
+                string _Changed_Action = dr["Changed_Action"].ToString();
+                string _old_id = dr["Old_Description"].ToString();
+                string[] value = { dr["Changed_Charname"].ToString(), _Description, _Id, _Changed_Action, _old_id };
+                master_artwork(value);
+            }
+        }
+        public static void master_artwork(string[] name)
+        {
+            ////loop details
+            //CHARACTERISTICS list = new CHARACTERISTICS();
+            //List<CHARACTERISTIC> iGrid_CHARACTERISTICS = new List<CHARACTERISTIC>();
+            //CHARACTERISTIC item = new CHARACTERISTIC();
+            //item.NAME = name[0].ToString();
+            //item.DESCRIPTION = name[1].ToString();
+            //if (name[0].ToString() == "ZPKG_SEC_BRAND")
+            //{
+            //    item.VALUE = name[2].ToString();
+            //}
+            //else
+            //    item.VALUE = name[1].ToString();
+
+            //item.ID = name[2].ToString();
+            //item.Old_ID = string.Format("{0}", name[4]);
+            //item.Changed_Action = string.Format("{0}", name[3]);
+            //iGrid_CHARACTERISTICS.Add(item);
+            //list.Characteristics = iGrid_CHARACTERISTICS;
+            ////MM72_OUTBOUND_MATERIAL_CHARACTERISTIC matNumber = new MM72_OUTBOUND_MATERIAL_CHARACTERISTIC();
+            //SERVICE_RESULT_MODEL resp = new SERVICE_RESULT_MODEL();
+            ////MM72Client client = new MM72Client();
+
+            ////matNumber.param = list;
+            //resp = MM_72_Hepler.SaveCharacteristics(list);
+            ////++++++++++++++++++++++++++++++++
+
+            //string datapath = "~/FileTest/master" + name[0].ToString() + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xml";
+            ////using (FileStream fs = new FileStream(Server.MapPath(datapath), FileMode.Create))
+            ////{
+            ////    new XmlSerializer(typeof(myService.CHARACTERISTICS)).Serialize(fs, list);
+            ////}
+
+            //string sendemailmaster = ConfigurationManager.AppSettings["SendEmailMaster"];
+            //sendemail(sendemailmaster, "",
+            //    string.Format("Name : {0}<br/>Status: {1},<br/>msg: {2}", name[0].ToString(), resp.status, resp.msg),
+            //    string.Format("Master {0} is completely created in SAP and Artwork", name[1].ToString()), (!File.Exists(datapath)) ? "" : System.Web.HttpContext.Current.Server.MapPath(datapath));
+        
+        }
+
+        public static void SendEmail(string MailTo, string MailCc, string _Body, string _Subject, string _Attachments)
+        {
+
+
+            try // aof added try catach
+            {
+                insertsendmail(MailTo, MailCc, _Body, _Subject);
+                MailMessage msg = new MailMessage();
+                SmtpClient smtp = new SmtpClient();
+                if (string.IsNullOrEmpty(MailTo)) return;
+                string[] words = MailTo.Split(';');
+                foreach (string word in words)
+                {
+                    if (!string.IsNullOrEmpty(word))
+                        msg.To.Add(new MailAddress(word));
+                }
+                List<string> myList = new List<string>();
+                string[] c = MailCc.Split(';');
+                foreach (string s in c)
+                    if (!string.IsNullOrEmpty(s))
+                    {
+                        msg.CC.Add(new MailAddress(s));
+                        myList.Add(s);
+                    }
+
+                msg.From = new MailAddress("wshuttleadm@thaiunion.com");
+                msg.Subject = string.Format("{0}", _Subject);
+                msg.Body = _Body;
+                if (!string.IsNullOrEmpty(_Attachments))
+                {
+                    msg.Attachments.Add(new Attachment(_Attachments));
+                }
+                msg.IsBodyHtml = true;
+                //smtp.Host = "192.168.1.38";
+                smtp.Host = string.Format("{0}", ConfigurationManager.AppSettings["SMTPServer"]);
+                smtp.Port = 25;
+                smtp.Send(msg);
+                smtp.Dispose();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+        }
+        public static string insertsendmail(string MailTo, string MailCc, string _Body, string _Subject)
+        {
+            using (SqlConnection con = new SqlConnection(ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.Text;
+                //SELECT FirstName + '.' + LastName + '@thaiunion.com' AS Email"
+                cmd.CommandText = "Insert into MailData values(@Sender,@To,@Cc,'',@Subject,@Body,getdate(),1,getdate(),'TEXT',1,0)";
+                cmd.Parameters.AddWithValue("@Sender", String.Format("{0}", 10));
+                cmd.Parameters.AddWithValue("@To", MailTo.ToString());
+                cmd.Parameters.AddWithValue("@Cc", MailCc.ToString());
+                cmd.Parameters.AddWithValue("@Subject", _Subject.ToString());
+                cmd.Parameters.AddWithValue("@Body", _Body.ToString());
+                cmd.Connection = con;
+                con.Open();
+                var getValue = cmd.ExecuteScalar();
+                con.Close();
+                return ((string)getValue == null) ? string.Empty : getValue.ToString();
+            }
+        }
+
         #endregion
 
         #region Temp METHODS
