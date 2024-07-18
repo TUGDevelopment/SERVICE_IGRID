@@ -1,18 +1,13 @@
 ﻿//using BLL.Services;
 //using CsvHelper;
 using System;
-using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
-using System.Collections;
 
 namespace Interface_igrid
 {
@@ -60,9 +55,9 @@ namespace Interface_igrid
             {
                 try
                 {
-                    
+
                     //string bodyMsg = "";
-                   
+
                     var filesToImport = Directory.GetFiles(InterfacePathInbound, "*_Result.csv");
                     if (filesToImport != null)
                     {
@@ -106,9 +101,9 @@ namespace Interface_igrid
                 {
                     Console.WriteLine("\nException Caught!");
                     Console.WriteLine($"Message :{e.Message} ");
-                    Console.WriteLine("Inbound - Not success");                   
+                    Console.WriteLine("Inbound - Not success");
                 }
-             
+
             }
             #endregion
         }
@@ -292,16 +287,16 @@ namespace Interface_igrid
 
         #region EXPORT INTERFACES
         public static void SQ01_ListMAT(DataTable Results)
-        {         
+        {
             DataTable dtListMat = new DataTable();
-            dtListMat.Columns.AddRange(new DataColumn[] 
-            { 
+            dtListMat.Columns.AddRange(new DataColumn[]
+            {
                 new DataColumn (@"Characteristic Name txtSP$00005-LOW.text"),
                 new DataColumn(@"txtSP$00003 - LOW.text"),
                 new DataColumn(@"AppId"),
             });
             foreach (DataRow row in Results.Rows)
-            {                    
+            {
                 dtListMat.Rows.Add(
                     string.Format("{0}", row["Changed_Charname"].ToString()),
                     string.Format("{0}", row["Old_Description"].ToString()),
@@ -311,7 +306,7 @@ namespace Interface_igrid
             {
                 string file = InterfacePathOutbound + "SQ01_ListMat" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
                 ToCSV(dtListMat, file);
-            }                 
+            }
         }
         public static void CT04(DataTable Results)
         {
@@ -384,8 +379,8 @@ namespace Interface_igrid
         public static void MM01_CreateMAT_ExtensionPlant(DataTable Results)
         {
             DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[] 
-            { 
+            dt.Columns.AddRange(new DataColumn[]
+            {
                 new DataColumn (@"IfColumn"),
                 new DataColumn(@"Material Number RMMG1-MATNR"),
                 new DataColumn(@"Material Description (Short Text) MAKT-MAKTX"),
@@ -436,7 +431,7 @@ namespace Interface_igrid
             });
             int i = 1;
             foreach (DataRow row in Results.Rows)
-            {               
+            {
                 dtClass.Rows.Add(string.Format("{0}", row["Material"].ToString()),
                 string.Format("{0}", row["ClassType"].ToString()),
                 string.Format("{0}", "H"),
@@ -458,7 +453,7 @@ namespace Interface_igrid
                         string.Format("{0}", row[value]),
                         string.Format("{0}", dr["Id"])
                         );
-                    }                   
+                    }
                     else
                     {
                         string[] splitPlant = string.Format("{0}", row[value].ToString()).Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
@@ -477,7 +472,7 @@ namespace Interface_igrid
                 }
                 if (dtClass.Rows.Count > 0)
                 {
-                    string file = InterfacePathOutbound + "BAPI_UpdateMATCharacteristics_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i  + ".csv";
+                    string file = InterfacePathOutbound + "BAPI_UpdateMATCharacteristics_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";
                     ToCSV(dtClass, file);
                 }
                 dtClass.Clear();
@@ -488,7 +483,7 @@ namespace Interface_igrid
         {
             DataTable dt = new DataTable();
             dt.Columns.AddRange(new DataColumn[]
-            {                       
+            {
                 new DataColumn(@"Table cell -TextField txtG_TARGET_TAB - OBJECT"),
                 new DataColumn (@"Char.Name ctxtG_CHAR_TAB - ATNAM"),
                 new DataColumn(@"Loop Id Column"),
@@ -509,7 +504,7 @@ namespace Interface_igrid
                 DataTable dtCharacteristic = builditems(@"select * from MasCharacteristic where MaterialType  like '%" + row["Material"].ToString().Substring(1, 1) + "%' order by Id");
                 foreach (DataRow dr in dtCharacteristic.Rows)
                 {
-                    string value,shortname;
+                    string value, shortname;
                     if (dr["Title"].ToString() == row["Char_Name"].ToString())
                     {
                         value = string.Format("{0}", row["Char_NewValue"]);
@@ -521,19 +516,19 @@ namespace Interface_igrid
                     }
                     if (dr["Single_Value"].ToString() == "X")
                     {
-                       dt.Rows.Add(
-                       string.Format("{0}", ""),
-                       string.Format("{0}", ""),
-                       string.Format("{0}", "D"),
-                       string.Format("{0}", dr["Title"]),
-                       string.Format("{0}", value),
-                       string.Format("{0}", dr["Id"])
-                       );
+                        dt.Rows.Add(
+                        string.Format("{0}", ""),
+                        string.Format("{0}", ""),
+                        string.Format("{0}", "D"),
+                        string.Format("{0}", dr["Title"]),
+                        string.Format("{0}", value),
+                        string.Format("{0}", dr["Id"])
+                        );
 
 
                     }
                     else
-                    {                   
+                    {
                         string[] splitPlant = string.Format("{0}", value).Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (string pl in splitPlant)
                         {
@@ -550,7 +545,7 @@ namespace Interface_igrid
                 }
                 if (dt.Rows.Count > 0)
                 {
-                    string file = InterfacePathOutbound + "CLMM_ChangeMatClass_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";                  
+                    string file = InterfacePathOutbound + "CLMM_ChangeMatClass_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";
                     ToCSV(dt, file);
                 }
                 dt.Clear();
@@ -560,7 +555,7 @@ namespace Interface_igrid
         public static void MM02_ImpactMatDesc(DataTable Results)
         {
             DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[] { 
+            dt.Columns.AddRange(new DataColumn[] {
                 new DataColumn (@"Material Number RMMG1 - MATNR"),
                 new DataColumn(@"Material description MAKT - MAKTX"),
                 new DataColumn(@"AppId"),});
@@ -586,7 +581,7 @@ namespace Interface_igrid
             {
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = sp; 
+                cmd.CommandText = sp;
                 cmd.Parameters.AddWithValue(field, sName);
                 cmd.Connection = con;
                 con.Open();
