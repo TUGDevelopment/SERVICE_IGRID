@@ -298,12 +298,14 @@ namespace Interface_igrid
             { 
                 new DataColumn (@"Characteristic Name txtSP$00005-LOW.text"),
                 new DataColumn(@"txtSP$00003 - LOW.text"),
+                new DataColumn(@"AppId"),
             });
             foreach (DataRow row in Results.Rows)
             {                    
                 dtListMat.Rows.Add(
                     string.Format("{0}", row["Changed_Charname"].ToString()),
-                    string.Format("{0}", row["Old_Description"].ToString()));
+                    string.Format("{0}", row["Old_Description"].ToString()),
+                    string.Format("{0}", row["Changed_Id"].ToString()));
             }
             if (dtListMat.Rows.Count > 0)
             {
@@ -321,6 +323,7 @@ namespace Interface_igrid
                 new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
                 new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
                 new DataColumn(@"Characteristic value description CAWNT-ATWTB(01)"),
+                new DataColumn(@"AppId"),
             });
             //dtCT04Update.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
             //    new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
@@ -332,6 +335,7 @@ namespace Interface_igrid
                 new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
                 new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
                 new DataColumn(@"Text for a table entry CLHP-CR_STATUS_TEXT"),
+                new DataColumn(@"AppId"),
             });
             foreach (DataRow row in Results.Rows)
             {
@@ -341,7 +345,8 @@ namespace Interface_igrid
                         dtCT04Insert.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString().Replace("Insert", "I")),
                             string.Format("{0}", row["Changed_Charname"].ToString()),
                             string.Format("{0}", row["id"].ToString()),
-                            string.Format("{0}", row["Description"].ToString()));
+                            string.Format("{0}", row["Description"].ToString()),
+                            string.Format("{0}", row["Changed_Id"].ToString()));
                         break;
                     //case "Update":
                     //    dtCT04Update.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString()),
@@ -353,7 +358,8 @@ namespace Interface_igrid
                     case "Remove":
                         dtCT04Remove.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString().Replace("Remove", "D")),
                            string.Format("{0}", row["Changed_Charname"].ToString()),
-                           string.Format("{0}", row["Description"].ToString()));
+                           string.Format("{0}", row["Description"].ToString()),
+                            string.Format("{0}", row["Changed_Id"].ToString()));
                         break;
                     default:
                         break;
@@ -387,6 +393,7 @@ namespace Interface_igrid
                 new DataColumn(@"IfColumn and Plant RMMG1-WERKS and Reference plant RMMG1_REF-WERKS"),
                 new DataColumn(@"IfColumn and Sales Organization RMMG1-VKORG and Reference sales organization RMMG1_REF-VKORG"),
                 new DataColumn(@"Distribution Channel RMMG1-VTWEG and Reference distribution channel RMMG1_REF-VTWEG"),
+                new DataColumn(@"AppId"),
             });
             foreach (DataRow row in Results.Rows)
             {
@@ -404,7 +411,8 @@ namespace Interface_igrid
                             string.Format("{0}", row["Ref"].ToString().Trim()),
                             string.Format("{0}", s.ToString().Trim()),
                             string.Format("{0}", row["Plant"]).Substring(0, 3),
-                            string.Format("{0}", o)
+                            string.Format("{0}", o),
+                            string.Format("{0}", row["Id"])
                             );
                         }
                     }
@@ -423,7 +431,8 @@ namespace Interface_igrid
                 new DataColumn(@"CLASSNUM"),
                 new DataColumn(@"Loop Id Column"),
                 new DataColumn(@"Characteristic Name ALLOCVALUESCHARNEW-CHARACT"),
-                new DataColumn(@"Characteristic Value ALLOCVALUESCHARNEW-VALUE_CHAR")
+                new DataColumn(@"Characteristic Value ALLOCVALUESCHARNEW-VALUE_CHAR"),
+                new DataColumn(@"AppId")
             });
             int i = 1;
             foreach (DataRow row in Results.Rows)
@@ -432,7 +441,8 @@ namespace Interface_igrid
                 string.Format("{0}", row["ClassType"].ToString()),
                 string.Format("{0}", "H"),
                 string.Format("{0}", ""),
-                string.Format("{0}", "")
+                string.Format("{0}", ""),
+                string.Format("{0}", row["Id"].ToString())
                 );
                 DataTable dtCharacteristic = builditems(@"select * from MasCharacteristic where MaterialType  like '%" + row["Material"].ToString().Substring(1, 1) + "%' order by Id");
                 foreach (DataRow dr in dtCharacteristic.Rows)
@@ -445,7 +455,8 @@ namespace Interface_igrid
                         string.Format("{0}", ""),
                         string.Format("{0}", "D"),
                         string.Format("{0}", dr["Title"]),
-                        string.Format("{0}", row[value])
+                        string.Format("{0}", row[value]),
+                        string.Format("{0}", dr["Id"])
                         );
                     }                   
                     else
@@ -454,11 +465,12 @@ namespace Interface_igrid
                         foreach (string pl in splitPlant)
                         {
                             dtClass.Rows.Add(
-                                string.Format("{0}", ""),
-                                string.Format("{0}", ""),
+                            string.Format("{0}", ""),
+                            string.Format("{0}", ""),
                             string.Format("{0}", "D"),
                             string.Format("{0}", dr["Title"]),
-                            string.Format("{0}", pl)
+                            string.Format("{0}", pl),
+                            string.Format("{0}", dr["Id"])
                             );
                         }
                     }
@@ -482,6 +494,7 @@ namespace Interface_igrid
                 new DataColumn(@"Loop Id Column"),
                 new DataColumn(@"Characteristic Name ALLOCVALUESCHARNEW-CHARACT"),
                 new DataColumn(@"New Value ctxtG_CHAR_TAB - NEWATWRT"),
+                new DataColumn(@"AppId"),
              });
             int i = 1;
             foreach (DataRow row in Results.Rows)
@@ -490,7 +503,8 @@ namespace Interface_igrid
                 string.Format("{0}", row["ClassType"].ToString()),
                 string.Format("{0}", "H"),
                 string.Format("{0}", ""),
-                string.Format("{0}", "")
+                string.Format("{0}", ""),
+                string.Format("{0}", row["Id"].ToString())
                 );
                 DataTable dtCharacteristic = builditems(@"select * from MasCharacteristic where MaterialType  like '%" + row["Material"].ToString().Substring(1, 1) + "%' order by Id");
                 foreach (DataRow dr in dtCharacteristic.Rows)
@@ -512,7 +526,8 @@ namespace Interface_igrid
                        string.Format("{0}", ""),
                        string.Format("{0}", "D"),
                        string.Format("{0}", dr["Title"]),
-                       string.Format("{0}", value)
+                       string.Format("{0}", value),
+                       string.Format("{0}", dr["Id"])
                        );
 
 
@@ -523,18 +538,19 @@ namespace Interface_igrid
                         foreach (string pl in splitPlant)
                         {
                             dt.Rows.Add(
-                                string.Format("{0}", ""),
-                                string.Format("{0}", ""),
+                            string.Format("{0}", ""),
+                            string.Format("{0}", ""),
                             string.Format("{0}", "D"),
                             string.Format("{0}", dr["Title"]),
-                            string.Format("{0}", pl)
+                            string.Format("{0}", pl),
+                            string.Format("{0}", dr["Id"])
                             );
                         }
                     }
                 }
                 if (dt.Rows.Count > 0)
                 {
-                    string file = InterfacePathOutbound + "CLMM_ChangeMatClass" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";                  
+                    string file = InterfacePathOutbound + "CLMM_ChangeMatClass_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";                  
                     ToCSV(dt, file);
                 }
                 dt.Clear();
@@ -544,13 +560,16 @@ namespace Interface_igrid
         public static void MM02_ImpactMatDesc(DataTable Results)
         {
             DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[] { new DataColumn (@"Material Number RMMG1 - MATNR"),
-            new DataColumn(@"Material description MAKT - MAKTX"),});
+            dt.Columns.AddRange(new DataColumn[] { 
+                new DataColumn (@"Material Number RMMG1 - MATNR"),
+                new DataColumn(@"Material description MAKT - MAKTX"),
+                new DataColumn(@"AppId"),});
             foreach (DataRow row in Results.Rows)
             {
                 dt.Rows.Add(
                 string.Format("{0}", row["Material"].ToString()),
-                string.Format("{0}", row["Description"].ToString()));
+                string.Format("{0}", row["Description"].ToString()),
+                string.Format("{0}", row["Id"].ToString()));
             }
             if (dt.Rows.Count > 0)
             {
