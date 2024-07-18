@@ -184,17 +184,6 @@ namespace Interface_igrid
                         {
                             Console.WriteLine(row);
                         }
-
-                       
-                        foreach (string item in rows)
-                        {
-
-                            string a = item[0].ToString();
-                        }
-                        foreach (dynamic record in rows.ToList())
-                        {
-                            var data = record["IfColumn"];
-                        }
                     }                   
                 }
 
