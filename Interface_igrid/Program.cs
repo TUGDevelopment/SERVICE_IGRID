@@ -1,18 +1,13 @@
 ﻿//using BLL.Services;
 //using CsvHelper;
 using System;
-using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
-using System.Collections;
 
 namespace Interface_igrid
 {
@@ -488,7 +483,7 @@ namespace Interface_igrid
                 }
                 if (dtClass.Rows.Count > 0)
                 {
-                    string file = InterfacePathOutbound + "BAPI_UpdateMATCharacteristics_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i  + ".csv";
+                    string file = InterfacePathOutbound + "BAPI_UpdateMATCharacteristics_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";
                     ToCSV(dtClass, file);
                 }
                 dtClass.Clear();
@@ -520,7 +515,7 @@ namespace Interface_igrid
                 DataTable dtCharacteristic = builditems(@"select * from MasCharacteristic where MaterialType  like '%" + row["Material"].ToString().Substring(1, 1) + "%' order by Id");
                 foreach (DataRow dr in dtCharacteristic.Rows)
                 {
-                    string value,shortname;
+                    string value, shortname;
                     if (dr["Title"].ToString() == row["Char_Name"].ToString())
                     {
                         value = string.Format("{0}", row["Char_NewValue"]);
