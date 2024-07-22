@@ -152,12 +152,12 @@ namespace Interface_igrid
         }
      
         public static string Import_CT04_I(string file)
-        {           
-            try 
-            {
-                var dt = new DataTable();
-                dt = ConvertCSVtoDataTable(file);
-                if (dt.Rows.Count > 0)
+        {
+            try
+            {               
+                using (DataTable dt = ConvertCSVtoDataTable(file)) 
+                { 
+                    if (dt.Rows.Count > 0)
                 {
                     foreach (DataRow row in dt.Rows)
                     {
@@ -201,7 +201,7 @@ namespace Interface_igrid
                     }
 
                 }
-
+                }
                 if (File.Exists(file))
                 {
                     File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
