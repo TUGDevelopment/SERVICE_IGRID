@@ -11,6 +11,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using System.Collections;
+using System.Net.Mail;
+using System.Collections.Generic;
+using DocumentFormat.OpenXml.Wordprocessing;
+
 
 namespace Interface_igrid
 {
@@ -146,68 +150,62 @@ namespace Interface_igrid
                 return e.Message;
             }
         }
+     
         public static string Import_CT04_I(string file)
-        {
-            try
+        {           
+            try 
             {
-                using (var sr = new StreamReader(file))
+                var dt = new DataTable();
+                dt = ConvertCSVtoDataTable(file);
+                if (dt.Rows.Count > 0)
                 {
-                    string[] headers = sr.ReadLine().Split(',');
-                    foreach (string header in headers)
+                    foreach (DataRow row in dt.Rows)
                     {
-                        Console.WriteLine(header);
-                        if (header.Length > 0)
-                        {
-                            if (header == "Resultx")
-                            {
-                                string Changed_Id = "";
-                                string Changed_Action = "";
-                                string Material = "";
+                        string Condition = row[0].ToString();
+                        string Name = row[1].ToString();
+                        string Value = row[2].ToString();
+                        string Description = row[3].ToString();
+                        string Changed_Id = row[4].ToString();
+                        string Result = row[5].ToString();
 
-                                //update impactedmat
-                                using (SqlConnection con = new SqlConnection(ConnectionString))
-                                {
-                                    //SqlCommand cmd = new SqlCommand();
-                                    //cmd.CommandType = CommandType.StoredProcedure;
-                                    //cmd.CommandText = "spUpdateImpactedmat";
-                                    //cmd.Parameters.AddWithValue("@Changed_Id", Changed_Id);
-                                    //cmd.Parameters.AddWithValue("@Changed_Action", Changed_Action);
-                                    //cmd.Parameters.AddWithValue("@Material", Material);
-                                    //cmd.Parameters.AddWithValue("@Description", Description);
-                                    //cmd.Parameters.AddWithValue("@DMSNo", DMSNo);
-                                    //cmd.Parameters.AddWithValue("@New_Material", New_Material);
-                                    //cmd.Parameters.AddWithValue("@New_Description", New_Description);
-                                    //cmd.Parameters.AddWithValue("@Status", Status);
-                                    //cmd.Parameters.AddWithValue("@Reason", Reason);
-                                    //cmd.Parameters.AddWithValue("@NewMat_JobId", NewMat_JobId);
-                                    //cmd.Parameters.AddWithValue("@Char_Name", Char_Name);
-                                    //cmd.Parameters.AddWithValue("@Char_OldValue", Char_OldValue);
-                                    //cmd.Parameters.AddWithValue("@Char_NewValue", Char_NewValue);
-                                    //cmd.Connection = con;
-                                    //con.Open();
-                                    //DataTable dtResult = new DataTable();
-                                    //SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
-                                    //oAdapter.Fill(dtResult);
-                                    //con.Close();
-                                }
+                        //update impactedmat
+                        //                using (SqlConnection con = new SqlConnection(ConnectionString))
+                        //                {
+                        //                    //SqlCommand cmd = new SqlCommand();
+                        //                    //cmd.CommandType = CommandType.StoredProcedure;
+                        //                    //cmd.CommandText = "spUpdateImpactedmat";
+                        //                    //cmd.Parameters.AddWithValue("@Changed_Id", Changed_Id);
+                        //                    //cmd.Parameters.AddWithValue("@Changed_Action", Changed_Action);
+                        //                    //cmd.Parameters.AddWithValue("@Material", Material);
+                        //                    //cmd.Parameters.AddWithValue("@Description", Description);
+                        //                    //cmd.Parameters.AddWithValue("@DMSNo", DMSNo);
+                        //                    //cmd.Parameters.AddWithValue("@New_Material", New_Material);
+                        //                    //cmd.Parameters.AddWithValue("@New_Description", New_Description);
+                        //                    //cmd.Parameters.AddWithValue("@Status", Status);
+                        //                    //cmd.Parameters.AddWithValue("@Reason", Reason);
+                        //                    //cmd.Parameters.AddWithValue("@NewMat_JobId", NewMat_JobId);
+                        //                    //cmd.Parameters.AddWithValue("@Char_Name", Char_Name);
+                        //                    //cmd.Parameters.AddWithValue("@Char_OldValue", Char_OldValue);
+                        //                    //cmd.Parameters.AddWithValue("@Char_NewValue", Char_NewValue);
+                        //                    //cmd.Connection = con;
+                        //                    //con.Open();
+                        //                    //DataTable dtResult = new DataTable();
+                        //                    //SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
+                        //                    //oAdapter.Fill(dtResult);
+                        //                    //con.Close();
+                        //                }
 
-                                //send email
-                                //CT04_SendEmail("U" + Material);
-                            }
-                        }
+                        //                //send email
+                        //                //CT04_SendEmail("U" + Material);
+
                     }
-                    while (!sr.EndOfStream)
-                    {
-                        string[] rows = sr.ReadLine().Split(',');
-                        foreach (string row in rows)
-                        {
-                            Console.WriteLine(row);
-                        }
-                    }
+
                 }
-               
 
-                File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                if (File.Exists(file))
+                {
+                    File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                }               
                 return "Success";
             }
             catch (IOException e)
@@ -713,6 +711,30 @@ namespace Interface_igrid
             }
             sw.Close();
         }
+        public static DataTable ConvertCSVtoDataTable(string strFilePath)
+        {
+            DataTable dt = new DataTable();
+            using (StreamReader sr = new StreamReader(strFilePath))
+            {
+                string[] headers = sr.ReadLine().Split(',');
+                foreach (string header in headers)
+                {
+                    dt.Columns.Add(header);
+                }
+                while (!sr.EndOfStream)
+                {
+                    string[] rows = sr.ReadLine().Split(',');
+                    DataRow dr = dt.NewRow();
+                    for (int i = 0; i < headers.Length; i++)
+                    {
+                        dr[i] = rows[i];
+                    }
+                    dt.Rows.Add(dr);
+                }
+            }
+            return dt;
+        }
+
         public static void CT04_SendEmail(string _name)
         {
             //string datapath = "~/FileTest/" + _name;
