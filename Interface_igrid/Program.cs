@@ -14,18 +14,22 @@ using System.Collections;
 using System.Net.Mail;
 using System.Collections.Generic;
 using DocumentFormat.OpenXml.Wordprocessing;
-
+using System.Xml.Linq;
+using System.Net;
+using System.Windows.Interop;
 
 namespace Interface_igrid
 {
     public class Program
     {
-        public static string ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+        //public static string ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         public static string InterfacePathInbound = ConfigurationManager.AppSettings["InterfacePathInbound"];
         public static string InterfacePathOutbound = ConfigurationManager.AppSettings["InterfacePathOutbound"];
         public static string runFlageOutbound = ConfigurationManager.AppSettings["runFlageOutbound"];
-        public static string runFlageInbound = ConfigurationManager.AppSettings["runFlageInbound"];
-
+        public static string runFlageInbound = ConfigurationManager.AppSettings["runFlageInbound"]; 
+        //public static string EnvironmentName = ConfigurationManager.AppSettings["EnvironmentName"];
+       
+        
         static void Main(string[] args)
         {
             #region Outbound
@@ -158,49 +162,62 @@ namespace Interface_igrid
                 using (DataTable dt = ConvertCSVtoDataTable(file)) 
                 { 
                     if (dt.Rows.Count > 0)
-                {
-                    foreach (DataRow row in dt.Rows)
                     {
-                        string Condition = row[0].ToString();
-                        string Name = row[1].ToString();
-                        string Value = row[2].ToString();
-                        string Description = row[3].ToString();
-                        string Changed_Id = row[4].ToString();
-                        string Result = row[5].ToString();
+                        foreach (DataRow row in dt.Rows)
+                        {
 
-                        //update impactedmat
-                        //                using (SqlConnection con = new SqlConnection(ConnectionString))
-                        //                {
-                        //                    //SqlCommand cmd = new SqlCommand();
-                        //                    //cmd.CommandType = CommandType.StoredProcedure;
-                        //                    //cmd.CommandText = "spUpdateImpactedmat";
-                        //                    //cmd.Parameters.AddWithValue("@Changed_Id", Changed_Id);
-                        //                    //cmd.Parameters.AddWithValue("@Changed_Action", Changed_Action);
-                        //                    //cmd.Parameters.AddWithValue("@Material", Material);
-                        //                    //cmd.Parameters.AddWithValue("@Description", Description);
-                        //                    //cmd.Parameters.AddWithValue("@DMSNo", DMSNo);
-                        //                    //cmd.Parameters.AddWithValue("@New_Material", New_Material);
-                        //                    //cmd.Parameters.AddWithValue("@New_Description", New_Description);
-                        //                    //cmd.Parameters.AddWithValue("@Status", Status);
-                        //                    //cmd.Parameters.AddWithValue("@Reason", Reason);
-                        //                    //cmd.Parameters.AddWithValue("@NewMat_JobId", NewMat_JobId);
-                        //                    //cmd.Parameters.AddWithValue("@Char_Name", Char_Name);
-                        //                    //cmd.Parameters.AddWithValue("@Char_OldValue", Char_OldValue);
-                        //                    //cmd.Parameters.AddWithValue("@Char_NewValue", Char_NewValue);
-                        //                    //cmd.Connection = con;
-                        //                    //con.Open();
-                        //                    //DataTable dtResult = new DataTable();
-                        //                    //SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
-                        //                    //oAdapter.Fill(dtResult);
-                        //                    //con.Close();
-                        //                }
+                            //1.Update to db
+                            //UpdateToDB("spsendemail_upm", row[4].ToString()); //Done
 
-                        //                //send email
-                        //                //CT04_SendEmail("U" + Material);
 
+                            ////2.get data from db to dataTable
+                            //string From = ConfigurationManager.AppSettings["SMTPFrom"];
+                            //string To = ConfigurationManager.AppSettings["ITEmailsNotify"];
+                            //string Id, Desc;
+                            //string Body = "test";
+                            //string AttachedFile = "";
+                            ////foreach (DataRow dr in dt.Rows)
+                            ////{
+                            ////    To = dr["Email"].ToString();
+                            ////    Id = dr["Id"].ToString();
+                            ////    Desc = dr["Description"].ToString();
+                            ////    Body = dr["Body"].ToString();
+                            ////    AttachedFile = dr["attached"].ToString();
+                            ////}
+
+                            //MailMessage msg = new MailMessage();
+                            //string[] ToMulti = To.ToString().Split(';');
+                            //foreach (string r in ToMulti)
+                            //{
+                            //    msg.To.Add(new MailAddress(r));
+                            //}
+
+                            //msg.From = new MailAddress(From);
+                            //msg.Subject = ConfigurationManager.AppSettings["EnvironmentName"] + "-" + "[" + Body + "]";
+                            //msg.Body = Body;
+                            ////msg.Attachments.Add(new System.Net.Mail.Attachment(_Attached));
+                            //msg.IsBodyHtml = true;
+
+                            //SmtpClient client = new SmtpClient();
+                            //client.UseDefaultCredentials = true;
+                            //client.Credentials = new System.Net.NetworkCredential("adminartworksystem@thaiunion.com", "WSP@ss2018");
+                            //client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
+                            //client.Host = ConfigurationManager.AppSettings["SMTPServer"];  //"smtp.office365.com";
+                            //client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                            //client.EnableSsl = true;
+
+                            //client.Send(msg);
+
+                            //3.sent email, //4.sent email insert log
+                            //SendEmail(To, "", Body,
+                            //    ConfigurationManager.AppSettings["EnvironmentName"] + " - Characteristic master is maintained in SAP " + "[" + Body.Substring(0, 6) + "]",
+                            //    AttachedFile);
+
+                            SendEmail();
+
+
+                        }
                     }
-
-                }
                 }
                 if (File.Exists(file))
                 {
@@ -213,6 +230,7 @@ namespace Interface_igrid
                 return e.Message;
             }
         }
+       
         public static string Import_CT04_R(string file)
         {
             try
@@ -260,7 +278,7 @@ namespace Interface_igrid
                                 //SendEmailUpdateMaster("U" + Material);
 
                                 //update impactedmat
-                                using (SqlConnection con = new SqlConnection(ConnectionString))
+                                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
                                 {
                                     SqlCommand cmd = new SqlCommand();
                                     cmd.CommandType = CommandType.StoredProcedure;
@@ -613,7 +631,7 @@ namespace Interface_igrid
         #region Util METHODS
         public static DataSet GetData(string sp, string field, string sName)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
             {
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -630,7 +648,7 @@ namespace Interface_igrid
         }
         public static DataTable builditems(string data)
         {
-            using (SqlConnection oConn = new SqlConnection(ConnectionString))
+            using (SqlConnection oConn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
             {
                 oConn.Open();
                 string strQuery = data;
@@ -647,7 +665,7 @@ namespace Interface_igrid
             string result = "";
             // (ByVal FieldName As String, ByVal TableName As String, ByVal Cur As String, ByVal Value As String) As String
             DataTable dt = new DataTable();
-            SqlConnection con = new SqlConnection(ConnectionString);
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             SqlDataAdapter sda = new SqlDataAdapter();
             SqlCommand cmd = new SqlCommand(strQuery);
             cmd.CommandType = CommandType.Text;
@@ -734,187 +752,175 @@ namespace Interface_igrid
             }
             return dt;
         }
-
-        public static void CT04_SendEmail(string _name)
-        {
-            //string datapath = "~/FileTest/" + _name;
-            string _email = "";
-            string _Id = "";
-            string _Description = "";
-            string _Body = "";
-            string _Attached = "";
-            string SubChanged_Id = ReadItems(@"select cast(substring('"
-            + _name.ToString() + "',2,len('" + _name.ToString() + "')-1) as nvarchar(max)) value");
-
-            //validate
-            testsendmaster(SubChanged_Id);
-
-
-            DataTable dt = new DataTable();
-            using (SqlConnection con = new SqlConnection(ConnectionString))
+        public static void UpdateToDB(string sp, string AppId)
+        {           
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
             {
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "spsendemail_upm";
-                cmd.Parameters.AddWithValue("@Changed_Id", _name.ToString());
+                cmd.CommandText = "spsendemail_upm";//change new sp
+                cmd.Parameters.AddWithValue("@Changed_Id", AppId);
                 cmd.Connection = con;
                 con.Open();
-                SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
-                oAdapter.Fill(dt);
-                con.Close();
-            }
-            foreach (DataRow dr in dt.Rows)
-            {
-                _email = dr["Email"].ToString();
-                _Id = dr["Id"].ToString();
-                _Description = dr["Description"].ToString();
-                _Body = dr["Body"].ToString();
-                _Attached = dr["attached"].ToString();
-            }
-            //        MailMessage msg = new MailMessage();
-            //        string[] words = _email.Split(';');
-            //        foreach (string word in words)
-            //        {
-            //            msg.To.Add(new MailAddress(word));
-            //            //Console.WriteLine(word);
-            //        }
-            //        //msg.To.Add(new MailAddress(_email));
-            //        msg.From = new MailAddress("wshuttleadm@thaiunion.com");
-            //        msg.Subject = "Maintained characteristic master data in SAP" + "[" + _Body.Substring(0, 6) + "]";
-            //        //msg.Body = "Id  " + _Id.ToString() + "Description  " + _Description.ToString() + " Changed";
-            //        //msg.Body = "Maintained characteristic master completed";
-            //        msg.Body = _Body;
-            //        //msg.Attachments.Add(new System.Net.Mail.Attachment(_Attached));
-            //        msg.IsBodyHtml = true;
-            //
-            //        SmtpClient client = new SmtpClient();
-            //        client.UseDefaultCredentials = false;
-            //        client.Credentials = new System.Net.NetworkCredential("wshuttleadm@thaiunion.com", "WSP@ss2018");
-            //        client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
-            //        client.Host = "smtp.office365.com";
-            //        client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            //        client.EnableSsl = true;
-            //        try
-            //        {
-            //            client.Send(msg);
-            //            Context.Response.Write("Message Sent Succesfully");
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            Context.Response.Write(ex.ToString());
-            //        }
-            SendEmail(_email, "", _Body,
-                "PRD Characteristic master is maintained in SAP " + "[" + _Body.Substring(0, 6) + "]",
-                _Attached);
-        }
-        public static void testsendmaster(string SubChanged_Id)
-        {
-            string strSQL = " select Id,Changed_Charname,Description,Changed_Action,Old_Description from TransMaster where Changed_id ='" + SubChanged_Id + "'";
-            DataTable dt = builditems(strSQL);
-            foreach (DataRow dr in dt.Rows)
-            {
-                string _Id = dr["Id"].ToString();
-                string _Description = dr["Description"].ToString();
-                string _Changed_Action = dr["Changed_Action"].ToString();
-                string _old_id = dr["Old_Description"].ToString();
-                string[] value = { dr["Changed_Charname"].ToString(), _Description, _Id, _Changed_Action, _old_id };
-                master_artwork(value);
+                cmd.ExecuteReader();
+                con.Close();                
             }
         }
-        public static void master_artwork(string[] name)
-        {
-            ////loop details
-            //CHARACTERISTICS list = new CHARACTERISTICS();
-            //List<CHARACTERISTIC> iGrid_CHARACTERISTICS = new List<CHARACTERISTIC>();
-            //CHARACTERISTIC item = new CHARACTERISTIC();
-            //item.NAME = name[0].ToString();
-            //item.DESCRIPTION = name[1].ToString();
-            //if (name[0].ToString() == "ZPKG_SEC_BRAND")
-            //{
-            //    item.VALUE = name[2].ToString();
-            //}
-            //else
-            //    item.VALUE = name[1].ToString();
+        public static void SendEmail()
+        {           
+            var smtp = new SmtpClient
+            {                
+                Host = string.Format("{0}", ConfigurationManager.AppSettings["SMTPServer"]),
+                Port = Convert.ToInt32(ConfigurationManager.AppSettings["SMTPPort"]),
+                EnableSsl = false,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,               
+                Timeout = 20000
+            };
 
-            //item.ID = name[2].ToString();
-            //item.Old_ID = string.Format("{0}", name[4]);
-            //item.Changed_Action = string.Format("{0}", name[3]);
-            //iGrid_CHARACTERISTICS.Add(item);
-            //list.Characteristics = iGrid_CHARACTERISTICS;
-            ////MM72_OUTBOUND_MATERIAL_CHARACTERISTIC matNumber = new MM72_OUTBOUND_MATERIAL_CHARACTERISTIC();
-            //SERVICE_RESULT_MODEL resp = new SERVICE_RESULT_MODEL();
-            ////MM72Client client = new MM72Client();
+            string MailFrom = ConfigurationManager.AppSettings["SMTPFrom"];
+            string MailTo = ConfigurationManager.AppSettings["ITEmailsNotify"];
+            string Body = "test";
 
-            ////matNumber.param = list;
-            //resp = MM_72_Hepler.SaveCharacteristics(list);
-            ////++++++++++++++++++++++++++++++++
 
-            //string datapath = "~/FileTest/master" + name[0].ToString() + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xml";
-            ////using (FileStream fs = new FileStream(Server.MapPath(datapath), FileMode.Create))
-            ////{
-            ////    new XmlSerializer(typeof(myService.CHARACTERISTICS)).Serialize(fs, list);
-            ////}
+            MailMessage msg = new MailMessage();
+            string[] words = MailTo.Split(';');
+            foreach (string word in words)
+            {
+                msg.To.Add(new MailAddress(word));
 
-            //string sendemailmaster = ConfigurationManager.AppSettings["SendEmailMaster"];
-            //sendemail(sendemailmaster, "",
-            //    string.Format("Name : {0}<br/>Status: {1},<br/>msg: {2}", name[0].ToString(), resp.status, resp.msg),
-            //    string.Format("Master {0} is completely created in SAP and Artwork", name[1].ToString()), (!File.Exists(datapath)) ? "" : System.Web.HttpContext.Current.Server.MapPath(datapath));
+            }
+            msg.From = new MailAddress(MailFrom);   
+            msg.Subject = ConfigurationManager.AppSettings["EnvironmentName"] + "-" + "[" + Body + "]";
+            msg.Body = Body;
+
+         
+
+                //Attachment attachment = new Attachment(filePath);
+                //message.Attachments.Add(attachment);
+
+             smtp.Send(msg);
+            
+        }
         
-        }
-
         public static void SendEmail(string MailTo, string MailCc, string _Body, string _Subject, string _Attachments)
         {
 
+            //MailSettings.SMTPServer = Convert.ToString(ConfigurationManager.AppSettings["HostName"]);
+            //MailMessage Msg = new MailMessage();
+            //// Sender e-mail address.
+            //Msg.From = new MailAddress("pqr@gmail.com");
+            //// Recipient e-mail address.
+            //Msg.To.Add("abc@gmail.com");
+            //Msg.CC.Add("zcd@gmail.com");
+            //Msg.Subject = "Timesheet Payment Instruction updated";
+            //Msg.IsBodyHtml = true;
+            //Msg.Body = emailMessage.ToString();
+            //NetworkCredential loginInfo = new NetworkCredential(Convert.ToString(ConfigurationManager.AppSettings["UserName"]), Convert.ToString(ConfigurationManager.AppSettings["Password"])); // password for connection smtp if u dont have have then pass blank
 
-            try // aof added try catach
+            //SmtpClient smtp = new SmtpClient();
+            //smtp.UseDefaultCredentials = true;
+            //smtp.Credentials = loginInfo;
+            ////smtp.EnableSsl = true;
+            ////No need for port
+            ////smtp.Host = ConfigurationManager.AppSettings["HostName"];
+            ////smtp.Port = int.Parse(ConfigurationManager.AppSettings["PortNumber"]);
+            //smtp.Send(Msg);
+
+            //---
+            //int Port = Convert.ToInt32(ConfigurationManager.AppSettings["SMTPPort"]);
+            //SmtpClient sc = new SmtpClient(ConfigurationManager.AppSettings["SMTPServer"], Port);
+            //sc.UseDefaultCredentials = false;
+
+            //bool IsUseSSL = false;
+            //var SMTPSSL = ConfigurationManager.AppSettings["SMTPSSL"];
+            //if (SMTPSSL.ToUpper().Trim() == "TRUE")
+            //{
+            //    IsUseSSL = true;
+            //}
+            //EnableSsl = IsUseSSL;
+
+            //-----
+            var fromAddress = new MailAddress("kriengkrai.ritthaphrom@thaiunion.com", "My Name");
+            var toAddress = new MailAddress("kriengkrai.ritthaphrom@thaiunion.com", "Mr Test");
+            const string fromPassword = "";
+            const string subject = "test";
+            const string body = "HEY, LISTEN!";
+
+            var smtp = new SmtpClient
             {
-                insertsendmail(MailTo, MailCc, _Body, _Subject);
-                MailMessage msg = new MailMessage();
-                SmtpClient smtp = new SmtpClient();
-                if (string.IsNullOrEmpty(MailTo)) return;
-                string[] words = MailTo.Split(';');
-                foreach (string word in words)
-                {
-                    if (!string.IsNullOrEmpty(word))
-                        msg.To.Add(new MailAddress(word));
-                }
-                List<string> myList = new List<string>();
-                string[] c = MailCc.Split(';');
-                foreach (string s in c)
-                    if (!string.IsNullOrEmpty(s))
-                    {
-                        msg.CC.Add(new MailAddress(s));
-                        myList.Add(s);
-                    }
+              
+                Host = string.Format("{0}", ConfigurationManager.AppSettings["SMTPServer"]),
+                Port = Convert.ToInt32(ConfigurationManager.AppSettings["SMTPPort"]),
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = true,
+                Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
+                Timeout = 20000
+            };
 
-                msg.From = new MailAddress("wshuttleadm@thaiunion.com");
-                msg.Subject = string.Format("{0}", _Subject);
-                msg.Body = _Body;
-                if (!string.IsNullOrEmpty(_Attachments))
-                {
-                    msg.Attachments.Add(new Attachment(_Attachments));
-                }
-                msg.IsBodyHtml = true;
-                //smtp.Host = "192.168.1.38";
-                smtp.Host = string.Format("{0}", ConfigurationManager.AppSettings["SMTPServer"]);
-                smtp.Port = 25;
-                smtp.Send(msg);
-                smtp.Dispose();
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = subject,
+                Body = body
+            })
+            {
+                //Attachment attachment = new Attachment(filePath);
+                //message.Attachments.Add(attachment);
+
+                smtp.Send(message);
             }
-            catch (Exception ex)
-            {
 
+            try
+            {
+                //    MailMessage msg = new MailMessage();
+                //    SmtpClient smtp = new SmtpClient();
+                //    if (string.IsNullOrEmpty(MailTo)) return;
+                //    string[] words = MailTo.Split(';');
+                //    foreach (string word in words)
+                //    {
+                //        if (!string.IsNullOrEmpty(word))
+                //            msg.To.Add(new MailAddress(word));
+                //    }
+                //    List<string> myList = new List<string>();
+                //    string[] c = MailCc.Split(';');
+                //    foreach (string s in c)
+                //        if (!string.IsNullOrEmpty(s))
+                //        {
+                //            msg.CC.Add(new MailAddress(s));
+                //            myList.Add(s);
+                //        }
+                //    msg.From = new MailAddress("wshuttleadm@thaiunion.com");
+                //    msg.Subject = string.Format("{0}", _Subject);
+                //    msg.Body = _Body;
+                //    if (!string.IsNullOrEmpty(_Attachments))
+                //    {
+                //        msg.Attachments.Add(new Attachment(_Attachments));
+                //    }
+                //    msg.IsBodyHtml = true;
+
+                //    smtp.Host = string.Format("{0}", ConfigurationManager.AppSettings["SMTPServer"]);
+                //    smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["SMTPPort"]);
+                //    smtp.UseDefaultCredentials = false;
+                //    smtp.Send(msg);
+                //    smtp.Dispose();
+
+                //    //insert to maildata
+                string ReternMsg = SendEmailInsertLog(MailTo, MailCc, _Body, _Subject);
+            }
+            catch (Exception e)
+            {
+                e.Message.ToString();
             }
 
 
         }
-        public static string insertsendmail(string MailTo, string MailCc, string _Body, string _Subject)
+        public static string SendEmailInsertLog(string MailTo, string MailCc, string _Body, string _Subject)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
             {
                 SqlCommand cmd = new SqlCommand();
-                cmd.CommandType = CommandType.Text;
-                //SELECT FirstName + '.' + LastName + '@thaiunion.com' AS Email"
+                cmd.CommandType = CommandType.Text;               
                 cmd.CommandText = "Insert into MailData values(@Sender,@To,@Cc,'',@Subject,@Body,getdate(),1,getdate(),'TEXT',1,0)";
                 cmd.Parameters.AddWithValue("@Sender", String.Format("{0}", 10));
                 cmd.Parameters.AddWithValue("@To", MailTo.ToString());
@@ -928,7 +934,132 @@ namespace Interface_igrid
                 return ((string)getValue == null) ? string.Empty : getValue.ToString();
             }
         }
+        public static void SendEmail(string _name)
+        {
+            //string datapath = "~/FileTest/" + _name;
+            string _email = "";
+            string _Material = "";
+            string _Description = "";
+            string _Body = "";
+            string _Attached = "";
 
+            DataTable dt = new DataTable();
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "spalertemail";
+
+                cmd.Connection = con;
+                con.Open();
+                SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
+                oAdapter.Fill(dt);
+                con.Close();
+            }
+            foreach (DataRow dr in dt.Rows)
+            {
+                _email = dr["Email"].ToString();
+                //_Material = dr["Material"].ToString();
+
+                _Description = dr["Description"].ToString();
+                _Body = dr["body"].ToString();
+                _Attached = dr["attached"].ToString();
+            }
+            MailMessage msg = new MailMessage();
+            string[] words = _email.Split(';');
+            foreach (string word in words)
+            {
+                msg.To.Add(new MailAddress(word));
+                //Console.WriteLine(word);
+            }
+            //msg.To.Add(new MailAddress(_email));
+            msg.From = new MailAddress("wshuttleadm@thaiunion.com");
+            msg.Subject = "System SEC PKG Template is created No. : ";
+            //msg.Body = "Material  " + _Material.ToString() + " Created";
+            msg.Body = _Body;
+            //msg.Attachments.Add(new System.Net.Mail.Attachment(_Attached));
+            msg.IsBodyHtml = true;
+
+            SmtpClient client = new SmtpClient();
+            client.UseDefaultCredentials = false;
+            //client.Credentials = new System.Net.NetworkCredential("wshuttleadm@thaiunion.com", "WSP@ss2018");
+            client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
+            client.Host = "192.168.1.39";
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.EnableSsl = false;
+            try
+            {
+                client.Send(msg);
+
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+            }
+            //string senderID = "voravut.somb@gmail.com";
+            //string senderPassword = "063446620";
+            //string result = "Email Sent Successfully";
+
+            //string body = " " + _name + " has sent an email from " + _email;
+            //body += "Phone : " + _phone;
+            //body += _description;
+            //try
+            //{
+            //    MailMessage mail = new MailMessage();
+            //    mail.To.Add("voravut.somboornpong@thaiunion.com");
+            //    mail.From = new MailAddress(senderID);
+            //    mail.Subject = "My Test Email!";
+            //    mail.Body = body;
+            //    mail.IsBodyHtml = true;
+            //    SmtpClient smtp = new SmtpClient();
+            //    smtp.Host = "smtp.gmail.com"; //Or Your SMTP Server Address
+            //    smtp.Credentials = new System.Net.NetworkCredential(senderID, senderPassword);
+            //    smtp.Port = 587;
+            //    smtp.EnableSsl = true;
+            //    smtp.Send(mail);
+            //}
+            //catch (Exception ex)
+            //{
+            //    result = "problem occurred";
+            //    Context.Response.Write("Exception in sendEmail:" + ex.Message);
+            //}
+            //Context.Response.Write(result);
+        }
+        public static void Jobalertemail(string data)
+        {
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "spalertemail";
+                cmd.Connection = con;
+                con.Open();
+                //cmd.ExecuteNonQuery();
+                var getValue = cmd.ExecuteScalar();
+                if (getValue.ToString() == "0")
+                {
+                    MailMessage msg = new MailMessage();
+                    msg.To.Add(new MailAddress("kriengkrai.ritthaphrom@thaiunion.com"));
+                    List<string> li = new List<string>();
+                    li.Add("mes.support@thaiunion.com"); 
+                    msg.CC.Add(string.Join<string>(",", li)); // Sending CC  
+                    msg.From = new MailAddress("wshuttleadm@thaiunion.com");
+                    msg.Subject = "[iGrid Support] Winshuttle down";
+                    msg.Body = "Dear All <br/>job Winshuttle fail.";
+                    msg.IsBodyHtml = true;
+                    SmtpClient client = new SmtpClient();
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = new System.Net.NetworkCredential("wshuttleadm@thaiunion.com", "WSP@ss2018");
+                    client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
+                    client.Host = "smtp.office365.com";
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.EnableSsl = true;
+                    client.Send(msg);
+                }
+                con.Close();
+            }
+            Console.Write("success");
+        }
         #endregion
 
         #region Temp METHODS
@@ -1314,6 +1445,46 @@ namespace Interface_igrid
             //    string file = InterfacePathOutbound + "CLMM_ChangeMatClass" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
             //    ToCSV(dt, file);
             //}
+        }
+        public static void master_artwork(string[] name)
+        {
+            ////loop details
+            //CHARACTERISTICS list = new CHARACTERISTICS();
+            //List<CHARACTERISTIC> iGrid_CHARACTERISTICS = new List<CHARACTERISTIC>();
+            //CHARACTERISTIC item = new CHARACTERISTIC();
+            //item.NAME = name[0].ToString();
+            //item.DESCRIPTION = name[1].ToString();
+            //if (name[0].ToString() == "ZPKG_SEC_BRAND")
+            //{
+            //    item.VALUE = name[2].ToString();
+            //}
+            //else
+            //    item.VALUE = name[1].ToString();
+
+            //item.ID = name[2].ToString();
+            //item.Old_ID = string.Format("{0}", name[4]);
+            //item.Changed_Action = string.Format("{0}", name[3]);
+            //iGrid_CHARACTERISTICS.Add(item);
+            //list.Characteristics = iGrid_CHARACTERISTICS;
+            ////MM72_OUTBOUND_MATERIAL_CHARACTERISTIC matNumber = new MM72_OUTBOUND_MATERIAL_CHARACTERISTIC();
+            //SERVICE_RESULT_MODEL resp = new SERVICE_RESULT_MODEL();
+            ////MM72Client client = new MM72Client();
+
+            ////matNumber.param = list;
+            //resp = MM_72_Hepler.SaveCharacteristics(list);
+            ////++++++++++++++++++++++++++++++++
+
+            //string datapath = "~/FileTest/master" + name[0].ToString() + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xml";
+            ////using (FileStream fs = new FileStream(Server.MapPath(datapath), FileMode.Create))
+            ////{
+            ////    new XmlSerializer(typeof(myService.CHARACTERISTICS)).Serialize(fs, list);
+            ////}
+
+            //string sendemailmaster = ConfigurationManager.AppSettings["SendEmailMaster"];
+            //sendemail(sendemailmaster, "",
+            //    string.Format("Name : {0}<br/>Status: {1},<br/>msg: {2}", name[0].ToString(), resp.status, resp.msg),
+            //    string.Format("Master {0} is completely created in SAP and Artwork", name[1].ToString()), (!File.Exists(datapath)) ? "" : System.Web.HttpContext.Current.Server.MapPath(datapath));
+
         }
 
         #endregion
