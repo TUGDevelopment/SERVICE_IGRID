@@ -167,46 +167,46 @@ namespace Interface_igrid
                         {
 
                             //1.Update to db
-                            //UpdateToDB("spsendemail_upm", row[4].ToString()); //Done
+                            UpdateToDB("spInterface_Igrid", row[4].ToString()); //Done
 
 
-                            ////2.get data from db to dataTable
-                            //string From = ConfigurationManager.AppSettings["SMTPFrom"];
-                            //string To = ConfigurationManager.AppSettings["ITEmailsNotify"];
-                            //string Id, Desc;
-                            //string Body = "test";
-                            //string AttachedFile = "";
-                            ////foreach (DataRow dr in dt.Rows)
-                            ////{
-                            ////    To = dr["Email"].ToString();
-                            ////    Id = dr["Id"].ToString();
-                            ////    Desc = dr["Description"].ToString();
-                            ////    Body = dr["Body"].ToString();
-                            ////    AttachedFile = dr["attached"].ToString();
-                            ////}
+                            //2.get data from db to dataTable
+                            string From = ConfigurationManager.AppSettings["SMTPFrom"];
+                            string To = ConfigurationManager.AppSettings["ITEmailsNotify"];
+                            string Id, Desc;
+                            string Body = "test";
+                            string AttachedFile = "";
+                            foreach (DataRow dr in dt.Rows)
+                            {
+                                To = dr["Email"].ToString();
+                                Id = dr["Id"].ToString();
+                                Desc = dr["Description"].ToString();
+                                Body = dr["Body"].ToString();
+                                AttachedFile = dr["attached"].ToString();
+                            }
 
-                            //MailMessage msg = new MailMessage();
-                            //string[] ToMulti = To.ToString().Split(';');
-                            //foreach (string r in ToMulti)
-                            //{
-                            //    msg.To.Add(new MailAddress(r));
-                            //}
+                            MailMessage msg = new MailMessage();
+                            string[] ToMulti = To.ToString().Split(';');
+                            foreach (string r in ToMulti)
+                            {
+                                msg.To.Add(new MailAddress(r));
+                            }
 
-                            //msg.From = new MailAddress(From);
-                            //msg.Subject = ConfigurationManager.AppSettings["EnvironmentName"] + "-" + "[" + Body + "]";
-                            //msg.Body = Body;
-                            ////msg.Attachments.Add(new System.Net.Mail.Attachment(_Attached));
-                            //msg.IsBodyHtml = true;
+                            msg.From = new MailAddress(From);
+                            msg.Subject = ConfigurationManager.AppSettings["EnvironmentName"] + "-" + "[" + Body + "]";
+                            msg.Body = Body;
+                            //msg.Attachments.Add(new System.Net.Mail.Attachment(_Attached));
+                            msg.IsBodyHtml = true;
 
-                            //SmtpClient client = new SmtpClient();
-                            //client.UseDefaultCredentials = true;
-                            //client.Credentials = new System.Net.NetworkCredential("adminartworksystem@thaiunion.com", "WSP@ss2018");
-                            //client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
-                            //client.Host = ConfigurationManager.AppSettings["SMTPServer"];  //"smtp.office365.com";
-                            //client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                            //client.EnableSsl = true;
+                            SmtpClient client = new SmtpClient();
+                            client.UseDefaultCredentials = true;
+                            client.Credentials = new System.Net.NetworkCredential("adminartworksystem@thaiunion.com", "WSP@ss2018");
+                            client.Port = 587; // You can use Port 25 if 587 is blocked (mine is!)
+                            client.Host = ConfigurationManager.AppSettings["SMTPServer"];  //"smtp.office365.com";
+                            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                            client.EnableSsl = true;
 
-                            //client.Send(msg);
+                            client.Send(msg);
 
                             //3.sent email, //4.sent email insert log
                             //SendEmail(To, "", Body,
@@ -758,7 +758,7 @@ namespace Interface_igrid
             {
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "spsendemail_upm";//change new sp
+                cmd.CommandText = sp;
                 cmd.Parameters.AddWithValue("@Changed_Id", AppId);
                 cmd.Connection = con;
                 con.Open();
