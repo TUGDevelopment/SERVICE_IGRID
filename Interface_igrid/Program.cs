@@ -17,6 +17,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using System.Xml.Linq;
 using System.Net;
 using System.Windows.Interop;
+using DocumentFormat.OpenXml.InkML;
 
 namespace Interface_igrid
 {
@@ -99,10 +100,10 @@ namespace Interface_igrid
                                     //imported = Import_BAPI_U(fileI.FullName);
                                     break;
                                 case "CLMM_C":
-                                    imported = Import_CLMM_C(file, InterfaceCode);
+                                    //imported = Import_CLMM_C(file, InterfaceCode);
                                     break;
                                 case "MM02_I":
-                                    //imported = Import_CMM02(fileI.FullName, out bodyMsg);
+                                    imported = Import_MM02_I(file, InterfaceCode);
                                     break;
                             }                          
                         }                        
@@ -242,6 +243,64 @@ namespace Interface_igrid
                             }
                             string subject = "Characteristic master is maintained in SAP " + "[" + Condition + "]";
                             string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Result: " + Result + ".";
+                            string AttachedFile = "";
+
+                            //3.sent email to user
+                            if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
+                            {
+                                //SendEmail(from, to, subject, body);
+                                SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);
+                            }
+
+                            //4.send email to IT //5.sent email insert log 
+                            if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                            {
+                                SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
+                                SendToLog(from, to, subject, body);
+                            }
+                        }
+                    }
+                }
+                if (File.Exists(file))
+                {
+                    File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                }
+                return InterfaceCode + " Success";
+            }
+            catch (IOException e)
+            {
+                return InterfaceCode + e.Message + e.StackTrace;
+            }
+
+        }
+        public static string Import_MM02_I(string file, string InterfaceCode)
+        {
+            try
+            {
+                using (DataTable dt = ConvertCSVtoDataTableWithOutSplit(file))
+                {
+                    if (dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dt.Rows)
+                        {                            
+                            string MatNumber = row[0].ToString();
+                            string MatDesc = row[1].ToString();
+                            string AppId = row[2].ToString();
+                            string Result = row[3].ToString();
+
+                            //1.Update to db
+                            DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
+
+                            //2.get data from db to dataTable prepare sent email to user
+                            string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                            string to = "";
+                            foreach (DataRow dr in dtGetMail.Rows)  //get email from db
+                            {
+                                to = dr["Email"].ToString();
+                            }
+                           
+                            string subject = "Material " + "[" + MatNumber + "] Saving changes to assignments Assignment changed";
+                            string body = " Material: " + MatNumber + ", Description: " + MatDesc + ", Result: " + Result + ".";
                             string AttachedFile = "";
 
                             //3.sent email to user
@@ -817,6 +876,29 @@ namespace Interface_igrid
             sw.Close();
         }
         public static DataTable ConvertCSVtoDataTable(string strFilePath)
+        {
+            DataTable dt = new DataTable();
+            using (StreamReader sr = new StreamReader(strFilePath))
+            {
+                string[] headers = sr.ReadLine().Split(',');
+                foreach (string header in headers)
+                {
+                    dt.Columns.Add(header);
+                }
+                while (!sr.EndOfStream)
+                {
+                    string[] rows = sr.ReadLine().Split(',');
+                    DataRow dr = dt.NewRow();
+                    for (int i = 0; i < headers.Length; i++)
+                    {
+                        dr[i] = rows[i];
+                    }
+                    dt.Rows.Add(dr);
+                }
+            }
+            return dt;
+        }
+        public static DataTable ConvertCSVtoDataTableWithOutSplit(string strFilePath)
         {
             DataTable dt = new DataTable();
             using (StreamReader sr = new StreamReader(strFilePath))
