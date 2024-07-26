@@ -64,6 +64,7 @@ namespace Interface_igrid
             #region Inbound        
             if (bool.Parse(runFlageInbound) == true) // flage for true run or false not run
             {
+                string imported = "";
                 try
                 {
 
@@ -72,7 +73,7 @@ namespace Interface_igrid
                     var filesToImport = Directory.GetFiles(InterfacePathInbound, "*_Result.csv");
                     if (filesToImport != null)
                     {
-                        string imported = "";
+                        
                         FileInfo fileI = null;
                         string fileN = "";
                         foreach (string file in filesToImport)
@@ -89,7 +90,7 @@ namespace Interface_igrid
                                     imported = Import_CT04_I(file, InterfaceCode);
                                     break;
                                 case "CT04_R":
-                                    //imported = Import_CT04_R(fileI.FullName);
+                                    imported = Import_CT04_R(file, InterfaceCode);
                                     break;
                                 case "MM01_C":
                                     //imported = Import_MM01_C(fileI.FullName, out bodyMsg);
@@ -103,17 +104,16 @@ namespace Interface_igrid
                                 case "MM02_I":
                                     //imported = Import_CMM02(fileI.FullName, out bodyMsg);
                                     break;
-                            }
-                            Console.WriteLine(imported + "Completed");
-                        }
+                            }                          
+                        }                        
                     }
                     Console.WriteLine("Inbound All Completed");
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("\nException Caught!");
-                    Console.WriteLine($"Message :{e.Message} ");
-                    Console.WriteLine("Inbound - Not success");
+                    Console.WriteLine($"Message :{e.Message} " + e.StackTrace);
+                    Console.WriteLine("Inbound - Not success" + imported);
                 }
             }
             #endregion
@@ -175,23 +175,23 @@ namespace Interface_igrid
                             //1.Update to db
                            DataTable dtGetMail= UpdateToDB("spInterface_Igrid", AppId, InterfaceCode,dt);
 
-
                             //2.get data from db to dataTable prepare sent email to user
                             string from = ConfigurationManager.AppSettings["SMTPFrom"];
-                            string to = "";
+                            string to = "";                           
+                            foreach (DataRow dr in dtGetMail.Rows)  //get email from db
+                            {
+                                to = dr["Email"].ToString();
+                            }
                             string subject = "Characteristic master is maintained in SAP " + "[" + Condition + "]";
                             string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Description: " + Description + " in SAP completed.";
                             string AttachedFile = ""; 
 
-                            //get email from db
-                            foreach (DataRow dr in dtGetMail.Rows)
+                            //3.sent email to user
+                            if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport"+ InterfaceCode]) == true)
                             {
-                                to = dr["Email"].ToString();
+                                //SendEmail(from, to, subject, body);
+                                SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);
                             }
-
-                            //3.sent email to user,                            
-                            //SendEmail(from, to, subject, body);
-                            SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);
 
                             //4.send email to IT //5.sent email insert log 
                             if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
@@ -214,17 +214,62 @@ namespace Interface_igrid
             }
         }
        
-        public static string Import_CT04_R(string file)
+        public static string Import_CT04_R(string file, string InterfaceCode)
         {
             try
             {
-                File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
-                return "Success";
+                using (DataTable dt = ConvertCSVtoDataTable(file))
+                {
+                    if (dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string Condition = row[0].ToString().Replace("D", "Remove");
+                            string Name = row[1].ToString();
+                            string Value = row[2].ToString();                           
+                            string AppId = row[3].ToString();
+                            string Result = row[4].ToString();
+
+                            //1.Update to db
+                            DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
+
+                            //2.get data from db to dataTable prepare sent email to user
+                            string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                            string to = "";
+                            foreach (DataRow dr in dtGetMail.Rows)  //get email from db
+                            {
+                                to = dr["Email"].ToString();
+                            }
+                            string subject = "Characteristic master is maintained in SAP " + "[" + Condition + "]";
+                            string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + " in SAP completed.";
+                            string AttachedFile = "";
+
+                            //3.sent email to user
+                            if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
+                            {
+                                //SendEmail(from, to, subject, body);
+                                SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);
+                            }
+
+                            //4.send email to IT //5.sent email insert log 
+                            if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                            {
+                                SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
+                                SendToLog(from, to, subject, body);
+                            }
+                        }
+                    }
+                }
+                if (File.Exists(file))
+                {
+                    File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                }
+                return InterfaceCode + " Success";
             }
             catch (IOException e)
             {
-                return e.Message;
-            }   
+                return InterfaceCode + e.Message + e.StackTrace;
+            }
 
         }
         public static string Import_BAPI_U(string file)
@@ -742,7 +787,7 @@ namespace Interface_igrid
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = sp;
-                cmd.Parameters.AddWithValue("@Changed_Id", AppId);
+                cmd.Parameters.AddWithValue("@AppId", AppId);
                 cmd.Parameters.AddWithValue("@InterfaceCode", InterfaceCode);
                 cmd.Connection = con;
                 con.Open();
@@ -769,6 +814,25 @@ namespace Interface_igrid
             }
             return dt2;
         }
+        public static DataSet GetDataToEmail(string sp, string AppId, string InterfaceCode)
+        {
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = sp;
+                cmd.Parameters.AddWithValue("@AppId", AppId);
+                cmd.Parameters.AddWithValue("@InterfaceCode", InterfaceCode);
+                cmd.Connection = con;
+                con.Open();
+                DataSet oDataset = new DataSet();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(oDataset);
+                con.Close();
+                return oDataset;
+            }
+        }
+
         public static void SendEmail(string from, string to, string subject, string body)
         {
             try
