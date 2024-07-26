@@ -87,10 +87,10 @@ namespace Interface_igrid
                                     //imported = Import_SQ01(file);
                                     break;
                                 case "CT04_I":
-                                    imported = Import_CT04_I(file, InterfaceCode);
+                                    //imported = Import_CT04_I(file, InterfaceCode);
                                     break;
                                 case "CT04_R":
-                                    imported = Import_CT04_R(file, InterfaceCode);
+                                    //imported = Import_CT04_R(file, InterfaceCode);
                                     break;
                                 case "MM01_C":
                                     //imported = Import_MM01_C(fileI.FullName, out bodyMsg);
@@ -99,7 +99,7 @@ namespace Interface_igrid
                                     //imported = Import_BAPI_U(fileI.FullName);
                                     break;
                                 case "CLMM_C":
-                                    //imported = Import_CLMM_C(fileI.FullName, out bodyMsg);
+                                    imported = Import_CLMM_C(file, InterfaceCode);
                                     break;
                                 case "MM02_I":
                                     //imported = Import_CMM02(fileI.FullName, out bodyMsg);
@@ -183,7 +183,7 @@ namespace Interface_igrid
                                 to = dr["Email"].ToString();
                             }
                             string subject = "Characteristic master is maintained in SAP " + "[" + Condition + "]";
-                            string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Description: " + Description + " in SAP completed.";
+                            string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Description: " + Description + ", Result: " + Result + ".";
                             string AttachedFile = ""; 
 
                             //3.sent email to user
@@ -241,7 +241,7 @@ namespace Interface_igrid
                                 to = dr["Email"].ToString();
                             }
                             string subject = "Characteristic master is maintained in SAP " + "[" + Condition + "]";
-                            string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + " in SAP completed.";
+                            string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Result: " + Result + ".";
                             string AttachedFile = "";
 
                             //3.sent email to user
@@ -272,6 +272,65 @@ namespace Interface_igrid
             }
 
         }
+        public static string Import_CLMM_C(string file, string InterfaceCode)
+        {
+            try
+            {
+                using (DataTable dt = ConvertCSVtoDataTable(file))
+                {
+                    if (dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string Condition = row[0].ToString().Replace("D", "Remove");
+                            string Name = row[1].ToString();
+                            string Value = row[2].ToString();
+                            string AppId = row[3].ToString();
+                            string Result = row[4].ToString();
+
+                            //1.Update to db
+                            DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
+
+                            //2.get data from db to dataTable prepare sent email to user
+                            string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                            string to = "";
+                            foreach (DataRow dr in dtGetMail.Rows)  //get email from db
+                            {
+                                to = dr["Email"].ToString();
+                            }
+                            string subject = "Characteristic master is maintained in SAP " + "[" + Condition + "]";
+                            string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Result: " + Result + ".";
+                            string AttachedFile = "";
+
+                            //3.sent email to user
+                            if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
+                            {
+                                //SendEmail(from, to, subject, body);
+                                SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);
+                            }
+
+                            //4.send email to IT //5.sent email insert log 
+                            if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                            {
+                                SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
+                                SendToLog(from, to, subject, body);
+                            }
+                        }
+                    }
+                }
+                if (File.Exists(file))
+                {
+                    File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                }
+                return InterfaceCode + " Success";
+            }
+            catch (IOException e)
+            {
+                return InterfaceCode + e.Message + e.StackTrace;
+            }
+
+        }
+
         public static string Import_BAPI_U(string file)
         {
             try
