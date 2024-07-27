@@ -277,7 +277,7 @@ namespace Interface_igrid
         {
             try
             {
-                using (DataTable dt = ConvertCSVtoDataTableWithOutSplit(file))
+                using (DataTable dt = ConvertCSVtoDataTable(file))
                 {
                     if (dt.Rows.Count > 0)
                     {
@@ -307,7 +307,7 @@ namespace Interface_igrid
                             if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
                             {
                                 //SendEmail(from, to, subject, body);
-                                SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);
+                                SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);//For test
                             }
 
                             //4.send email to IT //5.sent email insert log 
@@ -763,7 +763,7 @@ namespace Interface_igrid
             {
                 dt.Rows.Add(
                 string.Format("{0}", row["Material"].ToString()),
-                string.Format("{0}", row["Description"].ToString()),
+                string.Format("{0}", row["Description"].ToString().Replace(",",". ")),
                 string.Format("{0}", row["Id"].ToString()));
             }
             if (dt.Rows.Count > 0)
@@ -876,29 +876,6 @@ namespace Interface_igrid
             sw.Close();
         }
         public static DataTable ConvertCSVtoDataTable(string strFilePath)
-        {
-            DataTable dt = new DataTable();
-            using (StreamReader sr = new StreamReader(strFilePath))
-            {
-                string[] headers = sr.ReadLine().Split(',');
-                foreach (string header in headers)
-                {
-                    dt.Columns.Add(header);
-                }
-                while (!sr.EndOfStream)
-                {
-                    string[] rows = sr.ReadLine().Split(',');
-                    DataRow dr = dt.NewRow();
-                    for (int i = 0; i < headers.Length; i++)
-                    {
-                        dr[i] = rows[i];
-                    }
-                    dt.Rows.Add(dr);
-                }
-            }
-            return dt;
-        }
-        public static DataTable ConvertCSVtoDataTableWithOutSplit(string strFilePath)
         {
             DataTable dt = new DataTable();
             using (StreamReader sr = new StreamReader(strFilePath))
