@@ -97,13 +97,13 @@ namespace Interface_igrid
                                     //imported = Import_MM01_C(fileI.FullName, out bodyMsg);
                                     break;
                                 case "BAPI_U":
-                                    //imported = Import_BAPI_U(fileI.FullName);
+                                    imported = Import_BAPI_U(file, InterfaceCode);
                                     break;
                                 case "CLMM_C":
                                     //imported = Import_CLMM_C(file, InterfaceCode);
                                     break;
                                 case "MM02_I":
-                                    imported = Import_MM02_I(file, InterfaceCode);
+                                    //imported = Import_MM02_I(file, InterfaceCode);
                                     break;
                             }                          
                         }                        
@@ -390,7 +390,7 @@ namespace Interface_igrid
 
         }
 
-        public static string Import_BAPI_U(string file)
+        public static string Import_BAPI_U(string file, string InterfaceCode)
         {
             try
             {
@@ -474,12 +474,15 @@ namespace Interface_igrid
                     }
                 }
 
-                File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
-                return "Success";
+                if (File.Exists(file))
+                {
+                    File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                }
+                return InterfaceCode + " Success";
             }
             catch (IOException e)
             {
-                return e.Message;
+                return InterfaceCode + e.Message + e.StackTrace;
             }
         }
 
