@@ -341,6 +341,50 @@ namespace Interface_igrid
                     {
                         foreach (DataRow row in dt.Rows)
                         {
+                            //string Changed_Id = "";
+                            //string Changed_Action = "";
+                            //string Material = "";
+                            //string Description = "";
+                            //string DMSNo = "";
+                            //string New_Material = "";
+                            //string New_Description = "";
+                            //string Status = "";
+                            //string Reason = "";
+                            //string NewMat_JobId = "";
+                            //string Char_Name = "";
+                            //string Char_OldValue = "";
+                            //string Char_NewValue = "";
+
+                            ////send email
+                            ////SendEmailUpdateMaster("U" + Material);
+
+                            ////update impactedmat
+                            //using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
+                            //{
+                            //    SqlCommand cmd = new SqlCommand();
+                            //    cmd.CommandType = CommandType.StoredProcedure;
+                            //    cmd.CommandText = "spUpdateImpactedmat";
+                            //    cmd.Parameters.AddWithValue("@Changed_Id", Changed_Id);
+                            //    cmd.Parameters.AddWithValue("@Changed_Action", Changed_Action);
+                            //    cmd.Parameters.AddWithValue("@Material", Material);
+                            //    cmd.Parameters.AddWithValue("@Description", Description);
+                            //    cmd.Parameters.AddWithValue("@DMSNo", DMSNo);
+                            //    cmd.Parameters.AddWithValue("@New_Material", New_Material);
+                            //    cmd.Parameters.AddWithValue("@New_Description", New_Description);
+                            //    cmd.Parameters.AddWithValue("@Status", Status);
+                            //    cmd.Parameters.AddWithValue("@Reason", Reason);
+                            //    cmd.Parameters.AddWithValue("@NewMat_JobId", NewMat_JobId);
+                            //    cmd.Parameters.AddWithValue("@Char_Name", Char_Name);
+                            //    cmd.Parameters.AddWithValue("@Char_OldValue", Char_OldValue);
+                            //    cmd.Parameters.AddWithValue("@Char_NewValue", Char_NewValue);
+                            //    cmd.Connection = con;
+                            //    con.Open();
+                            //    DataTable dtResult = new DataTable();
+                            //    SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
+                            //    oAdapter.Fill(dtResult);
+                            //    con.Close();
+                            //}
+
                             string Condition = row[0].ToString().Replace("D", "Remove");
                             string Name = row[1].ToString();
                             string Value = row[2].ToString();
@@ -394,82 +438,48 @@ namespace Interface_igrid
         {
             try
             {
-                using (var sr = new StreamReader(file))
+                using (DataTable dt = ConvertCSVtoDataTable(file))
                 {
-                    string[] headers = sr.ReadLine().Split(',');
-                    foreach (string header in headers)
+                    if (dt.Rows.Count > 0)
                     {
-                        Console.WriteLine(header);
-
-
-                        if (header.Length > 0)
+                        foreach (DataRow row in dt.Rows)
                         {
-                            if (header == "Condition records saved")
+                            string MatNumber = row[0].ToString();
+                            string ClassNum = row[1].ToString();
+                            string LoopIdColumn = row[2].ToString();
+                            string Nmae = row[3].ToString();    
+                            string Value = row[4].ToString();   
+                            string AppId = row[5].ToString();
+                            string Result = row[6].ToString();                            
+
+                            //1.Update to db
+                            DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
+
+                            //2.get data from db to dataTable prepare sent email to user
+                            string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                            string to = "";
+                            foreach (DataRow dr in dtGetMail.Rows)  //get email from db
                             {
-                                string Changed_Id = "";
-                                string Changed_Action = "";
-                                string Material = "";
-                                string Description = "";
-                                string DMSNo = "";
-                                string New_Material = "";
-                                string New_Description = "";
-                                string Status = "";
-                                string Reason = "";
-                                string NewMat_JobId = "";
-                                string Char_Name = "";
-                                string Char_OldValue = "";
-                                string Char_NewValue = "";
-
-                                //send email
-                                //SendEmailUpdateMaster("U" + Material);
-
-                                //update impactedmat
-                                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
-                                {
-                                    SqlCommand cmd = new SqlCommand();
-                                    cmd.CommandType = CommandType.StoredProcedure;
-                                    cmd.CommandText = "spUpdateImpactedmat";
-                                    cmd.Parameters.AddWithValue("@Changed_Id", Changed_Id);
-                                    cmd.Parameters.AddWithValue("@Changed_Action", Changed_Action);
-                                    cmd.Parameters.AddWithValue("@Material", Material);
-                                    cmd.Parameters.AddWithValue("@Description", Description);
-                                    cmd.Parameters.AddWithValue("@DMSNo", DMSNo);
-                                    cmd.Parameters.AddWithValue("@New_Material", New_Material);
-                                    cmd.Parameters.AddWithValue("@New_Description", New_Description);
-                                    cmd.Parameters.AddWithValue("@Status", Status);
-                                    cmd.Parameters.AddWithValue("@Reason", Reason);
-                                    cmd.Parameters.AddWithValue("@NewMat_JobId", NewMat_JobId);
-                                    cmd.Parameters.AddWithValue("@Char_Name", Char_Name);
-                                    cmd.Parameters.AddWithValue("@Char_OldValue", Char_OldValue);
-                                    cmd.Parameters.AddWithValue("@Char_NewValue", Char_NewValue);
-                                    cmd.Connection = con;
-                                    con.Open();
-                                    DataTable dtResult = new DataTable();
-                                    SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
-                                    oAdapter.Fill(dtResult);
-                                    con.Close();
-                                }
+                                to = dr["Email"].ToString();
                             }
-                        }
-                    }
 
-                    while (!sr.EndOfStream)
-                    {
-                        string[] rows = sr.ReadLine().Split(',');
-                        foreach (string row in rows)
-                        {
-                            Console.WriteLine(row);
-                        }
+                            string subject = "Material " + "[" + MatNumber + "] " + Result;
+                            string body = " Material: " + MatNumber + ", ClassNum: " + ClassNum + ", Result: " + Result + ".";
+                            string AttachedFile = "";
 
+                            //3.sent email to user
+                            if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
+                            {
+                                //SendEmail(from, to, subject, body);
+                                SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);//For test
+                            }
 
-                        foreach (string item in rows)
-                        {
-
-                            string a = item[0].ToString();
-                        }
-                        foreach (dynamic record in rows.ToList())
-                        {
-                            var data = record["IfColumn"];
+                            //4.send email to IT //5.sent email insert log 
+                            if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                            {
+                                SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
+                                SendToLog(from, to, subject, body);
+                            }
                         }
                     }
                 }
