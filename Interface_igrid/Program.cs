@@ -24,17 +24,17 @@ namespace Interface_igrid
     public class Program
     {
         //public static string ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-        public static string InterfacePathInbound = ConfigurationManager.AppSettings["InterfacePathInbound"];
-        public static string InterfacePathOutbound = ConfigurationManager.AppSettings["InterfacePathOutbound"];
-        public static string runFlageOutbound = ConfigurationManager.AppSettings["runFlageOutbound"];
-        public static string runFlageInbound = ConfigurationManager.AppSettings["runFlageInbound"]; 
+        //public static string InterfacePathInbound = ConfigurationManager.AppSettings["InterfacePathInbound"];
+        //public static string InterfacePathOutbound = ConfigurationManager.AppSettings["InterfacePathOutbound"];
+        //public static string runFlageOutbound = ConfigurationManager.AppSettings["runFlageOutbound"];
+        //public static string runFlageInbound = ConfigurationManager.AppSettings["runFlageInbound"]; 
         //public static string EnvironmentName = ConfigurationManager.AppSettings["EnvironmentName"];
        
         
         static void Main(string[] args)
         {
             #region Outbound
-            if (bool.Parse(runFlageOutbound) == true) // flage for true run or false not run
+            if (bool.Parse(ConfigurationManager.AppSettings["runFlageOutbound"]) == true) // flage for true run or false not run
             {
                 try
                 {
@@ -63,7 +63,7 @@ namespace Interface_igrid
             #endregion
 
             #region Inbound        
-            if (bool.Parse(runFlageInbound) == true) // flage for true run or false not run
+            if (bool.Parse(ConfigurationManager.AppSettings["runFlageInbound"]) == true) // flage for true run or false not run
             {
                 string imported = "";
                 try
@@ -71,7 +71,7 @@ namespace Interface_igrid
 
                     //string bodyMsg = "";
 
-                    var filesToImport = Directory.GetFiles(InterfacePathInbound, "*_Result.csv");
+                    var filesToImport = Directory.GetFiles(ConfigurationManager.AppSettings["InterfacePathInbound"], "*_Result.csv");
                     if (filesToImport != null)
                     {
                         
@@ -145,7 +145,7 @@ namespace Interface_igrid
                     }
                     if (File.Exists(file))
                     {
-                        File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                        File.Move(file, ConfigurationManager.AppSettings["InterfacePathInbound"] + @"Processed\" + Path.GetFileName(file));
                     }
                 }
                 return "Success";
@@ -205,7 +205,7 @@ namespace Interface_igrid
                 }
                 if (File.Exists(file))
                 {
-                    File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                    File.Move(file, ConfigurationManager.AppSettings["InterfacePathInbound"] + @"Processed\" + Path.GetFileName(file));
                 }               
                 return InterfaceCode + " Success";
             }
@@ -263,7 +263,7 @@ namespace Interface_igrid
                 }
                 if (File.Exists(file))
                 {
-                    File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                    File.Move(file, ConfigurationManager.AppSettings["InterfacePathInbound"] + @"Processed\" + Path.GetFileName(file));
                 }
                 return InterfaceCode + " Success";
             }
@@ -321,7 +321,7 @@ namespace Interface_igrid
                 }
                 if (File.Exists(file))
                 {
-                    File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                    File.Move(file, ConfigurationManager.AppSettings["InterfacePathInbound"] + @"Processed\" + Path.GetFileName(file));
                 }
                 return InterfaceCode + " Success";
             }
@@ -379,7 +379,7 @@ namespace Interface_igrid
                 }
                 if (File.Exists(file))
                 {
-                    File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                    File.Move(file, ConfigurationManager.AppSettings["InterfacePathInbound"] + @"Processed\" + Path.GetFileName(file));
                 }
                 return InterfaceCode + " Success";
             }
@@ -476,7 +476,7 @@ namespace Interface_igrid
 
                 if (File.Exists(file))
                 {
-                    File.Move(file, InterfacePathInbound + @"Processed\" + Path.GetFileName(file));
+                    File.Move(file, ConfigurationManager.AppSettings["InterfacePathInbound"] + @"Processed\" + Path.GetFileName(file));
                 }
                 return InterfaceCode + " Success";
             }
@@ -507,7 +507,7 @@ namespace Interface_igrid
             }
             if (dtListMat.Rows.Count > 0)
             {
-                string file = InterfacePathOutbound + "SQ01_ListMat" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "SQ01_ListMat" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
                 ToCSV(dtListMat, file);
             }
         }
@@ -565,7 +565,7 @@ namespace Interface_igrid
             }
             if (dtCT04Insert.Rows.Count > 0)
             {
-                string file = InterfacePathOutbound + "CT04_Insert_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "CT04_Insert_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
                 ToCSV(dtCT04Insert, file);
             }
             //if (dtCT04Update.Rows.Count > 0)
@@ -575,7 +575,7 @@ namespace Interface_igrid
             //}
             if (dtCT04Remove.Rows.Count > 0)
             {
-                string file = InterfacePathOutbound + "CT04_Remove_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "CT04_Remove_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
                 ToCSV(dtCT04Remove, file);
             }
         }
@@ -618,7 +618,7 @@ namespace Interface_igrid
             }
             if (dt.Rows.Count > 0)
             {
-                string file = InterfacePathOutbound + "MM01_CreateMAT_ExtensionPlant_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "MM01_CreateMAT_ExtensionPlant_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
                 ToCSV(dt, file);
             }
         }
@@ -675,7 +675,7 @@ namespace Interface_igrid
                 }
                 if (dtClass.Rows.Count > 0)
                 {
-                    string file = InterfacePathOutbound + "BAPI_UpdateMATCharacteristics_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";
+                    string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "BAPI_UpdateMATCharacteristics_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";
                     ToCSV(dtClass, file);
                 }
                 dtClass.Clear();
@@ -748,7 +748,7 @@ namespace Interface_igrid
                 }
                 if (dt.Rows.Count > 0)
                 {
-                    string file = InterfacePathOutbound + "CLMM_ChangeMatClass_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";
+                    string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "CLMM_ChangeMatClass_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";
                     ToCSV(dt, file);
                 }
                 dt.Clear();
@@ -771,7 +771,7 @@ namespace Interface_igrid
             }
             if (dt.Rows.Count > 0)
             {
-                string file = InterfacePathOutbound + "MM02_ImpactMatDesc" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "MM02_ImpactMatDesc" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
                 ToCSV(dt, file);
             }
         }
