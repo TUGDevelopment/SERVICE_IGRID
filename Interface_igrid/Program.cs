@@ -97,10 +97,10 @@ namespace Interface_igrid
                                     //imported = Import_MM01_C(fileI.FullName, out bodyMsg);
                                     break;
                                 case "BAPI_U":
-                                    imported = Import_BAPI_U(file, InterfaceCode);
+                                    //imported = Import_BAPI_U(file, InterfaceCode);
                                     break;
                                 case "CLMM_C":
-                                    //imported = Import_CLMM_C(file, InterfaceCode);
+                                    imported = Import_CLMM_C(file, InterfaceCode);
                                     break;
                                 case "MM02_I":
                                     //imported = Import_MM02_I(file, InterfaceCode);
@@ -385,11 +385,13 @@ namespace Interface_igrid
                             //    con.Close();
                             //}
 
-                            string Condition = row[0].ToString().Replace("D", "Remove");
-                            string Name = row[1].ToString();
-                            string Value = row[2].ToString();
-                            string AppId = row[3].ToString();
-                            string Result = row[4].ToString();
+                            string MatNumber = row[0].ToString();
+                            string ClassNum = row[1].ToString();
+                            string LoopIdColumn = row[2].ToString();
+                            string Name = row[3].ToString();
+                            string Value = row[4].ToString();
+                            string AppId = row[5].ToString();
+                            string Result = row[6].ToString();
 
                             //1.Update to db
                             DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
@@ -401,8 +403,8 @@ namespace Interface_igrid
                             {
                                 to = dr["Email"].ToString();
                             }
-                            string subject = "Characteristic master is maintained in SAP " + "[" + Condition + "]";
-                            string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Result: " + Result + ".";
+                            string subject = "Characteristic master is maintained in SAP " + "[" + MatNumber + "]";
+                            string body = " Material: " + MatNumber + ", Characteristic master: " + Name + ", Value: " + Value + ", Result: " + Result + ".";
                             string AttachedFile = "";
 
                             //3.sent email to user
@@ -447,7 +449,7 @@ namespace Interface_igrid
                             string MatNumber = row[0].ToString();
                             string ClassNum = row[1].ToString();
                             string LoopIdColumn = row[2].ToString();
-                            string Nmae = row[3].ToString();    
+                            string Name = row[3].ToString();    
                             string Value = row[4].ToString();   
                             string AppId = row[5].ToString();
                             string Result = row[6].ToString();                            
