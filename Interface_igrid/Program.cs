@@ -1,6 +1,4 @@
-﻿//using BLL.Services;
-//using CsvHelper;
-using System;
+﻿using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -20,19 +18,12 @@ using System.Windows.Interop;
 using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.ExtendedProperties;
+using DocumentFormat.OpenXml.Presentation;
 
 namespace Interface_igrid
 {
     public class Program
-    {
-        //public static string ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-        //public static string InterfacePathInbound = ConfigurationManager.AppSettings["InterfacePathInbound"];
-        //public static string InterfacePathOutbound = ConfigurationManager.AppSettings["InterfacePathOutbound"];
-        //public static string runFlageOutbound = ConfigurationManager.AppSettings["runFlageOutbound"];
-        //public static string runFlageInbound = ConfigurationManager.AppSettings["runFlageInbound"]; 
-        //public static string EnvironmentName = ConfigurationManager.AppSettings["EnvironmentName"];
-       
-        
+    {     
         static void Main(string[] args)
         {
             #region Outbound
@@ -70,9 +61,6 @@ namespace Interface_igrid
                 string imported = "";
                 try
                 {
-
-                    //string bodyMsg = "";
-
                     var filesToImport = Directory.GetFiles(ConfigurationManager.AppSettings["InterfacePathInbound"], "*_Result.csv");
                     if (filesToImport != null)
                     {
@@ -87,25 +75,25 @@ namespace Interface_igrid
                             switch (InterfaceCode)
                             {
                                 case "SQ01_L":
-                                    //imported = Import_SQ01(file);
+                                    imported = Import_SQ01(file, InterfaceCode);
                                     break;
                                 case "CT04_I":
-                                    //imported = Import_CT04_I(file, InterfaceCode);
+                                    imported = Import_CT04_I(file, InterfaceCode);
                                     break;
                                 case "CT04_R":
-                                    //imported = Import_CT04_R(file, InterfaceCode);
+                                    imported = Import_CT04_R(file, InterfaceCode);
                                     break;
                                 case "MM01_C":
                                     imported = Import_MM01_C(file, InterfaceCode);
                                     break;
                                 case "BAPI_U":
-                                    //imported = Import_BAPI_U(file, InterfaceCode);
+                                    imported = Import_BAPI_U(file, InterfaceCode);
                                     break;
                                 case "CLMM_C":
-                                    //imported = Import_CLMM_C(file, InterfaceCode);
+                                    imported = Import_CLMM_C(file, InterfaceCode);
                                     break;
                                 case "MM02_I":
-                                    //imported = Import_MM02_I(file, InterfaceCode);
+                                    imported = Import_MM02_I(file, InterfaceCode);
                                     break;
                             }                          
                         }                        
@@ -123,38 +111,39 @@ namespace Interface_igrid
         }
 
         #region IMPORT INTERFACES
-        public static string Import_SQ01(string file)
+        public static string Import_SQ01(string file, string InterfaceCode)
         {
             try
             {
-                using (var sr = new StreamReader(file))
+                using (DataTable dt = ConvertCSVtoDataTable(file))
                 {
-                    int count = 0;
-                    while (!sr.EndOfStream)
+                    if (dt.Rows.Count > 0)
                     {
-                        string[] rows = sr.ReadLine().Split(',');
-                        //foreach (string row in rows)
-                        //{
-                        //    Console.WriteLine(row);
-                        //}
-                        count++;
-                    }
-                    Console.WriteLine("Count: " + count);
-                    if(count > 1)
-                    {
-                        //send email , count get mat all
-                        //SendEmail(count);
-                    }
-                    if (File.Exists(file))
-                    {
-                        File.Move(file, ConfigurationManager.AppSettings["InterfacePathInbound"] + @"Processed\" + Path.GetFileName(file));
+                        string AppId = "0";
+                        DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
+                        string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                        string to = ConfigurationManager.AppSettings["ITEmailsNotify"];                       
+                        string subject = "SQ01 List Material is done";
+                        string body = "SQ01 List Material is done";
+                        string AttachedFile = "";
+
+
+                        if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                        {
+                            SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
+                            SendToLog(from, to, subject, body);
+                        }
                     }
                 }
-                return "Success";
+                if (File.Exists(file))
+                {
+                    File.Move(file, ConfigurationManager.AppSettings["InterfacePathInbound"] + @"Processed\" + Path.GetFileName(file));
+                }
+                return InterfaceCode + " Success";
             }
             catch (IOException e)
             {
-                return e.Message;
+                return InterfaceCode + e.Message;
             }
         }
      
