@@ -20,7 +20,6 @@ using System.Windows.Interop;
 using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.ExtendedProperties;
-using WebServices.Model;
 
 namespace Interface_igrid
 {
@@ -641,7 +640,7 @@ namespace Interface_igrid
                         {
                             dt.Rows.Add(string.Format("{0}", row["DocumentNo"].ToString()),
                             string.Format("{0}", row["Material"].ToString()),
-                            string.Format("{0}", row["Description"].ToString()),
+                            string.Format("{0}", row["Description"].ToString().Replace(",", ". ")),
                             string.Format("{0}", row["Ref"].ToString().Trim()),
                             string.Format("{0}", s.ToString().Trim()),
                             string.Format("{0}", row["Plant"]).Substring(0, 3),
