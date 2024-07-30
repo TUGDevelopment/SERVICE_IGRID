@@ -18,6 +18,9 @@ using System.Xml.Linq;
 using System.Net;
 using System.Windows.Interop;
 using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.ExtendedProperties;
+using WebServices.Model;
 
 namespace Interface_igrid
 {
@@ -94,13 +97,13 @@ namespace Interface_igrid
                                     //imported = Import_CT04_R(file, InterfaceCode);
                                     break;
                                 case "MM01_C":
-                                    //imported = Import_MM01_C(fileI.FullName, out bodyMsg);
+                                    imported = Import_MM01_C(file, InterfaceCode);
                                     break;
                                 case "BAPI_U":
                                     //imported = Import_BAPI_U(file, InterfaceCode);
                                     break;
                                 case "CLMM_C":
-                                    imported = Import_CLMM_C(file, InterfaceCode);
+                                    //imported = Import_CLMM_C(file, InterfaceCode);
                                     break;
                                 case "MM02_I":
                                     //imported = Import_MM02_I(file, InterfaceCode);
@@ -393,7 +396,70 @@ namespace Interface_igrid
             }
 
         }
+        public static string Import_MM01_C(string file, string InterfaceCode)
+        {
+            try
+            {
+                using (DataTable dt = ConvertCSVtoDataTable(file))
+                {
+                    if (dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dt.Rows)
+                        {                            
+                            string DocNum = row[0].ToString();
+                            string MatNum = row[1].ToString();
+                            string MatDesc = row[2].ToString();
+                            string MatRef = row[3].ToString();
+                            string Plant = row[4].ToString();
+                            string Org = row[5].ToString();
+                            string Distribution = row[6].ToString();
+                            string AppId = row[7].ToString();
+                            string Result = row[8].ToString();
+                            if (DocNum != "" && MatNum != "" && MatDesc != "" && Plant != "" && Distribution != "" && AppId != "" && Result != "")
+                            {
+                                //1.Update to db
+                                DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
 
+                                //2.get data from db to dataTable prepare sent email to user
+                                string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                                string to = "";
+                                foreach (DataRow dr in dtGetMail.Rows)  //get email from db
+                                {
+                                    to = dr["Email"].ToString();
+                                }
+                                string subject = "System is created no : " + MatNum + " / " + MatDesc + " - [Create Material]";
+                                string body = Result;
+                                string AttachedFile = "";
+
+                                //3.sent email to user
+                                if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
+                                {
+                                    //SendEmail(from, to, subject, body);
+                                    SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);
+                                }
+
+                                //4.send email to IT //5.sent email insert log 
+                                if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                                {
+                                    SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
+                                    SendToLog(from, to, subject, body);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (File.Exists(file))
+                {
+                    File.Move(file, ConfigurationManager.AppSettings["InterfacePathInbound"] + @"Processed\" + Path.GetFileName(file));
+                }
+                return InterfaceCode + " Success";
+            }
+            catch (IOException e)
+            {
+                return InterfaceCode + e.Message + e.StackTrace;
+            }
+
+        }
         public static string Import_BAPI_U(string file, string InterfaceCode)
         {
             try
