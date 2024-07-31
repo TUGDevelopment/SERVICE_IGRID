@@ -84,7 +84,7 @@ namespace Interface_igrid
                                     imported = Import_CT04_R(file, InterfaceCode);
                                     break;
                                 case "MM01_C":
-                                    imported = Import_MM01_C(file, InterfaceCode);
+                                    //imported = Import_MM01_C(file, InterfaceCode);
                                     break;
                                 case "BAPI_U":
                                     imported = Import_BAPI_U(file, InterfaceCode);
@@ -268,7 +268,7 @@ namespace Interface_igrid
         {
             try
             {
-                using (DataTable dt = ConvertCSVtoDataTable(file))
+                using (DataTable dt = ConvertCSVtoDataTableWithPipe(file))
                 {
                     if (dt.Rows.Count > 0)
                     {
@@ -388,7 +388,7 @@ namespace Interface_igrid
         {
             try
             {
-                using (DataTable dt = ConvertCSVtoDataTable(file))
+                using (DataTable dt = ConvertCSVtoDataTableWithPipe(file))
                 {
                     if (dt.Rows.Count > 0)
                     {
@@ -915,6 +915,29 @@ namespace Interface_igrid
                 while (!sr.EndOfStream)
                 {
                     string[] rows = sr.ReadLine().Split(',');
+                    DataRow dr = dt.NewRow();
+                    for (int i = 0; i < headers.Length; i++)
+                    {
+                        dr[i] = rows[i];
+                    }
+                    dt.Rows.Add(dr);
+                }
+            }
+            return dt;
+        }
+        public static DataTable ConvertCSVtoDataTableWithPipe(string strFilePath)
+        {
+            DataTable dt = new DataTable();
+            using (StreamReader sr = new StreamReader(strFilePath))
+            {
+                string[] headers = sr.ReadLine().Split('|');
+                foreach (string header in headers)
+                {
+                    dt.Columns.Add(header);
+                }
+                while (!sr.EndOfStream)
+                {
+                    string[] rows = sr.ReadLine().Split('|');
                     DataRow dr = dt.NewRow();
                     for (int i = 0; i < headers.Length; i++)
                     {
