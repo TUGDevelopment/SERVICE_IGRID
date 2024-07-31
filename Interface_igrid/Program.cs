@@ -84,7 +84,7 @@ namespace Interface_igrid
                                     imported = Import_CT04_R(file, InterfaceCode);
                                     break;
                                 case "MM01_C":
-                                    //imported = Import_MM01_C(file, InterfaceCode);
+                                    imported = Import_MM01_C(file, InterfaceCode);
                                     break;
                                 case "BAPI_U":
                                     imported = Import_BAPI_U(file, InterfaceCode);
