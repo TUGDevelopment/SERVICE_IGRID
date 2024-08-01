@@ -629,7 +629,7 @@ namespace Interface_igrid
                         {
                             dt.Rows.Add(string.Format("{0}", row["DocumentNo"].ToString()),
                             string.Format("{0}", row["Material"].ToString()),
-                            string.Format("{0}", row["Description"].ToString().Replace(",", ". ")),
+                            string.Format("{0}", row["Description"].ToString()),
                             string.Format("{0}", row["Ref"].ToString().Trim()),
                             string.Format("{0}", s.ToString().Trim()),
                             string.Format("{0}", row["Plant"]).Substring(0, 3),
@@ -643,7 +643,7 @@ namespace Interface_igrid
             if (dt.Rows.Count > 0)
             {
                 string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "MM01_CreateMAT_ExtensionPlant_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                ToCSV(dt, file);
+                ToCSVWithPipe(dt, file);
             }
         }
         public static void BAPI_UpdateMATCharacteristics(DataTable Results)
@@ -790,13 +790,13 @@ namespace Interface_igrid
             {
                 dt.Rows.Add(
                 string.Format("{0}", row["Material"].ToString()),
-                string.Format("{0}", row["Description"].ToString().Replace(",",". ")),
+                string.Format("{0}", row["Description"].ToString()),
                 string.Format("{0}", row["Id"].ToString()));
             }
             if (dt.Rows.Count > 0)
             {
                 string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "MM02_ImpactMatDesc" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                ToCSV(dt, file);
+                ToCSVWithPipe(dt, file);
             }
         }
         #endregion
@@ -896,6 +896,45 @@ namespace Interface_igrid
                     if (i < dtDataTable.Columns.Count - 1)
                     {
                         sw.Write(",");
+                    }
+                }
+                sw.Write(sw.NewLine);
+            }
+            sw.Close();
+        }
+        public static void ToCSVWithPipe(DataTable dtDataTable, string strFilePath)
+        {
+            StreamWriter sw = new StreamWriter(strFilePath, false, new UTF8Encoding(true));
+            //headers
+            for (int i = 0; i < dtDataTable.Columns.Count; i++)
+            {
+                sw.Write(dtDataTable.Columns[i]);
+                if (i < dtDataTable.Columns.Count - 1)
+                {
+                    sw.Write("|");
+                }
+            }
+            sw.Write(sw.NewLine);
+            foreach (DataRow dr in dtDataTable.Rows)
+            {
+                for (int i = 0; i < dtDataTable.Columns.Count; i++)
+                {
+                    if (!Convert.IsDBNull(dr[i]))
+                    {
+                        string value = dr[i].ToString();
+                        if (value.Contains(','))
+                        {
+                            value = String.Format("\"{0}\"", value);
+                            sw.Write(value);
+                        }
+                        else
+                        {
+                            sw.Write(dr[i].ToString());
+                        }
+                    }
+                    if (i < dtDataTable.Columns.Count - 1)
+                    {
+                        sw.Write("|");
                     }
                 }
                 sw.Write(sw.NewLine);
