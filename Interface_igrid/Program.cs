@@ -47,7 +47,7 @@ namespace Interface_igrid
                             switch (InterfaceCode)
                             {
                                 case "SQ01_L":
-                                    imported = Import_SQ01(file, InterfaceCode);
+                                    imported = Import_SQ01_L(file, InterfaceCode);
                                     break;
                                 case "CT04_I":
                                     imported = Import_CT04_I(file, InterfaceCode);
@@ -134,7 +134,7 @@ namespace Interface_igrid
         }
 
         #region IMPORT INTERFACES
-        public static string Import_SQ01(string file, string InterfaceCode)
+        public static string Import_SQ01_L(string file, string InterfaceCode)
         {
             try
             {
@@ -148,8 +148,7 @@ namespace Interface_igrid
                         string to = ConfigurationManager.AppSettings["ITEmailsNotify"];                       
                         string subject = InterfaceCode + " - SQ01 List Material is done";
                         string body = "SQ01 List Material is done";
-                        string AttachedFile = "";
-
+                        string AttachedFile = "";                        
 
                         if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
                         {
