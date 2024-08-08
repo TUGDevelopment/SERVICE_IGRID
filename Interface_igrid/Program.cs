@@ -82,7 +82,7 @@ namespace Interface_igrid
                     {
                         string from = ConfigurationManager.AppSettings["SMTPFrom"];
                         string to = ConfigurationManager.AppSettings["ITEmailsNotify"];
-                        string subject = "Outbound Not success";
+                        string subject = "Inbound Not success";
                         string body = e.Message + e.StackTrace;
                         SendEmail(from, to, subject, body);
                         SendToLog(from, to, subject, body);
