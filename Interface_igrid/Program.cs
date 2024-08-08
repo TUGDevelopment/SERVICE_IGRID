@@ -50,6 +50,16 @@ namespace Interface_igrid
                     Console.WriteLine("\nException Caught!");
                     Console.WriteLine($"Message :{e.Message} ");
                     Console.WriteLine("Outbound - Not success");
+                    //4.send email to IT //5.sent email insert log 
+                    if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                    {
+                        string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                        string to = ConfigurationManager.AppSettings["ITEmailsNotify"];
+                        string subject = "Outbound Not success";
+                        string body = e.Message + e.StackTrace;
+                        SendEmail(from, to, subject, body);
+                        SendToLog(from, to, subject, body);
+                    }
                 }
             }
 
@@ -105,6 +115,16 @@ namespace Interface_igrid
                     Console.WriteLine("\nException Caught!");
                     Console.WriteLine($"Message :{e.Message} " + e.StackTrace);
                     Console.WriteLine("Inbound - Not success" + imported);
+                    //4.send email to IT //5.sent email insert log 
+                    if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                    {
+                        string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                        string to = ConfigurationManager.AppSettings["ITEmailsNotify"];
+                        string subject = "Outbound Not success";
+                        string body = e.Message + e.StackTrace;
+                        SendEmail(from, to, subject, body);
+                        SendToLog(from, to, subject, body);
+                    }
                 }
             }
             #endregion
@@ -123,7 +143,7 @@ namespace Interface_igrid
                         DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
                         string from = ConfigurationManager.AppSettings["SMTPFrom"];
                         string to = ConfigurationManager.AppSettings["ITEmailsNotify"];                       
-                        string subject = "SQ01 List Material is done";
+                        string subject = InterfaceCode + " - SQ01 List Material is done";
                         string body = "SQ01 List Material is done";
                         string AttachedFile = "";
 
@@ -174,15 +194,14 @@ namespace Interface_igrid
                             {
                                 to = dr["Email"].ToString();
                             }
-                            string subject = "Characteristic master is maintained in SAP " + "[" + Condition + "]";
+                            string subject = InterfaceCode + " - Characteristic master is maintained in SAP " + "[" + Condition + "]";
                             string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Description: " + Description + ", Result: " + Result + ".";
                             string AttachedFile = ""; 
 
                             //3.sent email to user
                             if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport"+ InterfaceCode]) == true)
                             {
-                                //SendEmail(from, to, subject, body);
-                                SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);
+                                SendEmail(from, to, subject, body);
                             }
 
                             //4.send email to IT //5.sent email insert log 
@@ -232,15 +251,14 @@ namespace Interface_igrid
                             {
                                 to = dr["Email"].ToString();
                             }
-                            string subject = "Characteristic master is maintained in SAP " + "[" + Condition + "]";
+                            string subject = InterfaceCode + " - Characteristic master is maintained in SAP " + "[" + Condition + "]";
                             string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Result: " + Result + ".";
                             string AttachedFile = "";
 
                             //3.sent email to user
                             if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
                             {
-                                //SendEmail(from, to, subject, body);
-                                SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);
+                                SendEmail(from, to, subject, body);
                             }
 
                             //4.send email to IT //5.sent email insert log 
@@ -290,15 +308,14 @@ namespace Interface_igrid
                                 to = dr["Email"].ToString();
                             }
                            
-                            string subject = "Material " + "[" + MatNumber + "] Saving changes to assignments Assignment changed";
+                            string subject = InterfaceCode + " - Material " + "[" + MatNumber + "] Saving changes to assignments Assignment changed";
                             string body = " Material: " + MatNumber + ", Description: " + MatDesc + ", Result: " + Result + ".";
                             string AttachedFile = "";
 
                             //3.sent email to user
                             if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
                             {
-                                //SendEmail(from, to, subject, body);
-                                SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);//For test
+                                SendEmail(from, to, subject, body);
                             }
 
                             //4.send email to IT //5.sent email insert log 
@@ -352,15 +369,14 @@ namespace Interface_igrid
                                 {
                                     to = dr["Email"].ToString();
                                 }
-                                string subject = "Characteristic master is maintained in SAP " + "[" + MatNumber + "]";
+                                string subject = InterfaceCode + " - Characteristic master is maintained in SAP " + "[" + MatNumber + "]";
                                 string body = " Material: " + MatNumber + ", Characteristic master: " + Name + ", Value: " + Value + ", Result: " + Result + ".";
                                 string AttachedFile = "";
 
                                 //3.sent email to user
                                 if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
                                 {
-                                    //SendEmail(from, to, subject, body);
-                                    SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);
+                                    SendEmail(from, to, subject, body);
                                 }
 
                                 //4.send email to IT //5.sent email insert log 
@@ -416,15 +432,14 @@ namespace Interface_igrid
                                 {
                                     to = dr["Email"].ToString();
                                 }
-                                string subject = "System is created no : " + MatNum + " / " + MatDesc + " - [Create Material]";
+                                string subject = InterfaceCode + " - System is created no : " + MatNum + " / " + MatDesc + " - [Create Material]";
                                 string body = Result;
                                 string AttachedFile = "";
 
                                 //3.sent email to user
                                 if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
                                 {
-                                    //SendEmail(from, to, subject, body);
-                                    SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);
+                                    SendEmail(from, to, subject, body);
                                 }
 
                                 //4.send email to IT //5.sent email insert log 
@@ -467,8 +482,7 @@ namespace Interface_igrid
                             string AppId = row[5].ToString();
                             string Result = row[6].ToString();
 
-                            if (MatNumber != "" && ClassNum != "" && LoopIdColumn == "H" && AppId != "" && Result != "")
-                            //if (LoopIdColumn == "H")
+                            if (MatNumber != "" && ClassNum != "" && LoopIdColumn == "H" && AppId != "" && Result != "")                           
                             {
 
                                 //1.Update to db
@@ -482,15 +496,14 @@ namespace Interface_igrid
                                     to = dr["Email"].ToString();
                                 }
 
-                                string subject = "Material " + "[" + MatNumber + "] " + Result;
+                                string subject = InterfaceCode + " - Material " + "[" + MatNumber + "] " + Result;
                                 string body = " Material: " + MatNumber + ", ClassNum: " + ClassNum + ", Result: " + Result + ".";
                                 string AttachedFile = "";
 
                                 //3.sent email to user
                                 if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
                                 {
-                                    //SendEmail(from, to, subject, body);
-                                    SendEmail(from, "kriengkrai.ritthaphrom@thaiunion.com", subject, body);//For test
+                                    SendEmail(from, to, subject, body);
                                 }
 
                                 //4.send email to IT //5.sent email insert log 
