@@ -208,7 +208,7 @@ namespace Interface_igrid
                                 to = dr["Email"].ToString();
                             }
                             string subject = InterfaceCode + " - Characteristic master is maintained in SAP " + "[" + Condition + "]";
-                            string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Description: " + Description + ", Result: " + Result + ".";
+                            string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Description: " + Description + ", Result: " + Result.Replace("changed","Insert in SAP completed") + ".";
                             string AttachedFile = ""; 
 
                             //3.sent email to user
