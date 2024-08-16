@@ -19,14 +19,15 @@ using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Presentation;
+using System.Net.Http.Headers;
 
 namespace Interface_igrid
 {
     public class Program
-    {     
+    {
+        static readonly HttpClient client = new HttpClient();
         static void Main(string[] args)
-        {
-
+        {            
             #region Inbound        
             if (bool.Parse(ConfigurationManager.AppSettings["runFlageInbound"]) == true) // flage for true run or false not run
             {
@@ -46,26 +47,27 @@ namespace Interface_igrid
                             string InterfaceCode = fileN.Substring(0, 6);
                             switch (InterfaceCode)
                             {
-                                case "SQ01_L":
-                                    imported = Import_SQ01_L(file, InterfaceCode);
-                                    break;
-                                case "CT04_I":
-                                    imported = Import_CT04_I(file, InterfaceCode);
-                                    break;
-                                case "CT04_R":
-                                    imported = Import_CT04_R(file, InterfaceCode);
-                                    break;
                                 case "MM01_C":
                                     imported = Import_MM01_C(file, InterfaceCode);
                                     break;
                                 case "BAPI_U":
                                     imported = Import_BAPI_U(file, InterfaceCode);
                                     break;
+                                case "MM02_I":
+                                    imported = Import_MM02_I(file, InterfaceCode);
+                                    break;
                                 case "CLMM_C":
                                     imported = Import_CLMM_C(file, InterfaceCode);
                                     break;
-                                case "MM02_I":
-                                    imported = Import_MM02_I(file, InterfaceCode);
+                               
+                                case "CT04_I":
+                                    imported = Import_CT04_I(file, InterfaceCode);
+                                    break;
+                                case "CT04_R":
+                                    imported = Import_CT04_R(file, InterfaceCode);
+                                    break;
+                                case "SQ01_L":
+                                    imported = Import_SQ01_L(file, InterfaceCode);
                                     break;
                             }                          
                         }                        
@@ -97,18 +99,27 @@ namespace Interface_igrid
             {
                 try
                 {
-                    DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
-                    SQ01_ListMAT(dsspGetMasterData.Tables[0]);
-                    CT04(dsspGetMasterData.Tables[0]); //Insert,Remove 
-
-                    DataSet dsspQuery = GetData("spQuery", "@Material", "X");
-                    MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
-                    BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
-
-                    DataSet dsspGetImpactmat = GetData("spGetImpactmat", "@Active", "X");
-                    CLMM_ChangeMatClass(dsspGetImpactmat.Tables[0]);
-                    MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
-
+                    if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM01"]) == true) // flage for true run or false not run
+                    {
+                        //MM01
+                        DataSet dsspQuery = GetData("spQuery", "@Material", "X");
+                        MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
+                        BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
+                    }
+                    if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM02"]) == true) // flage for true run or false not run
+                    {
+                        //MM02
+                        DataSet dsspGetImpactmat = GetData("spGetImpactmat", "@Active", "X");
+                        MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
+                        CLMM_ChangeMatClass(dsspGetImpactmat.Tables[0]);
+                    }
+                    if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_CT04"]) == true) // flage for true run or false not run
+                    {
+                        //CT04
+                        DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
+                        CT04(dsspGetMasterData.Tables[0]); //Insert,Remove 
+                        SQ01_ListMAT(dsspGetMasterData.Tables[0]);
+                    }
                     Console.WriteLine("Outbound Completed");
                 }
                 catch (HttpRequestException e)
@@ -451,6 +462,9 @@ namespace Interface_igrid
                                     SendToLog(from, to, subject, body);
                                 }
                             }
+
+                            //sent to artwork
+                            OutboundArtwork(DocNum);
                         }
                     }
                 }
@@ -458,6 +472,9 @@ namespace Interface_igrid
                 {
                     File.Move(file, ConfigurationManager.AppSettings["InterfacePathInbound"] + @"Processed\" + Path.GetFileName(file));
                 }
+
+              
+
                 return InterfaceCode + " Success";
             }
             catch (IOException e)
@@ -528,6 +545,27 @@ namespace Interface_igrid
             catch (IOException e)
             {
                 return InterfaceCode + e.Message + e.StackTrace;
+            }
+        }
+
+        static async Task OutboundArtwork(string keys)
+        {
+            try
+            {
+                var handler = new HttpClientHandler();
+                handler.Credentials = new System.Net.NetworkCredential(@"thaiunion\service.webbase", "Tuna@40wb*");
+                HttpClient client = new HttpClient(handler);
+                client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));                
+                HttpResponseMessage response = await client.GetAsync("http://192.168.1.170:8888/ServiceCS.asmx/OutboundArtwork?Keys=" + keys);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Response received: {responseBody}");
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine($"Message :{e.Message} ");
             }
         }
 
@@ -1797,7 +1835,181 @@ namespace Interface_igrid
             //    string.Format("Master {0} is completely created in SAP and Artwork", name[1].ToString()), (!File.Exists(datapath)) ? "" : System.Web.HttpContext.Current.Server.MapPath(datapath));
 
         }
+        public static string OutboundArtworkold(string Keys)
+        {
+            ////master_artwork();
+            ////header
+            //IGRID_OUTBOUND_MODEL iGrid_Model = new IGRID_OUTBOUND_MODEL();
+            ////myh.OUTBOUND_HEADERS = new ServiceReference.IGRID_OUTBOUND_HEADER_MODEL;
 
+            //IGRID_OUTBOUND_HEADER_MODEL result = new IGRID_OUTBOUND_HEADER_MODEL();
+            //List<IGRID_OUTBOUND_HEADER_MODEL> iGrid_Header_List = new List<IGRID_OUTBOUND_HEADER_MODEL>();
+
+            //IGRID_OUTBOUND_MODEL matNumber = new IGRID_OUTBOUND_MODEL();
+            //SERVICE_RESULT_MODEL resp = new SERVICE_RESULT_MODEL();
+            try
+            {
+                //    var _table = builditems("select *,case when statusapp=4 then 'Completed' when statusapp=5 then 'Canceled' end as 'Status' from SapMaterial Where DocumentNo='" + Keys + "'");
+                //    string _ArtworkNumber = "", _Date = "", _Time = "", _Material = "", _PAUserName = "", _Subject = "Material {0} data send to Artwork Complete";
+
+                //    foreach (DataRow dr in _table.Rows)
+                //    {
+                //        if (dr["StatusApp"].ToString() == "5")
+                //            _Subject = "Cancel form iGrid and send info to Artwork Complete";
+                //        _ArtworkNumber = string.Format("{0}", dr["DMSNo"]);
+                //        _Date = String.Format("{0:yyyyMMdd}", dr["CreateOn"]);
+                //        _Time = String.Format("{0:HH:mm:ss}", dr["CreateOn"]); //"10:22:03";
+                //        _Material = string.Format("{0}", dr["Material"]);
+                //        _PAUserName = string.Format("{0}", dr["CreateBy"]);
+
+
+                //        DataTable _dt = builditems(@"select isnull(url,'')url,isnull(ReferenceMaterial,'')ReferenceMaterial from TransArtworkURL where Matdoc="
+                //        + string.Format("{0}", dr["Id"]));
+                //        if (_dt.Rows.Count > 0)
+                //        {
+                //            DataRow r = _dt.Rows[0];
+                //            result.ArtworkURL = string.Format("{0}", r["url"]);//"http://artwork.thaiunion.com/content/aw-file.pdf";
+                //            result.ReferenceMaterial = string.Format("{0}", r["ReferenceMaterial"]);
+                //        }
+                //        else
+                //        {
+                //            result.ArtworkURL = "";
+                //            result.ReferenceMaterial = "";
+                //        }
+                //        result.ArtworkNumber = _ArtworkNumber;
+                //        result.Date = _Date;
+                //        result.Time = _Time; //"10:22:03";
+                //        result.RecordType = "I";
+                //        result.MaterialNumber = dr["StatusApp"].ToString() == "5" ? "" : string.Format("{0}", dr["Material"]);
+                //        result.MaterialDescription = string.Format("{0}", dr["Description"]); //"CTN3 - 60960,LUCKY";
+                //        result.ChangePoint = string.Format("{0}", dr["ChangePoint"]) == "C" ? "1" : "0";
+                //        result.MaterialCreatedDate = String.Format("{0:yyyyMMdd}", dr["ModifyOn"]);
+                //        result.Status = dr["Status"].ToString();
+                //        result.PAUserName = string.Format("{0}", dr["CreateBy"]);
+                //        result.PGUserName = string.Format("{0}", dr["Assignee"]);
+                //        //            result.Plant = string.Format("{0}", dr["Plant"].ToString().Replace(';',','));
+                //        result.Plant = string.Format("{0}", dr["Plant"].ToString());
+                //        result.PrintingStyleofPrimary = string.Format("{0}", dr["PrintingStyleofPrimary"]);
+                //        result.PrintingStyleofSecondary = string.Format("{0}", dr["PrintingStyleofSecondary"]);
+
+                //        //string CustomerDesign = string.Format("{0}", dr["CustomerDesign"]);
+                //        //string[] words = CustomerDesign.Split('|');
+                //        result.CustomersDesign = splittext(dr["CustomerDesign"].ToString(), 0);
+                //        result.CustomersDesignDetail = splittext(dr["CustomerDesign"].ToString(), 1);
+
+                //        result.CustomersSpec = splittext(dr["CustomerSpec"].ToString(), 0);
+                //        result.CustomersSpecDetail = CNService.splittext(dr["CustomerSpec"].ToString(), 1);
+                //        result.CustomersSize = splittext(dr["CustomerSize"].ToString(), 0);
+                //        result.CustomersSizeDetail = splittext(dr["CustomerSize"].ToString(), 1);
+                //        result.CustomerNominatesVendor = splittext(dr["CustomerVendor"].ToString(), 0);
+                //        result.CustomerNominatesVendorDetail = splittext(dr["CustomerVendor"].ToString(), 1);
+                //        result.CustomerNominatesColorPantone = splittext(dr["CustomerColor"].ToString(), 0);
+                //        result.CustomerNominatesColorPantoneDetail = splittext(dr["CustomerColor"].ToString(), 1);
+                //        result.CustomersBarcodeScanable = splittext(dr["CustomerScanable"].ToString(), 0);
+                //        result.CustomersBarcodeScanableDetail = splittext(dr["CustomerScanable"].ToString(), 1);
+                //        result.CustomersBarcodeSpec = splittext(dr["CustomerBarcodeSpec"].ToString(), 0);
+                //        result.CustomersBarcodeSpecDetail = splittext(dr["CustomerBarcodeSpec"].ToString(), 1);
+                //        result.FirstInfoGroup = string.Format("{0}", dr["FirstInfoGroup"]);
+                //        result.SONumber = string.Format("{0}", dr["SO"]);
+                //        result.SOitem = "";
+                //        result.SOPlant = string.Format("{0}", dr["SOPlant"]);
+                //        result.PICMKT = string.Format("{0}", dr["PICMkt"]);
+                //        result.Destination = string.Format("{0}", dr["Destination"]);
+                //        result.RemarkNoteofPA = string.Format("{0}", dr["Remark"]);
+                //        result.FinalInfoGroup = string.Format("{0}", dr["FinalInfoGroup"]);
+                //        result.RemarkNoteofPG = "";
+                //        result.CompleteInfoGroup = "";
+                //        result.ProductionExpirydatesystem = "";
+                //        result.Seriousnessofcolorprinting = "";
+                //        result.CustIngreNutritionAnalysis = "";
+                //        result.ShadeLimit = "";
+                //        result.PackageQuantity = "";
+                //        result.WastePercent = "";
+                //        iGrid_Header_List.Add(result);
+                //        iGrid_Model.OUTBOUND_HEADERS = iGrid_Header_List;
+                //    }
+
+                //    List<IGRID_OUTBOUND_ITEM_MODEL> iGrid_Item_List = new List<IGRID_OUTBOUND_ITEM_MODEL>();
+                //    DataTable dt = new DataTable();
+                //    using (SqlConnection con = new SqlConnection(strConn))
+                //    {
+                //        SqlCommand cmd = new SqlCommand();
+                //        cmd.CommandType = CommandType.StoredProcedure;
+                //        cmd.CommandText = "spInboundArtwork";
+                //        cmd.Parameters.AddWithValue("@Keys", string.Format("{0}", Keys.ToString()));
+                //        cmd.Connection = con;
+                //        con.Open();
+                //        SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
+                //        oAdapter.Fill(dt);
+                //        con.Close();
+                //        List<InboundArtwork> _itemsArtwork = new List<InboundArtwork>();
+                //        for (int i = 0; i < dt.Rows.Count; i++)
+                //        {
+                //            var detail = new IGRID_OUTBOUND_ITEM_MODEL();
+                //            DataRow dr = dt.Rows[i];
+
+                //            detail.ArtworkNumber = string.Format("{0}", _ArtworkNumber);
+                //            detail.Date = _Date;
+                //            detail.Time = _Time;
+                //            detail.Characteristic = dr["cols"].ToString();
+                //            //detail.Description = dr["Description"].ToString();
+                //            //detail.Value = dr["value"].ToString();
+                //            string[] splitHeader = dr["value"].ToString().Split(';');
+                //            if (splitHeader != null && splitHeader.Length > 1)
+                //                foreach (string word in splitHeader)
+                //                {
+                //                    detail = new IGRID_OUTBOUND_ITEM_MODEL();
+                //                    detail.ArtworkNumber = string.Format("{0}", _ArtworkNumber);
+                //                    detail.Date = _Date;
+                //                    detail.Time = _Time;
+                //                    detail.Characteristic = dr["cols"].ToString();
+                //                    detail.Value = word.ToString();
+                //                    detail.Description = detail.Value.ToString();
+                //                    iGrid_Item_List.Add(detail);
+                //                }
+                //            else
+                //            {
+                //                detail.Description = dr["Description"].ToString();
+                //                detail.Value = dr["value"].ToString();
+                //                iGrid_Item_List.Add(detail);
+                //            }
+                //        }
+                //    }
+                //    iGrid_Model.OUTBOUND_ITEMS = iGrid_Item_List;
+                //    //MM_73_Hepler.SaveMaterial client = new MM_73_Hepler.SaveMaterial();
+                //    //matNumber.param = iGrid_Model;
+                //    //resp = client.MATERIAL_NUMBER(matNumber);
+                //    string Start = DateTime.Now.ToString();
+                //    resp = MM_73_Hepler.SaveMaterial(iGrid_Model);
+                //    string dtEnd = DateTime.Now.ToString();
+                //    //Context.Response.Write(JsonConvert.SerializeObject(resp));
+                //    //DirectoryInfo dir = new DirectoryInfo(@"\\SERVER\Data\");
+
+                //    string datapath = @"\\192.168.1.170\FileTest\iGrid_Model" + Keys.ToString() + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xml";
+                //    FileInfo myFile = new FileInfo(datapath);
+                //    using (FileStream fs = new FileStream(datapath, FileMode.Create))
+                //    {
+                //        new XmlSerializer(typeof(IGRID_OUTBOUND_MODEL)).Serialize(fs, iGrid_Model);
+                //    }
+                //    Checkpath check1 = GetInfo(datapath);
+                //    SqlParameter[] param = { new SqlParameter("@keys", string.Format("{0}", Keys)) };
+
+                //    executeProcedure("spupdateOutbound", param);
+                //    string MailCc = CNService.GetModulEmail(CNService.Getusermail("PA_Approve"));
+                //    sendemail(Getuser(_PAUserName, "email"), MailCc,
+                //        string.Format("Artwork Number {3} <br/> Workflow IGrid {0} <br/> Status: {1},<br/>msg: {2} <br/>Start Time: {4}<br/>End Time: {5}", Keys.ToString(), resp.status, resp.msg, _ArtworkNumber, Start, dtEnd),
+                //        string.Format(_Subject, _Material.ToString()), datapath);
+                //return resp.msg;
+                return "";
+            }
+            catch (Exception e)
+            {
+                //sendemail("Nongrat.Jantarasuwan@thaiunion.com;Pornpimon.Bouban@thaiunion.com", "",
+                //string.Format("{0}", e.Message), string.Format("iGrid can't send to Artwork , status fail , iGrid No : {0}", Keys.Substring(0, 16)), "");
+                return e.Message;
+                // Action after the exception is caught  
+            }
+        }
         #endregion
 
         //public static void GetmasterUpdateToCSV(DataTable Results)
