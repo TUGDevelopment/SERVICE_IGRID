@@ -53,6 +53,9 @@ namespace Interface_igrid
                                 case "BAPI_U":
                                     imported = Import_BAPI_U(file, InterfaceCode);
                                     break;
+                                case "BAPI_B":
+                                    imported = Import_BAPI_B(file, InterfaceCode);
+                                    break;
                                 case "MM02_I":
                                     imported = Import_MM02_I(file, InterfaceCode);
                                     break;
@@ -548,7 +551,71 @@ namespace Interface_igrid
                 return InterfaceCode + e.Message + e.StackTrace;
             }
         }
+        public static string Import_BAPI_B(string file, string InterfaceCode)
+        {
+            try
+            {
+                using (DataTable dt = ConvertCSVtoDataTable(file))
+                {
+                    if (dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string MatNumber = row[0].ToString();
+                            string ClassNum = row[1].ToString();
+                            string LoopIdColumn = row[2].ToString();
+                            string Name = row[3].ToString();
+                            string Value = row[4].ToString();
+                            string AppId = row[5].ToString();
+                            string Result = row[6].ToString();
 
+                            if (MatNumber != "" && ClassNum != "" && LoopIdColumn == "H" && AppId != "" && Result != "")
+                            {
+
+                                //1.Update to db
+                                //DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
+
+                                //2.get data from db to dataTable prepare sent email to user
+                                string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                                string to = "";
+                                //foreach (DataRow dr in dtGetMail.Rows)  //get email from db
+                                //{
+                                //    to = dr["Email"].ToString();
+                                //}
+
+                                string subject = InterfaceCode + " - Material " + "[" + MatNumber + "] " + Result;
+                                string body = " Material: " + MatNumber + ", ClassNum: " + ClassNum + ", Result: " + Result + ".";
+                                string AttachedFile = "";
+
+                                //3.sent email to user
+                                if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
+                                {
+                                    //SendEmail(from, to, subject, body);
+                                }
+
+                                //4.send email to IT //5.sent email insert log 
+                                if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                                {
+                                    to= ConfigurationManager.AppSettings["ITEmailsNotify"];
+                                    SendEmail(from, to, subject, body);
+                                    SendToLog(from, to, subject, body);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (File.Exists(file))
+                {
+                    File.Move(file, ConfigurationManager.AppSettings["InterfacePathInbound"] + @"Processed\" + Path.GetFileName(file));
+                }
+                return InterfaceCode + " Success";
+            }
+            catch (IOException e)
+            {
+                return InterfaceCode + e.Message + e.StackTrace;
+            }
+        }
         static async Task OutboundArtwork(string keys)
         {
             try
