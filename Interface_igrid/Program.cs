@@ -105,6 +105,7 @@ namespace Interface_igrid
                         DataSet dsspQuery = GetData("spQuery", "@Material", "X");
                         MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
                         BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
+                        BAPI_BATCHCLASS(dsspQuery.Tables[0]);
                     }
                     if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM02"]) == true) // flage for true run or false not run
                     {
@@ -759,6 +760,36 @@ namespace Interface_igrid
                 if (dtClass.Rows.Count > 0)
                 {
                     string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "BAPI_UpdateMATCharacteristics_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";
+                    ToCSV(dtClass, file);
+                }
+                dtClass.Clear();
+                i++;
+            }
+        }
+        public static void BAPI_BATCHCLASS(DataTable Results)
+        {
+            DataTable dtClass = new DataTable();
+            dtClass.Columns.AddRange(new DataColumn[] { new DataColumn(@"Material Number RMMG1-MATNR"),
+                new DataColumn(@"CLASSNUM"),
+                new DataColumn(@"Loop Id Column"),
+                new DataColumn(@"Characteristic Name ALLOCVALUESCHARNEW-CHARACT"),
+                new DataColumn(@"Characteristic Value ALLOCVALUESCHARNEW-VALUE_CHAR"),
+                new DataColumn(@"AppId")
+            });
+            int i = 1;
+            foreach (DataRow row in Results.Rows)
+            {
+                dtClass.Rows.Add(string.Format("{0}", row["Material"].ToString()),
+                string.Format("{0}", row["BatchClass"].ToString()),
+                string.Format("{0}", "H"),
+                string.Format("{0}", ""),
+                string.Format("{0}", ""),
+                string.Format("{0}", row["Id"].ToString())
+                );
+                
+                if (dtClass.Rows.Count > 0)
+                {
+                    string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "BAPI_BATCHCLASS_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";
                     ToCSV(dtClass, file);
                 }
                 dtClass.Clear();
