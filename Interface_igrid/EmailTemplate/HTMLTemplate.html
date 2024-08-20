@@ -1,0 +1,69 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title></title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 18px;
+        text-align: left;
+    }
+
+    th, td {
+        padding: 12px;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        color: #333;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+</style>
+<body>
+    <table>
+        <tr>
+            <td>
+                <img src="http://idc-app-dv3-115.thaiunion.co.th:8089/Content/img/Thai-union-logo.png" width="100px" height="60px" />
+                <br />
+                <br />
+                <div style="border-top:3px solid #22BCE5"> </div>
+                <span style="font-family:Arial;font-size:10pt">
+                    Hello <b>
+                        {user}
+
+                    </b>, <br /> <br />
+                    <a style="color:#22BCE5" href="{Url}">
+                        {title}
+
+                    </a> <br /> {message}
+                    <br />
+                    <table>
+                        <tr>
+                           {header}
+                        </tr>
+                       
+                           {row}
+                                          
+                    </table>
+                    <br /> <br />
+                    Thank you very much.<br /> {system_name}
+                </span>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

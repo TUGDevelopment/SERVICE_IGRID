@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using System.Configuration;
 using System.Collections;
 using System.Net.Mail;
 using System.Collections.Generic;
@@ -20,6 +19,9 @@ using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Presentation;
 using System.Net.Http.Headers;
+using DocumentFormat.OpenXml.Spreadsheet;
+//using DocumentFormat.OpenXml.Office2013.Excel;
+//using BLL.MemberService;
 
 namespace Interface_igrid
 {
@@ -46,31 +48,51 @@ namespace Interface_igrid
                             fileN = fileI.Name;
                             string InterfaceCode = fileN.Substring(0, 6);
                             switch (InterfaceCode)
-                            {
+                            {                              
                                 case "MM01_C":
-                                    imported = Import_MM01_C(file, InterfaceCode);
+                                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM01"]) == true)
+                                    {
+                                        imported = Import_MM01_C(file, InterfaceCode);
+                                    }                                    
                                     break;
                                 case "BAPI_U":
-                                    imported = Import_BAPI_U(file, InterfaceCode);
+                                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM01"]) == true)
+                                    {
+                                        imported = Import_BAPI_U(file, InterfaceCode);
+                                    }                                   
                                     break;
                                 case "BAPI_B":
-                                    imported = Import_BAPI_B(file, InterfaceCode);
+                                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM01"]) == true)
+                                    {
+                                        imported = Import_BAPI_B(file, InterfaceCode);
+                                    }                                    
                                     break;
                                 case "MM02_I":
-                                    imported = Import_MM02_I(file, InterfaceCode);
+                                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM02"]) == true)
+                                    {
+                                        imported = Import_MM02_I(file, InterfaceCode);
+                                    }                                   
                                     break;
                                 case "CLMM_C":
-                                    imported = Import_CLMM_C(file, InterfaceCode);
-                                    break;
-                               
+                                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM02"]) == true)
+                                    {
+                                        imported = Import_CLMM_C(file, InterfaceCode);
+                                    }                                    
+                                    break;                               
                                 case "CT04_I":
-                                    imported = Import_CT04_I(file, InterfaceCode);
+                                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_CT04"]) == true)
+                                    {
+                                        imported = Import_CT04_I(file, InterfaceCode);
+                                    }                                    
                                     break;
-                                case "CT04_R":
-                                    imported = Import_CT04_R(file, InterfaceCode);
-                                    break;
+                                //case "CT04_R": // Cancel CT04 Remove
+                                //    imported = Import_CT04_R(file, InterfaceCode);
+                                //    break;
                                 case "SQ01_L":
-                                    imported = Import_SQ01_L(file, InterfaceCode);
+                                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_CT04"]) == true)
+                                    {
+                                        imported = Import_SQ01_L(file, InterfaceCode);
+                                    }                                    
                                     break;
                             }                          
                         }                        
@@ -163,7 +185,7 @@ namespace Interface_igrid
                         string to = ConfigurationManager.AppSettings["ITEmailsNotify"];                       
                         string subject = InterfaceCode + " - SQ01 List Material is done";
                         string body = "SQ01 List Material is done";
-                        string AttachedFile = "";                        
+                        //string AttachedFile = "";                        
 
                         if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
                         {
@@ -213,7 +235,7 @@ namespace Interface_igrid
                             }
                             string subject = InterfaceCode + " - Characteristic master is maintained in SAP " + "[" + Condition + "]";
                             string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Description: " + Description + ", Result: " + Result.Replace("changed","Insert in SAP completed") + ".";
-                            string AttachedFile = ""; 
+                            //string AttachedFile = ""; 
 
                             //3.sent email to user
                             if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport"+ InterfaceCode]) == true)
@@ -270,7 +292,7 @@ namespace Interface_igrid
                             }
                             string subject = InterfaceCode + " - Characteristic master is maintained in SAP " + "[" + Condition + "]";
                             string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Result: " + Result + ".";
-                            string AttachedFile = "";
+                            //string AttachedFile = "";
 
                             //3.sent email to user
                             if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
@@ -327,7 +349,7 @@ namespace Interface_igrid
                            
                             string subject = InterfaceCode + " - Material " + "[" + MatNumber + "] Saving changes to assignments Assignment changed";
                             string body = " Material: " + MatNumber + ", Description: " + MatDesc + ", Result: " + Result + ".";
-                            string AttachedFile = "";
+                            //string AttachedFile = "";
 
                             //3.sent email to user
                             if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
@@ -388,7 +410,7 @@ namespace Interface_igrid
                                 }
                                 string subject = InterfaceCode + " - Characteristic master is maintained in SAP " + "[" + MatNumber + "]";
                                 string body = " Material: " + MatNumber + ", Characteristic master: " + Name + ", Value: " + Value + ", Result: " + Result + ".";
-                                string AttachedFile = "";
+                                //string AttachedFile = "";
 
                                 //3.sent email to user
                                 if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
@@ -426,6 +448,7 @@ namespace Interface_igrid
                 {
                     if (dt.Rows.Count > 0)
                     {
+                        string previousDocNum = null;
                         foreach (DataRow row in dt.Rows)
                         {                            
                             string DocNum = row[0].ToString();
@@ -437,38 +460,64 @@ namespace Interface_igrid
                             string Distribution = row[6].ToString();
                             string AppId = row[7].ToString();
                             string Result = row[8].ToString();
-                            if (DocNum != "" && MatNum != "" && MatDesc != "" && Plant != "" && Distribution != "" && AppId != "" && Result != "")
+
+                            var currentDocNum = DocNum;
+                            if (currentDocNum != null)
                             {
-                                //1.Update to db
-                                DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
-
-                                //2.get data from db to dataTable prepare sent email to user
-                                string from = ConfigurationManager.AppSettings["SMTPFrom"];
-                                string to = "";
-                                foreach (DataRow dr in dtGetMail.Rows)  //get email from db
+                                if(previousDocNum != currentDocNum)
                                 {
-                                    to = dr["Email"].ToString();
-                                }
-                                string subject = InterfaceCode + " - System is created no : " + MatNum + " / " + MatDesc + " - [Create Material]";
-                                string body = Result;
-                                string AttachedFile = "";
-
-                                //3.sent email to user
-                                if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
-                                {
-                                    SendEmail(from, to, subject, body);
-                                }
-
-                                //4.send email to IT //5.sent email insert log 
-                                if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
-                                {
-                                    SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
-                                    SendToLog(from, to, subject, body);
+                                    //1.Update to db
+                                    //DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
+                                    Console.WriteLine(AppId +"-do update="+ currentDocNum);
+                                   
                                 }
                             }
 
+                           
+                            previousDocNum = currentDocNum.ToString();
+
+
+                            //if (DocNum != "" && MatNum != "" && MatDesc != "" && Plant != "" && Distribution != "" && AppId != "" && Result != "")
+                            //{
+                               
+
+                                
+                            //        //1.Update to db
+                            //        DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
+                                
+
+
+                            //    //2.get data from db to dataTable prepare sent email to user
+                            //    string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                            //    string to = "";
+                            //    foreach (DataRow dr in dtGetMail.Rows)  //get email from db
+                            //    {
+                            //        to = dr["Email"].ToString();
+                            //    }
+
+                               
+
+                            //    string subject = InterfaceCode + " - System is created no : " + MatNum + " / " + MatDesc + " - [Create Material]";
+                            //    //string body = CreateEmailBody("test", "Please check your account Information", "cccc", "IGRID System", dt);
+                            //    string body = Result;
+                            //    //string AttachedFile = "";
+
+                            //    //3.sent email to user
+                            //    if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
+                            //    {
+                            //        SendEmail(from, to, subject, body);
+                            //    }
+
+                            //    //4.send email to IT //5.sent email insert log 
+                            //    if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                            //    {
+                            //        SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
+                            //        SendToLog(from, to, subject, body);
+                            //    }
+                            //}
+
                             //sent to artwork
-                            OutboundArtwork(DocNum);
+                            //OutboundArtwork(DocNum);
                         }
                     }
                 }
@@ -521,7 +570,7 @@ namespace Interface_igrid
 
                                 string subject = InterfaceCode + " - Material " + "[" + MatNumber + "] " + Result;
                                 string body = " Material: " + MatNumber + ", ClassNum: " + ClassNum + ", Result: " + Result + ".";
-                                string AttachedFile = "";
+                                //string AttachedFile = "";
 
                                 //3.sent email to user
                                 if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
@@ -585,7 +634,7 @@ namespace Interface_igrid
 
                                 string subject = InterfaceCode + " - Material " + "[" + MatNumber + "] " + Result;
                                 string body = " Material: " + MatNumber + ", ClassNum: " + ClassNum + ", Result: " + Result + ".";
-                                string AttachedFile = "";
+                                //string AttachedFile = "";
 
                                 //3.sent email to user
                                 if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
@@ -1199,8 +1248,6 @@ namespace Interface_igrid
 
         public static void SendEmail(string from, string to, string subject, string body)
         {
-            try
-            {
                 using (MailMessage mailMsg = new MailMessage())
                 {
                     mailMsg.From = new MailAddress(from);
@@ -1223,12 +1270,7 @@ namespace Interface_igrid
                         Timeout = 20000
                     };                 
                     smtp.Send(mailMsg);
-                }
-            }
-            catch(Exception ex)
-            {
-               ex.Message.ToString();
-            }
+                }            
         }
         
         public static void SendEmail(string MailTo, string MailCc, string _Body, string _Subject, string _Attachments)
@@ -1299,8 +1341,7 @@ namespace Interface_igrid
                 smtp.Send(message);
             }
 
-            try
-            {
+
                 //    MailMessage msg = new MailMessage();
                 //    SmtpClient smtp = new SmtpClient();
                 //    if (string.IsNullOrEmpty(MailTo)) return;
@@ -1335,11 +1376,7 @@ namespace Interface_igrid
 
                 //    //insert to maildata
                 string ReternMsg = SendEmailInsertLog(MailTo, MailCc, _Body, _Subject);
-            }
-            catch (Exception e)
-            {
-                e.Message.ToString();
-            }
+
 
 
         }
@@ -1385,7 +1422,7 @@ namespace Interface_igrid
         {
             //string datapath = "~/FileTest/" + _name;
             string _email = "";
-            string _Material = "";
+            //string _Material = "";
             string _Description = "";
             string _Body = "";
             string _Attached = "";
@@ -1506,6 +1543,69 @@ namespace Interface_igrid
                 con.Close();
             }
             Console.Write("success");
+        }
+        public static string ReplaceHeader(string header)
+        {
+            switch (header)
+            {
+                case "IfColumn":
+                    header = header.Replace("IfColumn", "Action");
+                    break;
+                case "Material Number RMMG1-MATNR":
+                    header = header.Replace("Material Number RMMG1-MATNR", "MatNum");
+                    break;
+                case "Material Description (Short Text) MAKT-MAKTX":    
+                    header = header.Replace("Material Description (Short Text) MAKT-MAKTX", "MatDesc");
+                break;  
+                case "Reference material RMMG1_REF-MATNR":
+                    header = header.Replace("Reference material RMMG1_REF-MATNR", "RefMat");
+                break;
+                case "IfColumn and Plant RMMG1-WERKS and Reference plant RMMG1_REF-WERKS":
+                    header = header.Replace("IfColumn and Plant RMMG1-WERKS and Reference plant RMMG1_REF-WERKS", "Plant");
+                break;
+                case "IfColumn and Sales Organization RMMG1-VKORG and Reference sales organization RMMG1_REF-VKORG":
+                    header = header.Replace("IfColumn and Sales Organization RMMG1-VKORG and Reference sales organization RMMG1_REF-VKORG", "Sales Org");
+                break;
+                case "Distribution Channel RMMG1-VTWEG and Reference distribution channel RMMG1_REF-VTWEG":
+                    header = header.Replace("Distribution Channel RMMG1-VTWEG and Reference distribution channel RMMG1_REF-VTWEG", "Dist Channel");
+                break;
+                default:
+                    // Handle other cases if necessary
+                    break;
+            }
+            return header;
+        }
+        public static string CreateEmailBody(string user, string title, string message, string system_name,DataTable dt)
+        {
+            string body = string.Empty;
+            string header = string.Empty;
+            string row = string.Empty;
+            foreach (DataColumn item in dt.Columns)
+            {
+                header += "<th>" + ReplaceHeader(item.ColumnName) + "</th>";
+            }
+            foreach (DataRow myRow in dt.Rows)
+            {
+                row += "<tr>";
+                foreach (DataColumn myColumn in dt.Columns)
+                {
+                    row += "<td>" + myRow[myColumn.ColumnName].ToString() + "</td>";
+                }
+                row +=  "</tr>";
+            }
+            var EmailTemplatepath = Directory.GetFiles(ConfigurationManager.AppSettings["EmailTemplatepath"], "HTMLTemplate.html");
+            string EmailTemplate = EmailTemplatepath[0];
+            using (StreamReader sr = new StreamReader(EmailTemplate))
+            {
+                body = sr.ReadToEnd();
+            }
+            body = body.Replace("{user}", user);  
+            body = body.Replace("{title}", title);
+            body = body.Replace("{message}", message);
+            body = body.Replace("{header}", header);
+            body = body.Replace("{row}", row);
+            body = body.Replace("{system_name}", system_name);
+            return body;
         }
         #endregion
 
