@@ -465,59 +465,45 @@ namespace Interface_igrid
                             if (currentDocNum != null)
                             {
                                 if(previousDocNum != currentDocNum)
-                                {
-                                    //1.Update to db
-                                    //DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
-                                    Console.WriteLine(AppId +"-do update="+ currentDocNum);
+                                {                                                                 
                                    
+                                    if (DocNum != "" && MatNum != "" && MatDesc != "" && Plant != "" && Distribution != "" && AppId != "" && Result != "")
+                                    {
+                                        //1.Update to db
+                                        DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
+
+                                        //2.get data from db to dataTable prepare sent email to user
+                                        string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                                        string to = "";
+                                        foreach (DataRow dr in dtGetMail.Rows)  //get email from db
+                                        {
+                                            to = dr["Email"].ToString();
+                                        }
+                                        string subject = InterfaceCode + " - System is created no : " + MatNum + " / " + MatDesc + " - [Create Material]";
+                                        string body = CreateEmailBody(to, "Please check your account Information", subject, from, dt.Select("AppId="+AppId).CopyToDataTable());                                        
+                                        //string AttachedFile = "";
+
+                                        //3.sent email to user
+                                        if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
+                                        {
+                                            SendEmail(from, to, subject, body);
+                                        }
+
+                                        //4.send email to IT //5.sent email insert log 
+                                        if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                                        {
+                                            //SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
+                                            SendToLog(from, to, subject, body);
+                                        }
+
+                                        //5.sent to artwork
+                                        //OutboundArtwork(DocNum);
+
+                                        Console.WriteLine(AppId + "-do update=" + currentDocNum);
+                                    }
                                 }
-                            }
-
-                           
+                            }                           
                             previousDocNum = currentDocNum.ToString();
-
-
-                            //if (DocNum != "" && MatNum != "" && MatDesc != "" && Plant != "" && Distribution != "" && AppId != "" && Result != "")
-                            //{
-                               
-
-                                
-                            //        //1.Update to db
-                            //        DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
-                                
-
-
-                            //    //2.get data from db to dataTable prepare sent email to user
-                            //    string from = ConfigurationManager.AppSettings["SMTPFrom"];
-                            //    string to = "";
-                            //    foreach (DataRow dr in dtGetMail.Rows)  //get email from db
-                            //    {
-                            //        to = dr["Email"].ToString();
-                            //    }
-
-                               
-
-                            //    string subject = InterfaceCode + " - System is created no : " + MatNum + " / " + MatDesc + " - [Create Material]";
-                            //    //string body = CreateEmailBody("test", "Please check your account Information", "cccc", "IGRID System", dt);
-                            //    string body = Result;
-                            //    //string AttachedFile = "";
-
-                            //    //3.sent email to user
-                            //    if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
-                            //    {
-                            //        SendEmail(from, to, subject, body);
-                            //    }
-
-                            //    //4.send email to IT //5.sent email insert log 
-                            //    if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
-                            //    {
-                            //        SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
-                            //        SendToLog(from, to, subject, body);
-                            //    }
-                            //}
-
-                            //sent to artwork
-                            //OutboundArtwork(DocNum);
                         }
                     }
                 }
