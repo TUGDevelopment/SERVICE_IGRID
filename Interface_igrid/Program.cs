@@ -474,13 +474,10 @@ namespace Interface_igrid
 
                                         //2.get data from db to dataTable prepare sent email to user
                                         string from = ConfigurationManager.AppSettings["SMTPFrom"];
-                                        string to = "";
-                                        foreach (DataRow dr in dtGetMail.Rows)  //get email from db
-                                        {
-                                            to = dr["Email"].ToString();
-                                        }
+                                        string to = GetCommaSeparatedEmails(dtGetMail);
+                                  
                                         string subject = InterfaceCode + " - System is created no : " + MatNum + " / " + MatDesc + " - [Create Material]";
-                                        string body = CreateEmailBody(to, "Please check your account Information", subject, from, dt.Select("AppId="+AppId).CopyToDataTable());                                        
+                                        string body = CreateEmailBody(to, ".", subject, from, dt.Select("AppId="+AppId).CopyToDataTable());                                        
                                         //string AttachedFile = "";
 
                                         //3.sent email to user
@@ -492,14 +489,12 @@ namespace Interface_igrid
                                         //4.send email to IT //5.sent email insert log 
                                         if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
                                         {
-                                            //SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
+                                            SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
                                             SendToLog(from, to, subject, body);
                                         }
 
                                         //5.sent to artwork
-                                        //OutboundArtwork(DocNum);
-
-                                        Console.WriteLine(AppId + "-do update=" + currentDocNum);
+                                        //OutboundArtwork(DocNum);                                        
                                     }
                                 }
                             }                           
@@ -511,16 +506,12 @@ namespace Interface_igrid
                 {
                     File.Move(file, ConfigurationManager.AppSettings["InterfacePathInbound"] + @"Processed\" + Path.GetFileName(file));
                 }
-
-              
-
                 return InterfaceCode + " Success";
             }
             catch (IOException e)
             {
                 return InterfaceCode + e.Message + e.StackTrace;
             }
-
         }
         public static string Import_BAPI_U(string file, string InterfaceCode)
         {
@@ -1375,7 +1366,7 @@ namespace Interface_igrid
                 cmd.CommandText = "Insert into MailData values(@Sender,@To,@Cc,'',@Subject,@Body,getdate(),1,getdate(),'TEXT',1,0)";
                 cmd.Parameters.AddWithValue("@Sender", String.Format("{0}", 10));
                 cmd.Parameters.AddWithValue("@To", to.ToString());
-                cmd.Parameters.AddWithValue("@Cc", to.ToString());
+                cmd.Parameters.AddWithValue("@Cc", "");
                 cmd.Parameters.AddWithValue("@Subject", subject.ToString());
                 cmd.Parameters.AddWithValue("@Body", body.ToString());
                 cmd.Connection = con;
@@ -1593,6 +1584,20 @@ namespace Interface_igrid
             body = body.Replace("{system_name}", system_name);
             return body;
         }
+        public static string GetCommaSeparatedEmails(DataTable dtGetMail)
+        {
+            StringBuilder to = new StringBuilder();
+            foreach (DataRow dr in dtGetMail.Rows)  // get email from db
+            {
+                if (to.Length > 0)
+                {
+                    to.Append(", ");
+                }
+                to.Append(dr["Email"].ToString());
+            }
+            return to.ToString();
+        }
+
         #endregion
 
         #region Temp METHODS
