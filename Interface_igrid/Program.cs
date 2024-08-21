@@ -143,7 +143,7 @@ namespace Interface_igrid
                     {
                         //CT04
                         DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
-                        CT04(dsspGetMasterData.Tables[0]); //Insert,Remove 
+                        CT04(dsspGetMasterData.Tables[0]); 
                         SQ01_ListMAT(dsspGetMasterData.Tables[0]);
                     }
                     Console.WriteLine("Outbound Completed");
@@ -228,11 +228,7 @@ namespace Interface_igrid
 
                             //2.get data from db to dataTable prepare sent email to user
                             string from = ConfigurationManager.AppSettings["SMTPFrom"];
-                            string to = "";                           
-                            foreach (DataRow dr in dtGetMail.Rows)  //get email from db
-                            {
-                                to = dr["Email"].ToString();
-                            }
+                            string to = GetCommaSeparatedEmails(dtGetMail);
                             string subject = InterfaceCode + " - Characteristic master is maintained in SAP " + "[" + Condition + "]";
                             string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Description: " + Description + ", Result: " + Result.Replace("changed","Insert in SAP completed") + ".";
                             //string AttachedFile = ""; 
@@ -246,7 +242,7 @@ namespace Interface_igrid
                             //4.send email to IT //5.sent email insert log 
                             if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
                             {
-                                SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
+                                //SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
                                 SendToLog(from, to, subject, body);
                             }                           
                         }
@@ -714,31 +710,37 @@ namespace Interface_igrid
             });
             foreach (DataRow row in Results.Rows)
             {
-                switch (row["Changed_Action"].ToString())
-                {
-                    case "Insert":
-                        dtCT04Insert.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString().Replace("Insert", "I")),
+                dtCT04Insert.Rows.Add(string.Format("{0}", "I"),
                             string.Format("{0}", row["Changed_Charname"].ToString()),
                             string.Format("{0}", row["id"].ToString()),
                             string.Format("{0}", row["Description"].ToString()),
                             string.Format("{0}", row["Changed_Id"].ToString()));
-                        break;
-                    //case "Update":
-                    //    dtCT04Update.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString()),
-                    //       string.Format("{0}", row["Changed_Charname"].ToString()),
-                    //       string.Format("{0}", row["id"].ToString()),
-                    //       string.Format("{0}", row["Old_Description"].ToString()),
-                    //       string.Format("{0}", row["Description"].ToString()));
-                    //    break;
-                    case "Remove":
-                        dtCT04Remove.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString().Replace("Remove", "D")),
-                           string.Format("{0}", row["Changed_Charname"].ToString()),
-                           string.Format("{0}", row["Description"].ToString()),
-                            string.Format("{0}", row["Changed_Id"].ToString()));
-                        break;
-                    default:
-                        break;
-                }
+
+                //switch (row["Changed_Action"].ToString())
+                //{
+                //    case "Insert":
+                //        dtCT04Insert.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString().Replace("Insert", "I")),
+                //            string.Format("{0}", row["Changed_Charname"].ToString()),
+                //            string.Format("{0}", row["id"].ToString()),
+                //            string.Format("{0}", row["Description"].ToString()),
+                //            string.Format("{0}", row["Changed_Id"].ToString()));
+                //        break;
+                //    //case "Update":
+                //    //    dtCT04Update.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString()),
+                //    //       string.Format("{0}", row["Changed_Charname"].ToString()),
+                //    //       string.Format("{0}", row["id"].ToString()),
+                //    //       string.Format("{0}", row["Old_Description"].ToString()),
+                //    //       string.Format("{0}", row["Description"].ToString()));
+                //    //    break;
+                //    //case "Remove":
+                //    //    dtCT04Remove.Rows.Add(string.Format("{0}", row["Changed_Action"].ToString().Replace("Remove", "D")),
+                //    //       string.Format("{0}", row["Changed_Charname"].ToString()),
+                //    //       string.Format("{0}", row["Description"].ToString()),
+                //    //        string.Format("{0}", row["Changed_Id"].ToString()));
+                //    //    break;
+                //    default:
+                //        break;
+                //}
             }
             if (dtCT04Insert.Rows.Count > 0)
             {
@@ -750,11 +752,11 @@ namespace Interface_igrid
             //    string file = @"D:\SAPInterfaces\Outbound\CT04_Update_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
             //    ToCSV(dtCT04Update, file);
             //}
-            if (dtCT04Remove.Rows.Count > 0)
-            {
-                string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "CT04_Remove_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                ToCSV(dtCT04Remove, file);
-            }
+            //if (dtCT04Remove.Rows.Count > 0)
+            //{
+            //    string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "CT04_Remove_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+            //    ToCSV(dtCT04Remove, file);
+            //}
         }
         public static void MM01_CreateMAT_ExtensionPlant(DataTable Results)
         {
