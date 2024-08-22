@@ -20,6 +20,7 @@ using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Presentation;
 using System.Net.Http.Headers;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Math;
 //using DocumentFormat.OpenXml.Office2013.Excel;
 //using BLL.MemberService;
 
@@ -207,7 +208,7 @@ namespace Interface_igrid
                             //4.send email to IT //5.sent email insert log 
                             if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
                             {
-                                //SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
+                                SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
                                 SendToLog(from, to, subject, body);
                             }
                         }
@@ -315,6 +316,7 @@ namespace Interface_igrid
             }
 
         }
+        
         public static string Import_MM02_I(string file, string InterfaceCode)
         {
             try
@@ -434,6 +436,7 @@ namespace Interface_igrid
             }
 
         }
+        
         public static string Import_MM01_C(string file, string InterfaceCode)
         {
             try
@@ -739,7 +742,7 @@ namespace Interface_igrid
             //}
         }
         public static void SQ01_ListMAT(DataTable Results)
-        {
+        {           
             DataTable dtListMat = new DataTable();
             dtListMat.Columns.AddRange(new DataColumn[]
             {
@@ -748,11 +751,14 @@ namespace Interface_igrid
                 new DataColumn(@"AppId"),
             });
             foreach (DataRow row in Results.Rows)
-            {
-                dtListMat.Rows.Add(
-                    string.Format("{0}", row["Changed_Charname"].ToString()),
-                    string.Format("{0}", row["Old_Description"].ToString()),
-                    string.Format("{0}", row["Changed_Id"].ToString()));
+            {                
+                if(row["Changed_Action"].ToString() != "Insert" || row["Changed_Action"].ToString() != "Remove")
+                {
+                   dtListMat.Rows.Add(
+                   string.Format("{0}", row["Changed_Charname"].ToString()),
+                   string.Format("{0}", row["Old_Description"].ToString()),
+                   string.Format("{0}", row["Changed_Id"].ToString()));
+                }              
             }
             if (dtListMat.Rows.Count > 0)
             {
