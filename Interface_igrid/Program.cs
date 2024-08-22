@@ -171,6 +171,59 @@ namespace Interface_igrid
         }
 
         #region IMPORT INTERFACES
+        public static string Import_CT04_I(string file, string InterfaceCode)
+        {
+            try
+            {
+                using (DataTable dt = ConvertCSVtoDataTable(file))
+                {
+                    if (dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string Condition = row[0].ToString().Replace("I", "Insert");
+                            string Name = row[1].ToString();
+                            string Value = row[2].ToString();
+                            string Description = row[3].ToString();
+                            string AppId = row[4].ToString();
+                            string Result = row[5].ToString();
+
+                            //1.Update to db
+                            DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
+
+                            //2.get data from db to dataTable prepare sent email to user
+                            string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                            string to = GetCommaSeparatedEmails(dtGetMail);
+                            string subject = InterfaceCode + " - Characteristic master is maintained in SAP " + "[" + Condition + "]";
+                            string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Description: " + Description + ", Result: " + Result.Replace("changed", "Insert in SAP completed") + ".";
+                            //string AttachedFile = ""; 
+
+                            //3.sent email to user
+                            if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport" + InterfaceCode]) == true)
+                            {
+                                SendEmail(from, to, subject, body);
+                            }
+
+                            //4.send email to IT //5.sent email insert log 
+                            if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                            {
+                                //SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
+                                SendToLog(from, to, subject, body);
+                            }
+                        }
+                    }
+                }
+                if (File.Exists(file))
+                {
+                    File.Move(file, ConfigurationManager.AppSettings["InterfacePathInbound"] + @"Processed\" + Path.GetFileName(file));
+                }
+                return InterfaceCode + " Success";
+            }
+            catch (IOException e)
+            {
+                return InterfaceCode + e.Message;
+            }
+        }
         public static string Import_SQ01_L(string file, string InterfaceCode)
         {
             try
@@ -205,61 +258,6 @@ namespace Interface_igrid
                 return InterfaceCode + e.Message;
             }
         }
-     
-        public static string Import_CT04_I(string file, string InterfaceCode)
-        {
-            try
-            {               
-                using (DataTable dt = ConvertCSVtoDataTable(file)) 
-                { 
-                    if (dt.Rows.Count > 0)
-                    {
-                        foreach (DataRow row in dt.Rows)
-                        {
-                            string Condition = row[0].ToString().Replace("I","Insert");
-                            string Name = row[1].ToString();
-                            string Value = row[2].ToString();   
-                            string Description = row[3].ToString();
-                            string AppId = row[4].ToString();   
-                            string Result = row[5].ToString();
-
-                            //1.Update to db
-                           DataTable dtGetMail= UpdateToDB("spInterface_Igrid", AppId, InterfaceCode,dt);
-
-                            //2.get data from db to dataTable prepare sent email to user
-                            string from = ConfigurationManager.AppSettings["SMTPFrom"];
-                            string to = GetCommaSeparatedEmails(dtGetMail);
-                            string subject = InterfaceCode + " - Characteristic master is maintained in SAP " + "[" + Condition + "]";
-                            string body = "[" + Condition + "]-" + " Characteristic master: " + Name + ", Value: " + Value + ", Description: " + Description + ", Result: " + Result.Replace("changed","Insert in SAP completed") + ".";
-                            //string AttachedFile = ""; 
-
-                            //3.sent email to user
-                            if (bool.Parse(ConfigurationManager.AppSettings["EmailsNotifySuccessImport"+ InterfaceCode]) == true)
-                            {
-                                SendEmail(from, to, subject, body);
-                            }
-
-                            //4.send email to IT //5.sent email insert log 
-                            if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
-                            {
-                                //SendEmail(from, ConfigurationManager.AppSettings["ITEmailsNotify"], subject, body);
-                                SendToLog(from, to, subject, body);
-                            }                           
-                        }
-                    }
-                }
-                if (File.Exists(file))
-                {
-                    File.Move(file, ConfigurationManager.AppSettings["InterfacePathInbound"] + @"Processed\" + Path.GetFileName(file));
-                }               
-                return InterfaceCode + " Success";
-            }
-            catch (IOException e)
-            {
-                return InterfaceCode + e.Message;
-            }
-        }
-       
         public static string Import_CT04_R(string file, string InterfaceCode)
         {
             try
@@ -662,34 +660,16 @@ namespace Interface_igrid
         #endregion
 
         #region EXPORT INTERFACES
-        public static void SQ01_ListMAT(DataTable Results)
-        {
-            DataTable dtListMat = new DataTable();
-            dtListMat.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn (@"Characteristic Name txtSP$00005-LOW.text"),
-                new DataColumn(@"txtSP$00003 - LOW.text"),
-                new DataColumn(@"AppId"),
-            });
-            foreach (DataRow row in Results.Rows)
-            {
-                dtListMat.Rows.Add(
-                    string.Format("{0}", row["Changed_Charname"].ToString()),
-                    string.Format("{0}", row["Old_Description"].ToString()),
-                    string.Format("{0}", row["Changed_Id"].ToString()));
-            }
-            if (dtListMat.Rows.Count > 0)
-            {
-                string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "SQ01_ListMat" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                ToCSV(dtListMat, file);
-            }
-        }
         public static void CT04(DataTable Results)
         {
-            //Cancel CT04Update
+
             DataTable dtCT04Insert = new DataTable();
+
+            //Cancel CT04Update
+            //Cancel CT04Remove
             //DataTable dtCT04Update = new DataTable();
-            DataTable dtCT04Remove = new DataTable();
+            //DataTable dtCT04Remove = new DataTable();
+
             dtCT04Insert.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
                 new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
                 new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
@@ -702,12 +682,12 @@ namespace Interface_igrid
             //    new DataColumn(@"Text for a table entry CLHP-CR_STATUS_TEXT"),
             //    new DataColumn(@"Characteristic value description CAWNT-ATWTB(01)"),
             //});
-            dtCT04Remove.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
-                new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
-                new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
-                new DataColumn(@"Text for a table entry CLHP-CR_STATUS_TEXT"),
-                new DataColumn(@"AppId"),
-            });
+            //dtCT04Remove.Columns.AddRange(new DataColumn[] { new DataColumn (@"IfColumn"),
+            //    new DataColumn(@"Characteristic Name RCTAV-ATNAM"),
+            //    new DataColumn(@"Characteristic Value CAWN-ATWRT(01)"),
+            //    new DataColumn(@"Text for a table entry CLHP-CR_STATUS_TEXT"),
+            //    new DataColumn(@"AppId"),
+            //});
             foreach (DataRow row in Results.Rows)
             {
                 dtCT04Insert.Rows.Add(string.Format("{0}", "I"),
@@ -758,6 +738,29 @@ namespace Interface_igrid
             //    ToCSV(dtCT04Remove, file);
             //}
         }
+        public static void SQ01_ListMAT(DataTable Results)
+        {
+            DataTable dtListMat = new DataTable();
+            dtListMat.Columns.AddRange(new DataColumn[]
+            {
+                new DataColumn (@"Characteristic Name txtSP$00005-LOW.text"),
+                new DataColumn(@"txtSP$00003 - LOW.text"),
+                new DataColumn(@"AppId"),
+            });
+            foreach (DataRow row in Results.Rows)
+            {
+                dtListMat.Rows.Add(
+                    string.Format("{0}", row["Changed_Charname"].ToString()),
+                    string.Format("{0}", row["Old_Description"].ToString()),
+                    string.Format("{0}", row["Changed_Id"].ToString()));
+            }
+            if (dtListMat.Rows.Count > 0)
+            {
+                string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "SQ01_ListMat" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                ToCSV(dtListMat, file);
+            }
+        }
+       
         public static void MM01_CreateMAT_ExtensionPlant(DataTable Results)
         {
             DataTable dt = new DataTable();
@@ -891,6 +894,27 @@ namespace Interface_igrid
                 i++;
             }
         }
+        
+        public static void MM02_ImpactMatDesc(DataTable Results)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.AddRange(new DataColumn[] {
+                new DataColumn (@"Material Number RMMG1 - MATNR"),
+                new DataColumn(@"Material description MAKT - MAKTX"),
+                new DataColumn(@"AppId"),});
+            foreach (DataRow row in Results.Rows)
+            {
+                dt.Rows.Add(
+                string.Format("{0}", row["Material"].ToString()),
+                string.Format("{0}", row["Description"].ToString()),
+                string.Format("{0}", row["Id"].ToString()));
+            }
+            if (dt.Rows.Count > 0)
+            {
+                string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "MM02_ImpactMatDesc" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+                ToCSVWithPipe(dt, file);
+            }
+        }
         public static void CLMM_ChangeMatClass(DataTable Results)
         {
             DataTable dt = new DataTable();
@@ -962,26 +986,6 @@ namespace Interface_igrid
                 }
                 dt.Clear();
                 i++;
-            }
-        }
-        public static void MM02_ImpactMatDesc(DataTable Results)
-        {
-            DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[] {
-                new DataColumn (@"Material Number RMMG1 - MATNR"),
-                new DataColumn(@"Material description MAKT - MAKTX"),
-                new DataColumn(@"AppId"),});
-            foreach (DataRow row in Results.Rows)
-            {
-                dt.Rows.Add(
-                string.Format("{0}", row["Material"].ToString()),
-                string.Format("{0}", row["Description"].ToString()),
-                string.Format("{0}", row["Id"].ToString()));
-            }
-            if (dt.Rows.Count > 0)
-            {
-                string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "MM02_ImpactMatDesc" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                ToCSVWithPipe(dt, file);
             }
         }
         #endregion
