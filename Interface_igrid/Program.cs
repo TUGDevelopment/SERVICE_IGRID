@@ -136,7 +136,7 @@ namespace Interface_igrid
                     if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM02"]) == true) // flage for true run or false not run
                     {
                         //MM02
-                        DataSet dsspGetImpactmat = GetData("spGetImpactmat", "@Active", "X");
+                        DataSet dsspGetImpactmat = GetData("spGetImpactmat_desc", "@Active", "X");
                         MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
                         CLMM_ChangeMatClass(dsspGetImpactmat.Tables[0]);
                     }
