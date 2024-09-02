@@ -127,7 +127,7 @@ namespace Interface_igrid
                 {
                     if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM01"]) == true) // flage for true run or false not run
                     {
-                        //MM01
+                        //MM01,Create material
                         DataSet dsspQuery = GetData("spQuery", "@Material", "X");
                         MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
                         BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
@@ -135,14 +135,14 @@ namespace Interface_igrid
                     }
                     if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM02"]) == true) // flage for true run or false not run
                     {
-                        //MM02
+                        //MM02-Update material description
                         DataSet dsspGetImpactmat = GetData("spGetImpactmat_desc", "@Active", "X");
                         MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
                         CLMM_ChangeMatClass(dsspGetImpactmat.Tables[0]);
                     }
                     if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_CT04"]) == true) // flage for true run or false not run
                     {
-                        //CT04
+                        //CT04-Characteristic master (I, U, D, Inactive, Re-Active)
                         DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
                         CT04(dsspGetMasterData.Tables[0]); 
                         SQ01_ListMAT(dsspGetMasterData.Tables[0]);
@@ -491,7 +491,7 @@ namespace Interface_igrid
                                         }
 
                                         //5.sent to artwork
-                                        //OutboundArtwork(DocNum);                                        
+                                        OutboundArtwork(DocNum);
                                     }
                                 }
                             }                           
