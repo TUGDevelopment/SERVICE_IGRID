@@ -21,6 +21,9 @@ using DocumentFormat.OpenXml.Presentation;
 using System.Net.Http.Headers;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Math;
+using DocumentFormat.OpenXml.Office2013.Word;
+using System.Reflection;
+using System.Security.Policy;
 //using DocumentFormat.OpenXml.Office2013.Excel;
 //using BLL.MemberService;
 
@@ -29,147 +32,985 @@ namespace Interface_igrid
     public class Program
     {
         static readonly HttpClient client = new HttpClient();
-        static void Main(string[] args)
-        {            
-            #region Inbound        
-            if (bool.Parse(ConfigurationManager.AppSettings["runFlageInbound"]) == true) // flage for true run or false not run
+        static async Task Main(string[] args)
+        {
+            try
             {
-                string imported = "";
-                try
+
+
+                #region Inbound    
+                if (bool.Parse(ConfigurationManager.AppSettings["runFlageInbound"]) == true) // flage for true run or false not run
                 {
-                    var filesToImport = Directory.GetFiles(ConfigurationManager.AppSettings["InterfacePathInbound"], "*_Result.csv");
-                    if (filesToImport != null)
+                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM01"]) == true)
                     {
-                        
-                        FileInfo fileI = null;
-                        string fileN = "";
-                        foreach (string file in filesToImport)
+                        await MyQueryMacro();
+                    }
+                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_CT04"]) == true)
+                    {
+                        await MyQuery2Macro();
+                    }
+                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM02"]) == true)
+                    {
+                        await MyQuery3Macro();
+                    }
+                    string imported = "";
+                    try
+                    {
+
+                        var filesToImport = Directory.GetFiles(ConfigurationManager.AppSettings["InterfacePathInbound"], "*_Result.csv");
+                        if (filesToImport != null)
                         {
-                            fileI = new FileInfo(file);
-                            fileN = fileI.Name;
-                            string InterfaceCode = fileN.Substring(0, 6);
-                            switch (InterfaceCode)
-                            {                              
-                                case "MM01_C":
-                                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM01"]) == true)
-                                    {
-                                        imported = Import_MM01_C(file, InterfaceCode);
-                                    }                                    
-                                    break;
-                                case "BAPI_U":
-                                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM01"]) == true)
-                                    {
-                                        imported = Import_BAPI_U(file, InterfaceCode);
-                                    }                                   
-                                    break;
-                                case "BAPI_B":
-                                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM01"]) == true)
-                                    {
-                                        imported = Import_BAPI_B(file, InterfaceCode);
-                                    }                                    
-                                    break;
-                                case "MM02_I":
-                                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM02"]) == true)
-                                    {
-                                        imported = Import_MM02_I(file, InterfaceCode);
-                                    }                                   
-                                    break;
-                                case "CLMM_C":
-                                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM02"]) == true)
-                                    {
-                                        imported = Import_CLMM_C(file, InterfaceCode);
-                                    }                                    
-                                    break;                               
-                                case "CT04_I":
-                                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_CT04"]) == true)
-                                    {
-                                        imported = Import_CT04_I(file, InterfaceCode);
-                                    }                                    
-                                    break;
-                                //case "CT04_R": // Cancel CT04 Remove
-                                //    imported = Import_CT04_R(file, InterfaceCode);
-                                //    break;
-                                case "SQ01_L":
-                                    if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_CT04"]) == true)
-                                    {
-                                        imported = Import_SQ01_L(file, InterfaceCode);
-                                    }                                    
-                                    break;
-                            }                          
-                        }                        
+
+                            FileInfo fileI = null;
+                            string fileN = "";
+                            foreach (string file in filesToImport)
+                            {
+                                fileI = new FileInfo(file);
+                                fileN = fileI.Name;
+                                string InterfaceCode = fileN.Substring(0, 6);
+                                switch (InterfaceCode)
+                                {
+                                    case "MM01_C":
+                                        if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM01"]) == true)
+                                        {
+                                            imported = Import_MM01_C(file, InterfaceCode);
+                                        }
+                                        break;
+                                    case "BAPI_U":
+                                        if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM01"]) == true)
+                                        {
+                                            imported = Import_BAPI_U(file, InterfaceCode);
+                                        }
+                                        break;
+                                    case "BAPI_B":
+                                        if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM01"]) == true)
+                                        {
+                                            imported = Import_BAPI_B(file, InterfaceCode);
+                                        }
+                                        break;
+                                    case "MM02_I":
+                                        if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM02"]) == true)
+                                        {
+                                            imported = Import_MM02_I(file, InterfaceCode);
+                                        }
+                                        break;
+                                    case "CLMM_C":
+                                        if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM02"]) == true)
+                                        {
+                                            imported = Import_CLMM_C(file, InterfaceCode);
+                                        }
+                                        break;
+                                    case "CT04_I":
+                                        if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_CT04"]) == true)
+                                        {
+                                            imported = Import_CT04_I(file, InterfaceCode);
+                                        }
+                                        break;
+                                    //case "CT04_R": // Cancel CT04 Remove
+                                    //    imported = Import_CT04_R(file, InterfaceCode);
+                                    //    break;
+                                    case "SQ01_L":
+                                        if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_CT04"]) == true)
+                                        {
+                                            imported = Import_SQ01_L(file, InterfaceCode);
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                        Console.WriteLine("Inbound All Completed");
                     }
-                    Console.WriteLine("Inbound All Completed");
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("\nException Caught!");
-                    Console.WriteLine($"Message :{e.Message} " + e.StackTrace);
-                    Console.WriteLine("Inbound - Not success" + imported);
-                    //4.send email to IT //5.sent email insert log 
-                    if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                    catch (Exception e)
                     {
-                        string from = ConfigurationManager.AppSettings["SMTPFrom"];
-                        string to = ConfigurationManager.AppSettings["ITEmailsNotify"];
-                        string subject = "Inbound Not success";
-                        string body = e.Message + e.StackTrace;
-                        SendEmail(from, to, subject, body);
-                        SendToLog(from, to, subject, body);
+                        Console.WriteLine("\nException Caught!");
+                        Console.WriteLine($"Message :{e.Message} " + e.StackTrace);
+                        Console.WriteLine("Inbound - Not success" + imported);
+                        //4.send email to IT //5.sent email insert log 
+                        if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                        {
+                            string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                            string to = ConfigurationManager.AppSettings["ITEmailsNotify"];
+                            string subject = "Inbound Not success";
+                            string body = e.Message + e.StackTrace;
+                            SendEmail(from, to, subject, body);
+                            SendToLog(from, to, subject, body);
+                        }
                     }
                 }
+                #endregion
+
+
+                #region Outbound
+                if (bool.Parse(ConfigurationManager.AppSettings["runFlageOutbound"]) == true) // flage for true run or false not run
+                {
+                    try
+                    {
+                        if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM01"]) == true) // flage for true run or false not run
+                        {
+                            //MM01,Create material
+                            DataSet dsspQuery = GetData("spQuery", "@Material", "X");
+                            MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
+                            BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
+                            BAPI_BATCHCLASS(dsspQuery.Tables[0]);
+                        }
+                        if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM02"]) == true) // flage for true run or false not run
+                        {
+                            //MM02-Update material description
+                            DataSet dsspGetImpactmat = GetData("spGetImpactmat_desc", "@Active", "X");
+                            MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
+                            CLMM_ChangeMatClass(dsspGetImpactmat.Tables[0]);
+                        }
+                        if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_CT04"]) == true) // flage for true run or false not run
+                        {
+                            //CT04-Characteristic master (I, U, D, Inactive, Re-Active)
+                            DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
+                            CT04(dsspGetMasterData.Tables[0]);
+                            SQ01_ListMAT(dsspGetMasterData.Tables[0]);
+                        }
+                        Console.WriteLine("Outbound Completed");
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        Console.WriteLine("\nException Caught!");
+                        Console.WriteLine($"Message :{e.Message} ");
+                        Console.WriteLine("Outbound - Not success");
+                        //4.send email to IT //5.sent email insert log 
+                        if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                        {
+                            string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                            string to = ConfigurationManager.AppSettings["ITEmailsNotify"];
+                            string subject = "Outbound Not success";
+                            string body = e.Message + e.StackTrace;
+                            SendEmail(from, to, subject, body);
+                            SendToLog(from, to, subject, body);
+                        }
+                    }
+                }
+
+                #endregion
             }
-            #endregion
-
-
-            #region Outbound
-            if (bool.Parse(ConfigurationManager.AppSettings["runFlageOutbound"]) == true) // flage for true run or false not run
+            catch (Exception ex)
             {
-                try
+
+                throw;
+            }
+        }
+
+        #region Macro 
+        #region  MyQuery
+        public async static Task<string> MyQueryMacro()
+        {
+            try
+            {
+                string filePathResult = ConfigurationManager.AppSettings["FilePathResult"];
+                //Get Data From spQuery Store
+                //Parameter
+                string condition = "";
+                string extended_Plant = "";
+                bool statusup = false;
+                string result = "";
+                string material = "";
+                List<string> lstFileName = await GetAllFileName("BAPI_UpdateMATCharacteristics");
+                foreach (string fileName in lstFileName)
                 {
-                    if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM01"]) == true) // flage for true run or false not run
+                    DataTable dtResultMATCharacteristics = await GetDataTableFromResult(fileName);
+                    if (dtResultMATCharacteristics != null)
                     {
-                        //MM01,Create material
-                        DataSet dsspQuery = GetData("spQuery", "@Material", "X");
-                        MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
-                        BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
-                        BAPI_BATCHCLASS(dsspQuery.Tables[0]);
+                        foreach (DataRow rowMat in dtResultMATCharacteristics.Rows)
+                        {
+                            if (rowMat != null && !string.IsNullOrEmpty(rowMat["Result"].ToString()))
+                            {
+                                DataSet dsspQuery = GetData("spQuery", "@Material", "X");
+                                var table = dsspQuery.Tables[0];
+                                if (table == null || table.Rows.Count == 0)
+                                {
+                                    return "No Data In spGetImpactmat";
+                                }
+                                var mat = rowMat["Material Number RMMG1-MATNR"].ToString();
+                                foreach (DataRow row in table.Rows)
+                                {
+                                    if (row["Material"].ToString() == mat)
+                                    {
+                                        material = row["Material"].ToString();
+                                        condition = row["Condition"].ToString();
+                                        extended_Plant = row["Extended_Plant"].ToString();
+                                        //string cellValue = row["DocumentNo"].ToString(); // Get the cell value as a string
+                                    }
+                                }
+                                var resultMat = rowMat["Result"].ToString();
+                                result = resultMat;
+                                //Get StartUp For Update DB
+                                if (condition == "7")
+                                {
+                                    //Run MM02_ChangeMATDesc2
+                                    //Set StartUp
+                                    if (resultMat.ToLower().Contains("does not exist") && !statusup) { statusup = false; }
+                                    //else if (resultMat.Contains("Material") && !statusup) { statusup = true; }
+                                    else if (resultMat.ToLower().Contains("material " + material.ToLower()) && !statusup) { statusup = true; }
+                                    //else if (resultMat.Contains("*Saving changes to assignments Assignment changed*") && !statusup) { statusup = true; }
+                                    else if (resultMat.ToLower().Contains("assignment changed") && !statusup) { statusup = true; }
+                                    else
+                                    {
+                                        //Get DataFilePath From MM02_ChangeMATDesc
+                                        var dtResultChangeMATDesc = await GetDataTableFromResult("MM02_ChangeMATDesc");
+                                        if (dtResultChangeMATDesc != null)
+                                        {
+                                            foreach (DataRow rowChangeMATDesc in dtResultChangeMATDesc.Rows)
+                                            {
+                                                //Split Data With ||
+                                                if (rowChangeMATDesc != null && rowChangeMATDesc[0] != null)
+                                                {
+                                                    //Col Material Number RMMG1-MATNR
+                                                    var dataInRow = rowChangeMATDesc[0].ToString();
+                                                    if (!string.IsNullOrEmpty(dataInRow))
+                                                    {
+                                                        var getListResult = dataInRow.Split(new string[] { "||" }, StringSplitOptions.None).ToList();
+                                                        if (getListResult != null && getListResult.Count > 0)
+                                                        {
+                                                            if (getListResult.Count > 0 && mat == getListResult[0])
+                                                            {
+                                                                //Col Result
+                                                                string colResult = getListResult[getListResult.Count - 1];
+                                                                //if (colResult.Contains("Material")) { statusup = true; }
+                                                                result = colResult;
+                                                                if (colResult.ToLower().Contains("material " + material.ToLower()))
+                                                                {
+                                                                    result = "P_" + colResult;
+                                                                    statusup = true;
+                                                                }
+                                                                else { statusup = false; }
+
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    //**** Wassana P. insert on 11.01.2018 (Not change class but extend plant)
+                                    if (!statusup && extended_Plant.ToLower() == "true")
+                                    {
+                                        List<string> listTableResult = new List<string> { "MM01_CreateMAT_ExtensionPlant", "MM01_ExtendSaleOrg" };
+                                        foreach (var tableResult in listTableResult)
+                                        {
+                                            var dtResult = await GetDataTableFromResult(tableResult);
+                                            string resultStr = ReadMM01Result(statusup, mat, material, dtResult);
+                                            if (resultStr.ToLower().Contains("material " + material.ToLower()))
+                                            {
+                                                statusup = true;
+                                                result = "P_" + resultStr;
+                                            }
+                                            {
+                                                statusup = true;
+                                                result = resultStr;
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    //Check BAPI_UpdateMATCharacteristics
+                                    if (resultMat.ToLower().Contains("material " + material.ToLower()) && resultMat.ToLower().Contains("assignment changed"))
+                                    {
+                                        statusup = true;
+                                        result = resultMat;
+                                    }
+
+                                    //MM01_CreateMAT_ExtensionPlant Col 11 MM01_ExtendSaleOrg Col 12
+
+                                    List<string> listTableResult = new List<string> { "MM01_CreateMAT_ExtensionPlant", "MM01_ExtendSaleOrg" };
+                                    foreach (var tableResult in listTableResult)
+                                    {
+                                        var dtResultExtensionPlant = await GetDataTableFromResult(tableResult);
+
+                                        if (dtResultExtensionPlant != null)
+                                        {
+                                            var dtResult = await GetDataTableFromResult(tableResult);
+                                            string resultStr = ReadMM01Result(statusup, mat, material, dtResult);
+                                            if (resultStr.ToLower().Contains("material " + material.ToLower()))
+                                            {
+                                                statusup = true;
+                                                result = "P_" + resultStr;
+                                            }
+                                        }
+                                    }
+
+                                    //if (resultMat.Contains("Material " + material + "  changed") || resultMat.Contains("*Saving changes to assignments Assignment changed*"))
+                                    //if ( resultMat.ToLower().Contains("assignment changed"))
+                                    //{
+                                    //    statusup = true;
+                                    //}
+                                }
+                                //Update DB
+                                if (statusup)
+                                {
+                                    await MoveFile(fileName);
+                                    //GenerateAttachedmentFile
+                                    if (condition == "7")
+                                    {
+                                        await updateDB("U" + material, fileName);
+                                    }
+                                    else
+                                    {
+                                        //if (result.Contains("Material " + material + "  changed") || result.Contains("*Saving changes to assignments Assignment changed*"))
+                                        if ((result.ToLower().Contains("material " + material.ToLower()) || result.ToLower().Contains("assignment changed")) && result.Substring(0, 2) != "P_")
+                                        {
+                                            await updateDB("O" + material, fileName);
+                                        }
+                                        else
+                                        {
+                                            await updateDB("P" + material, fileName);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    await MoveFile(fileName);
+                                    //GenerateAttachedmentFile
+                                    if (condition == "7")
+                                    {
+                                        //if (result.Contains("No changes made") || result.Contains("*Saving changes to assignments Assignment changed*"))
+                                        if (result.ToLower().Contains("no changes made"))
+                                        {
+                                            await updateDB("Y" + material, fileName);
+                                        }
+                                        else
+                                        {
+                                            await updateDB("Z" + material, fileName);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        await updateDB("X" + material, fileName);
+                                    }
+                                }
+                            }
+                        }
                     }
-                    if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM02"]) == true) // flage for true run or false not run
-                    {
-                        //MM02-Update material description
-                        DataSet dsspGetImpactmat = GetData("spGetImpactmat_desc", "@Active", "X");
-                        MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
-                        CLMM_ChangeMatClass(dsspGetImpactmat.Tables[0]);
-                    }
-                    if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_CT04"]) == true) // flage for true run or false not run
-                    {
-                        //CT04-Characteristic master (I, U, D, Inactive, Re-Active)
-                        DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
-                        CT04(dsspGetMasterData.Tables[0]); 
-                        SQ01_ListMAT(dsspGetMasterData.Tables[0]);
-                    }
-                    Console.WriteLine("Outbound Completed");
                 }
-                catch (HttpRequestException e)
+                await MoveFile("BAPI_UpdateMATCharacteristics");
+                await MoveFile("MM02_ChangeMATDesc");
+                await MoveFile("MM01_CreateMAT_ExtensionPlant");
+                await MoveFile("MM01_ExtendSaleOrg");
+                return "success";
+            }
+            catch (Exception ex)
+            {
+                //WriteLog("MyQueryMacro : " + ex.ToString());
+                return ex.ToString();
+            }
+        }
+        public async static Task<string> MyQuery2Macro()
+        {
+            try
+            {
+                string servicePathUrl = ConfigurationManager.AppSettings["ServicePathUrl"];
+                string filePath = ConfigurationManager.AppSettings["FilePath"];
+
+                DataTable dtResult = await GetDataTableFromResult("CT04_Insert");
+                foreach (DataRow rowResult in dtResult.Rows)
                 {
-                    Console.WriteLine("\nException Caught!");
-                    Console.WriteLine($"Message :{e.Message} ");
-                    Console.WriteLine("Outbound - Not success");
-                    //4.send email to IT //5.sent email insert log 
-                    if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                    var checkStatus = rowResult["Result"].ToString();
+                    if (string.IsNullOrEmpty(checkStatus) || checkStatus == "Result")
                     {
-                        string from = ConfigurationManager.AppSettings["SMTPFrom"];
-                        string to = ConfigurationManager.AppSettings["ITEmailsNotify"];
-                        string subject = "Outbound Not success";
-                        string body = e.Message + e.StackTrace;
-                        SendEmail(from, to, subject, body);
-                        SendToLog(from, to, subject, body);
+                        continue;
+                    }
+                    //Get Data From spGetMasterData
+                    DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
+                    var table = dsspGetMasterData.Tables[0];
+                    if (table == null || table.Rows.Count == 0)
+                    {
+                        return "No Data In spGetImpactmat";
+                    }
+
+                    foreach (DataRow row in table.Rows)
+                    {
+                        if (rowResult["AppId"].ToString() == row["Changed_Id"].ToString())
+                        {
+                            // assign parameter
+                            var action = row["Changed_Action"].ToString();
+                            var changed_Id = row["Changed_Id"].ToString();
+                            var char_name = row["Changed_Charname"].ToString();
+                            var char_var = "";
+                            if (rowResult["AppId"].ToString() == changed_Id)
+                            {
+                                if (char_name == "ZPKG_SEC_BRAND")
+                                {
+                                    char_var = row["Old_Id"].ToString();
+                                }
+                                else
+                                {
+                                    char_var = row["Old_Description"].ToString();
+                                }
+                                var char_newvar = row["Description"].ToString();
+
+                                var old_matdesc = row["Old_Description"].ToString();
+                                var new_matdesc = row["Description"].ToString();
+                                //File Parameter
+                                var fileName = "";
+                                var char_filename = changed_Id + "_" + char_name;
+
+                                //Check ulogin Characteristic Name
+                                if (char_name != "ulogin")
+                                {
+                                    //Check Action And Run CT04
+                                    if (action == "Insert")
+                                    {
+                                        //RunNormalTXRfile ("CT04_Insert")
+                                    }
+                                    else if (action == "Update" || action == "Inactive" || action == "Re-Active")
+                                    {
+                                        //RunNormalTXRfile ("SQ01_ListMAT")
+                                        fileName = filePath + char_filename + ".txt";
+                                        //RunNormalTXRfile ("CT04_ExactlyUpdated") 
+                                    }
+                                    else if (action == "Remove")
+                                    {
+                                        //RunNormalTXRfile ("CT04_Remove") 
+                                    }
+
+                                    //Update Paramenter
+                                    string Str_MaterialNo = "";
+                                    string Str_Class = "";
+                                    string Str_CharName = "";
+                                    string Str_CharValue = "";
+                                    string Str_MaterialDesc = "";
+                                    string Str_DMSno = "";
+                                    string Str_NewMaterialNo = "";
+                                    string Str_NewMaterialDesc = "";
+                                    string Str_Action = "";
+                                    string Str_Status = "";
+                                    string Str_Reason = "";
+                                    string Str_NewMat_JobId = "";
+                                    string Str_Char_Name = "";
+                                    string Str_Char_OldValue = "";
+                                    string Str_Char_NewValue = "";
+
+                                    //Update Master
+                                    //Check Status
+                                    if (checkStatus.Contains("changed") || checkStatus.Contains("already exists"))
+                                    {
+                                        //Check Action
+                                        if (action == "Update" || action == "Inactive" || action == "Re-Active")
+                                        {
+                                            //Check FIle
+                                            DataTable dtResultListMat = await GetDataTableFromResult("SQ01_ListMat");
+                                            //Update Master
+                                            //Row in File
+                                            foreach (DataRow itemRow in dtResultListMat.Rows)
+                                            {
+                                                //Column In File
+
+                                                Str_MaterialNo = itemRow[0].ToString();
+                                                Str_Class = itemRow[2].ToString();
+                                                Str_CharName = itemRow[3].ToString();
+                                                Str_CharValue = itemRow[4].ToString();
+                                                Str_MaterialDesc = itemRow[5].ToString();
+                                                if (string.IsNullOrEmpty(Str_MaterialDesc))
+                                                {
+                                                    Str_DMSno = Str_MaterialDesc.Substring(0, Str_MaterialDesc.IndexOf(","));
+                                                    if (Str_DMSno.Contains("-COR"))
+                                                    {
+                                                        Str_DMSno.Replace("-COR", "@");
+                                                    }
+                                                    else if (Str_DMSno.Contains("COR-"))
+                                                    {
+                                                        Str_DMSno.Replace("COR-", "@");
+                                                    }
+                                                    else
+                                                    {
+                                                        Str_DMSno.Replace("-", "@");
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    Str_DMSno = "";
+                                                }
+
+                                                //Call Service Update
+                                                if (action == "Inactive")
+                                                {
+                                                    Str_NewMaterialNo = "";
+                                                    Str_NewMaterialDesc = "";
+                                                    Str_Action = "Master Inactive";
+                                                    Str_Status = "Pending";
+                                                }
+                                                else if (action == "Re-Active")
+                                                {
+                                                    Str_NewMaterialNo = "";
+                                                    Str_NewMaterialDesc = "";
+                                                    Str_Action = "Master Re-Active";
+                                                    Str_Status = "Completed";
+                                                }
+                                                else if (action == "Update")
+                                                {
+                                                    if (Str_CharName == "ZPKG_SEC_BRAND")
+                                                    {
+                                                        Str_Action = "Update Description";
+                                                        Str_Status = "Not Start";
+                                                    }
+                                                    else
+                                                    {
+                                                        Str_Action = "Update Characteristic Master";
+                                                        Str_Status = "Not Start";
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    Str_NewMaterialNo = "";
+                                                    if (Str_MaterialDesc.Contains(","))
+                                                    {
+                                                        Str_NewMaterialDesc = Str_MaterialDesc.Substring(0, Str_MaterialDesc.IndexOf(",")) + new_matdesc;
+                                                    }
+                                                    else
+                                                    {
+                                                        Str_NewMaterialDesc = Str_MaterialDesc;
+                                                    }
+                                                }
+
+                                                Str_Reason = "";
+                                                Str_NewMat_JobId = "";
+                                                Str_Char_Name = "";
+                                                Str_Char_OldValue = "";
+                                                Str_Char_NewValue = "";
+
+                                                //Call Service UpdateImpactedmat2
+                                                //GET Strquery = "http://" + sServer + "/WebService_jQuery_Ajax/ServiceCS.asmx/UpdateImpactedmat2?Changed_Id=" + Changed_Id + "&Changed_Action=" + Str_Action + "&Material=" + Str_MaterialNo + "&Description=" + Str_MaterialDesc + "&DMSNo=" + Str_DMSno + "&New_Material=" + Str_NewMaterialNo + "&New_Description=" + Str_NewMaterialDesc + "&Status=" + Str_Status + "&Reason=" + Str_Reason + "&NewMat_JobId=" + Str_NewMat_JobId + "&Char_Name=" + Str_Char_Name + "&Char_OldValue=" + Str_Char_OldValue + "&Char_NewValue=" + Str_Char_NewValue
+
+                                                using (var httpClient = new HttpClient())
+                                                {
+                                                    using (var response = await httpClient.GetAsync(servicePathUrl + "UpdateImpactedmat2?Changed_Id=" + changed_Id + "&Changed_Action=" + Str_Action + "&Material=" + Str_MaterialNo + "&Description=" + Str_MaterialDesc + "&DMSNo=" + Str_DMSno + "&New_Material=" + Str_NewMaterialNo + "&New_Description=" + Str_NewMaterialDesc + "&Status=" + Str_Status + "&Reason=" + Str_Reason + "&NewMat_JobId=" + Str_NewMat_JobId + "&Char_Name=" + Str_Char_Name + "&Char_OldValue=" + Str_Char_OldValue + "&Char_NewValue=" + Str_Char_NewValue))
+                                                    {
+                                                        var apiResponse = await response.Content.ReadAsStringAsync();
+
+                                                    }
+                                                }
+
+                                                Str_MaterialNo = "";
+                                                Str_Class = "";
+                                                Str_CharName = "";
+                                                Str_CharValue = "";
+                                                Str_MaterialDesc = "";
+                                                Str_DMSno = "";
+                                                Str_NewMaterialNo = "";
+                                                Str_NewMaterialDesc = "";
+                                                Str_Status = "";
+                                                Str_Reason = "";
+                                                Str_NewMat_JobId = "";
+                                                Str_Char_Name = "";
+                                                Str_Char_OldValue = "";
+                                                Str_Char_NewValue = "";
+                                            }
+                                            await UpdateMaster("U" + changed_Id);
+                                        }
+                                        else
+                                        {
+                                            //Update Master C
+                                            await UpdateMaster("C" + changed_Id);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //Update Master E
+                                        await UpdateMaster("E" + changed_Id);
+                                    }
+                                }
+                                else
+                                {
+                                    //Update Master C
+                                    await UpdateMaster("C" + changed_Id);
+                                }
+                            }
+                        }
+                    }
+                }
+                await MoveFile("CT04_Insert");
+                await MoveFile("SQ01_ListMat");
+                return "Success";
+            }
+            catch (Exception e)
+            {
+                //WriteLog("MyQuery2Macro : " + e.ToString());
+                return e.ToString();
+            }
+        }
+        public async static Task<string> MyQuery3Macro()
+        {
+            try
+            {
+                string scriptName = "";
+                //Parameter
+                var material = "";
+                var status_ChgMatDesc = "";
+                var tab_Id = "";
+                var getId = "";
+                var reason = "";
+
+
+
+                DataSet dsspGetImpactmat = GetData("spGetImpactmat", "@Active", "X");
+                var table = dsspGetImpactmat.Tables[0];
+                if (table == null || table.Rows.Count == 0)
+                {
+                    return "No Data In spGetImpactmat";
+                }
+                DataTable dtImpactMatDesc = table.Clone();
+                DataTable dtChangeMatClass = table.Clone();
+                //Get Script
+                foreach (DataRow row in table.Rows)
+                {
+                    if (!string.IsNullOrEmpty(row["New_Description"].ToString()))
+                    {
+                        if ((row["Status"].ToString() == "In process"))
+                        {
+                            scriptName = "MM02_ImpactMatDesc";
+                            material = row["Material"].ToString();
+                            getId = row["Id"].ToString();
+                            dtImpactMatDesc.Rows.Add(row);
+                        }
+                    }
+                    else
+                    {
+                        scriptName = "CLMM_ChangeMatClass";
+                        material = row["Material"].ToString();
+                        getId = row["Id"].ToString();
+                        dtChangeMatClass.Rows.Add(row);
+                    }
+                }
+
+
+
+                if (scriptName == "MM02_ImpactMatDesc")
+                {
+                    DataTable dtResultImpactMatDesc = await GetDataTableFromResult("MM02_ImpactMatDesc");
+                    foreach (DataRow rowResult in dtResultImpactMatDesc.Rows)
+                    {
+                        var getListResult = getDataRow(rowResult);
+                        foreach (DataRow rowMatDesc in table.Rows)
+                        {
+                            if (rowMatDesc["Material"].ToString() == getListResult[0])
+                            {
+                                var checkResult = getListResult[getListResult.Count - 1];
+                                if (checkResult.Contains("Material") || checkResult.Contains("No changes made"))
+                                {
+                                    status_ChgMatDesc = "Completed";
+                                    tab_Id = rowMatDesc["Id"].ToString();
+                                    reason = "";
+                                    await SaveImpactedMatDesc(tab_Id, reason, status_ChgMatDesc);
+                                }
+                                else
+                                {
+                                    status_ChgMatDesc = "Failed";
+                                }
+                            }
+                        }
+                    }
+                }
+                //CLMM
+                else if (scriptName == "CLMM_ChangeMatClass")
+                {
+                    List<string> lstFileName = await GetAllFileName("CLMM_ChangeMatClass");
+                    bool isFoundData = false;
+                    foreach (string fileName in lstFileName)
+                    {
+                        if (isFoundData) { break; }
+                        DataTable dtResultChangeMatClass = await GetDataTableFromResult(fileName);
+                        foreach (DataRow rowResultMatClass in dtResultChangeMatClass.Rows)
+                        {
+                            //Match With MM02_ImpactMatDesc
+                            if (!string.IsNullOrEmpty(rowResultMatClass[0].ToString()))
+                            {
+                                isFoundData = true;
+                                foreach (DataRow rowChangeMatClass in table.Rows)
+                                {
+                                    if (!string.IsNullOrEmpty(rowChangeMatClass["Material"].ToString()) && rowChangeMatClass["Material"].ToString() == rowResultMatClass[0].ToString())
+                                    {
+                                        var checkResult = rowResultMatClass[0].ToString();
+                                        if (checkResult.Contains("Material") || checkResult.Contains("No message is returned from SAP"))
+                                        {
+                                            status_ChgMatDesc = "Completed";
+                                            tab_Id = rowChangeMatClass["Id"].ToString();
+                                            reason = "";
+                                            await SaveImpactedMatDesc(tab_Id, reason, status_ChgMatDesc);
+                                        }
+                                        else
+                                        {
+                                            status_ChgMatDesc = "Failed";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+
+                await MoveFile("MM02_ImpactMatDesc");
+                await MoveFile("CLMM_ChangeMatClass");
+
+                return "success";
+            }
+            catch (Exception ex)
+            {
+                //WriteLog("MyQuery3Macro : " + ex.ToString());
+                return ex.ToString();
+            }
+        }
+        #endregion
+        public static string ReadMM01Result(bool statusup, string mat, string material, DataTable dtResultExtensionPlant)
+        {
+            if (dtResultExtensionPlant != null)
+            {
+                foreach (DataRow rowExtensionPlant in dtResultExtensionPlant.Rows)
+                {
+                    //Split Data With ||
+                    if (rowExtensionPlant != null && rowExtensionPlant[0] != null && !statusup)
+                    {
+                        var getListResult = getDataRow(rowExtensionPlant);
+                        //Col Material Number RMMG1-MATNR
+                        if (getListResult.Count > 0 && mat == getListResult[1])
+                        {
+                            //Col Result
+                            string colResult = getListResult[getListResult.Count - 1];
+                            //if (colResult.Contains("Material " + material)) 
+                            return colResult;
+                        }
                     }
                 }
             }
-
-            #endregion
-
+            return "";
         }
+        public static void WriteLog(string message)
+        {
+            string logFile = ConfigurationManager.AppSettings["LogFile"];
+            string filePath = logFile + "example.txt";
+
+            string textToWrite = DateTime.Now.ToString() + message + Environment.NewLine;
+
+            using (StreamWriter writer = new StreamWriter(filePath, append: true))
+            {
+                writer.WriteLine(textToWrite);
+            }
+
+            Console.WriteLine("Text written to file successfully.");
+        }
+        public static List<string> getDataRow(DataRow row)
+        {
+            List<string> getListResult = new List<string>();
+            //Split Data With ||
+            if (row != null && row[0] != null)
+            {
+                //Col Material Number RMMG1-MATNR
+                var dataInRow = row[0].ToString();
+                if (!string.IsNullOrEmpty(dataInRow))
+                {
+                    getListResult = dataInRow.Split(new string[] { "|" }, StringSplitOptions.None).ToList();
+                    if (getListResult != null && getListResult.Count > 0)
+                    {
+                        return getListResult;
+                    }
+                }
+            }
+            return getListResult;
+        }
+        public static List<FileInfo> ListAllFile(string filePathResult)
+        {
+            //Get Result
+            DirectoryInfo d = new DirectoryInfo(filePathResult);
+
+            FileInfo[] Files = d.GetFiles("*.csv");
+            return Files.ToList();
+        }
+        public static async Task<string> MoveFile(string fileName)
+        {
+            List<string> getlstFullFileName = await GetAllFileName(fileName);
+            if (getlstFullFileName.Count > 0)
+            {
+                foreach (var getFullFileName in getlstFullFileName)
+                {
+                    if (getFullFileName != null)
+                    {
+                        string filePathResult = ConfigurationManager.AppSettings["FilePathResult"];
+                        string destinationPathResult = ConfigurationManager.AppSettings["DestinationPathResult"];
+                        string sourceFilePath = filePathResult + getFullFileName;
+                        string destinationFilePath = destinationPathResult + getFullFileName;
+
+                        try
+                        {
+                            //Delete File If Redundant
+                            DirectoryInfo d = new DirectoryInfo(destinationPathResult);
+                            FileInfo[] Files = d.GetFiles("*.csv");
+
+                            var fileResult = Files.Where(x => x.Name.Contains(getFullFileName)).OrderByDescending(x => x.CreationTime).FirstOrDefault();
+                            if (fileResult != null)
+                            {
+                                File.Delete(destinationFilePath);
+                            }
+                            // Move the file
+                            File.Move(sourceFilePath, destinationFilePath);
+                        }
+
+                        catch (IOException ex)
+                        {
+                            return ex.ToString();
+                        }
+                    }
+                    else
+                    {
+                        return "File Not Found";
+                    }
+                }
+            }
+            else
+            {
+                return "File Not Found";
+            }
+            return "File Not Found";
+        }
+        public static DataSet GetMasCharacteristic(string materialType)
+        {
+            //select* from MasCharacteristic where MaterialType like '@" + VBA.Mid(.Cells(irow, "B").value, 2, 1) + "@')#a order by Id"
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("select* from MasCharacteristic where MaterialType like VALUES(@materialType) order by Id;", con))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@materialType", materialType);
+                    cmd.Connection = con;
+                    con.Open();
+                    DataSet oDataset = new DataSet();
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(oDataset);
+                    con.Close();
+                    return oDataset;
+                }
+            }
+        }
+        private async static Task<DataTable> GetDataTableFromFile(FileInfo fileResult)
+        {
+            string filePathResult = fileResult.DirectoryName;
+            string fileNameResult = "";
+            if (fileResult != null)
+            {
+                fileNameResult = fileResult.Name;
+            }
+            DataTable dtResult = ConvertCSVtoDataTable(filePathResult + fileNameResult);
+            return dtResult;
+        }
+        private async static Task<string> GetFileName(string name)
+        {
+            string filePathResult = ConfigurationManager.AppSettings["FilePathResult"];
+            //Get Result
+            DirectoryInfo d = new DirectoryInfo(filePathResult);
+
+            FileInfo[] Files = d.GetFiles("*.csv");
+            string str = "";
+
+            var fileResult = Files.Where(x => x.Name.Contains(name)).OrderByDescending(x => x.CreationTime).FirstOrDefault();
+            string fileNameResult = "";
+            if (fileResult != null)
+            {
+                fileNameResult = fileResult.Name;
+            }
+            return fileNameResult;
+        }
+
+        private async static Task<List<string>> GetAllFileName(string name)
+        {
+            List<DataTable> dtResult = new List<DataTable>();
+            string filePathResult = ConfigurationManager.AppSettings["FilePathResult"];
+            //Get Result
+            DirectoryInfo d = new DirectoryInfo(filePathResult);
+
+            FileInfo[] Files = d.GetFiles("*.csv");
+            string str = "";
+
+            var fileResult = Files.Where(x => x.Name.Contains(name)).OrderByDescending(x => x.CreationTime).Select(x => x.Name).ToList();
+            return fileResult;
+        }
+        private async static Task<DataTable> GetDataTableFromResult(string name)
+        {
+            string filePathResult = ConfigurationManager.AppSettings["FilePathResult"];
+            string fileNameResult = await GetFileName(name);
+            if (!string.IsNullOrEmpty(fileNameResult))
+            {
+                DataTable dtResult = ConvertCSVtoDataTable(filePathResult + fileNameResult);
+                return dtResult;
+            }
+            return new DataTable();
+        }
+
+        private async static Task<string> SaveImpactedMatDesc(string str_TabId, string reason, string status_ChgMatDesc)
+        {
+            string servicePathUrl = ConfigurationManager.AppSettings["ServicePathUrl"];
+            string apiResponse = "";
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(servicePathUrl + "saveImpactedMatDesc?Id=" + str_TabId + "&Reason=" + reason + "&Status=" + status_ChgMatDesc + ""))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        apiResponse = await response.Content.ReadAsStringAsync();
+                    }
+                    else
+                    {
+                        apiResponse = await response.Content.ReadAsStringAsync();
+                        WriteLog("MyQuery3Macro : SaveImpactedMatDesc : " + apiResponse);
+                    }
+                }
+            }
+            return apiResponse;
+        }
+
+        private async static Task<string> UpdateMaster(string changeId)
+        {
+            string servicePathUrl = ConfigurationManager.AppSettings["ServicePathUrl"];
+            string apiResponse = "";
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(servicePathUrl + "SendEmailUpdateMaster?_name=" + changeId))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        apiResponse = await response.Content.ReadAsStringAsync();
+                    }
+                    else
+                    {
+                        apiResponse = await response.Content.ReadAsStringAsync();
+                        WriteLog("MyQuery2Macro : UpdateMaster : " + apiResponse);
+                    }
+                }
+            }
+            return apiResponse;
+        }
+
+
+        private async static Task<string> updateDB(string name, string filename)
+        {
+            string servicePathUrl = ConfigurationManager.AppSettings["ServicePathUrl"];
+            string apiResponse = "";
+            using (var httpClient = new HttpClient())
+            {
+
+                using (var response = await httpClient.GetAsync(servicePathUrl + "SendEmail3NewVer?_name=" + name + "&filename=" + filename))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        apiResponse = await response.Content.ReadAsStringAsync();
+                    }
+                    else
+                    {
+                        apiResponse = await response.Content.ReadAsStringAsync();
+                        WriteLog("MyQueryMacro : updateDB : " + apiResponse);
+                    }
+                }
+            }
+            return apiResponse;
+        }
+
+        #endregion
+
 
         #region IMPORT INTERFACES
         public static string Import_CT04_I(string file, string InterfaceCode)
@@ -236,7 +1077,7 @@ namespace Interface_igrid
                         string AppId = "0";
                         DataTable dtGetMail = UpdateToDB("spInterface_Igrid", AppId, InterfaceCode, dt);
                         string from = ConfigurationManager.AppSettings["SMTPFrom"];
-                        string to = ConfigurationManager.AppSettings["ITEmailsNotify"];                       
+                        string to = ConfigurationManager.AppSettings["ITEmailsNotify"];
                         string subject = InterfaceCode + " - SQ01 List Material is done";
                         string body = "SQ01 List Material is done";
                         //string AttachedFile = "";                        
@@ -271,7 +1112,7 @@ namespace Interface_igrid
                         {
                             string Condition = row[0].ToString().Replace("D", "Remove");
                             string Name = row[1].ToString();
-                            string Value = row[2].ToString();                           
+                            string Value = row[2].ToString();
                             string AppId = row[3].ToString();
                             string Result = row[4].ToString();
 
@@ -316,7 +1157,7 @@ namespace Interface_igrid
             }
 
         }
-        
+
         public static string Import_MM02_I(string file, string InterfaceCode)
         {
             try
@@ -326,7 +1167,7 @@ namespace Interface_igrid
                     if (dt.Rows.Count > 0)
                     {
                         foreach (DataRow row in dt.Rows)
-                        {                            
+                        {
                             string MatNumber = row[0].ToString();
                             string MatDesc = row[1].ToString();
                             string AppId = row[2].ToString();
@@ -342,7 +1183,7 @@ namespace Interface_igrid
                             {
                                 to = dr["Email"].ToString();
                             }
-                           
+
                             string subject = InterfaceCode + " - Material " + "[" + MatNumber + "] Saving changes to assignments Assignment changed";
                             string body = " Material: " + MatNumber + ", Description: " + MatDesc + ", Result: " + Result + ".";
                             //string AttachedFile = "";
@@ -372,7 +1213,6 @@ namespace Interface_igrid
             {
                 return InterfaceCode + e.Message + e.StackTrace;
             }
-
         }
         public static string Import_CLMM_C(string file, string InterfaceCode)
         {
@@ -434,9 +1274,8 @@ namespace Interface_igrid
             {
                 return InterfaceCode + e.Message + e.StackTrace;
             }
-
         }
-        
+
         public static string Import_MM01_C(string file, string InterfaceCode)
         {
             try
@@ -447,7 +1286,7 @@ namespace Interface_igrid
                     {
                         string previousDocNum = null;
                         foreach (DataRow row in dt.Rows)
-                        {                            
+                        {
                             string DocNum = row[0].ToString();
                             string MatNum = row[1].ToString();
                             string MatDesc = row[2].ToString();
@@ -461,9 +1300,9 @@ namespace Interface_igrid
                             var currentDocNum = DocNum;
                             if (currentDocNum != null)
                             {
-                                if(previousDocNum != currentDocNum)
-                                {                                                                 
-                                   
+                                if (previousDocNum != currentDocNum)
+                                {
+
                                     if (DocNum != "" && MatNum != "" && MatDesc != "" && Plant != "" && Distribution != "" && AppId != "" && Result != "")
                                     {
                                         //1.Update to db
@@ -472,9 +1311,9 @@ namespace Interface_igrid
                                         //2.get data from db to dataTable prepare sent email to user
                                         string from = ConfigurationManager.AppSettings["SMTPFrom"];
                                         string to = GetCommaSeparatedEmails(dtGetMail);
-                                  
+
                                         string subject = InterfaceCode + " - System is created no : " + MatNum + " / " + MatDesc + " - [Create Material]";
-                                        string body = CreateEmailBody(to, ".", subject, from, dt.Select("AppId="+AppId).CopyToDataTable());                                        
+                                        string body = CreateEmailBody(to, ".", subject, from, dt.Select("AppId=" + AppId).CopyToDataTable());
                                         //string AttachedFile = "";
 
                                         //3.sent email to user
@@ -494,7 +1333,7 @@ namespace Interface_igrid
                                         OutboundArtwork(DocNum);
                                     }
                                 }
-                            }                           
+                            }
                             previousDocNum = currentDocNum.ToString();
                         }
                     }
@@ -523,12 +1362,12 @@ namespace Interface_igrid
                             string MatNumber = row[0].ToString();
                             string ClassNum = row[1].ToString();
                             string LoopIdColumn = row[2].ToString();
-                            string Name = row[3].ToString();    
-                            string Value = row[4].ToString();   
+                            string Name = row[3].ToString();
+                            string Value = row[4].ToString();
                             string AppId = row[5].ToString();
                             string Result = row[6].ToString();
 
-                            if (MatNumber != "" && ClassNum != "" && LoopIdColumn == "H" && AppId != "" && Result != "")                           
+                            if (MatNumber != "" && ClassNum != "" && LoopIdColumn == "H" && AppId != "" && Result != "")
                             {
 
                                 //1.Update to db
@@ -619,7 +1458,7 @@ namespace Interface_igrid
                                 //4.send email to IT //5.sent email insert log 
                                 if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
                                 {
-                                    to= ConfigurationManager.AppSettings["ITEmailsNotify"];
+                                    to = ConfigurationManager.AppSettings["ITEmailsNotify"];
                                     SendEmail(from, to, subject, body);
                                     SendToLog(from, to, subject, body);
                                 }
@@ -647,7 +1486,7 @@ namespace Interface_igrid
                 handler.Credentials = new System.Net.NetworkCredential(@"thaiunion\service.webbase", "Tuna@40wb*");
                 HttpClient client = new HttpClient(handler);
                 client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));                
+                new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage response = await client.GetAsync("http://192.168.1.170:8888/ServiceCS.asmx/OutboundArtwork?Keys=" + keys);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
@@ -693,7 +1532,12 @@ namespace Interface_igrid
             //});
             foreach (DataRow row in Results.Rows)
             {
-                dtCT04Insert.Rows.Add(string.Format("{0}", "I"),
+                var ifColumn = "I";
+                if (row["Changed_Action"].ToString() != "Insert" && row["Changed_Action"].ToString() != "Update")
+                {
+                    ifColumn = "U";
+                }
+                dtCT04Insert.Rows.Add(string.Format("{0}", ifColumn),
                             string.Format("{0}", row["Changed_Charname"].ToString()),
                             string.Format("{0}", row["id"].ToString()),
                             string.Format("{0}", row["Description"].ToString()),
@@ -742,7 +1586,7 @@ namespace Interface_igrid
             //}
         }
         public static void SQ01_ListMAT(DataTable Results)
-        {           
+        {
             DataTable dtListMat = new DataTable();
             dtListMat.Columns.AddRange(new DataColumn[]
             {
@@ -751,22 +1595,65 @@ namespace Interface_igrid
                 new DataColumn(@"AppId"),
             });
             foreach (DataRow row in Results.Rows)
-            {                
-                if(row["Changed_Action"].ToString() != "Insert" || row["Changed_Action"].ToString() != "Remove")
+            {
+                if ((row["Changed_Action"].ToString() != "Insert" || row["Changed_Action"].ToString() != "Remove") && !string.IsNullOrEmpty(row["Old_Description"].ToString()))
                 {
-                   dtListMat.Rows.Add(
-                   string.Format("{0}", row["Changed_Charname"].ToString()),
-                   string.Format("{0}", row["Old_Description"].ToString()),
-                   string.Format("{0}", row["Changed_Id"].ToString()));
-                }              
+                    dtListMat.Rows.Add(
+                    string.Format("{0}", row["Changed_Charname"].ToString()),
+                    string.Format("{0}", row["Old_Description"].ToString()),
+                    string.Format("{0}", row["Changed_Id"].ToString()));
+                }
             }
             if (dtListMat.Rows.Count > 0)
             {
                 string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "SQ01_ListMat" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
                 ToCSV(dtListMat, file);
             }
+            //Best Edit 28-09-2024
+            //Add data to list
+            //List<SQ01_OUTBOUND> lstData = new List<SQ01_OUTBOUND>();
+            //foreach (DataRow row in Results.Rows)
+            //{
+            //    if ((row["Changed_Action"].ToString() != "Insert" || row["Changed_Action"].ToString() != "Remove") && !string.IsNullOrEmpty(row["Old_Description"].ToString()))
+            //    {
+            //        lstData.Add(new SQ01_OUTBOUND
+            //        {
+            //            APPID = string.Format("{0}", row["Changed_Id"].ToString()),
+            //            CHARACTERISTIC_NAME = string.Format("{0}", row["Changed_Charname"].ToString()),
+            //            TXTSP00003 = string.Format("{0}", row["Old_Description"].ToString())
+            //        });
+            //    }
+            //}
+            ////Add List to seperate AppId
+            //List<string> lstAppID = new List<string>();
+            //lstAppID = lstData.Select(x => x.APPID).ToList();
+            //foreach (string appID in lstAppID)
+            //{
+            //    //create table to each appID
+            //    DataTable dtListMatFilterData = new DataTable();
+            //    dtListMatFilterData.Columns.AddRange(new DataColumn[]
+            //    {
+            //        new DataColumn (@"Characteristic Name txtSP$00005-LOW.text"),
+            //        new DataColumn(@"txtSP$00003 - LOW.text"),
+            //        new DataColumn(@"AppId")
+            //    });
+            //    var lstFilter = lstData.Where(x => x.APPID == appID).ToList();
+            //    foreach (SQ01_OUTBOUND row in lstFilter)
+            //    {
+            //        dtListMatFilterData.Rows.Add(
+            //            string.Format("{0}", row.CHARACTERISTIC_NAME),
+            //            string.Format("{0}", row.TXTSP00003),
+            //            string.Format("{0}", row.APPID));
+            //    }
+            //    if (dtListMatFilterData.Rows.Count > 0)
+            //    {
+            //        //create excel each appID
+            //        string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "SQ01_ListMat_" + appID + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
+            //        ToCSV(dtListMatFilterData, file);
+            //    }
+            //}
         }
-       
+
         public static void MM01_CreateMAT_ExtensionPlant(DataTable Results)
         {
             DataTable dt = new DataTable();
@@ -890,7 +1777,7 @@ namespace Interface_igrid
                 string.Format("{0}", ""),
                 string.Format("{0}", row["Id"].ToString())
                 );
-                
+
                 if (dtClass.Rows.Count > 0)
                 {
                     string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "BAPI_BATCHCLASS_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";
@@ -900,7 +1787,7 @@ namespace Interface_igrid
                 i++;
             }
         }
-        
+
         public static void MM02_ImpactMatDesc(DataTable Results)
         {
             DataTable dt = new DataTable();
@@ -1183,9 +2070,9 @@ namespace Interface_igrid
             return dt;
         }
         public static void UpdateToDB(string sp, string AppId, string InterfaceCode)
-        {           
+        {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
-            {                
+            {
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = sp;
@@ -1193,26 +2080,26 @@ namespace Interface_igrid
                 cmd.Parameters.AddWithValue("@InterfaceCode", InterfaceCode);
                 cmd.Connection = con;
                 con.Open();
-                cmd.ExecuteReader();               
+                cmd.ExecuteReader();
                 con.Close();
             }
         }
         public static DataTable UpdateToDB(string sp, string AppId, string InterfaceCode, DataTable dt)
-        {          
+        {
             DataTable dt2 = new DataTable();
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
             {
-                
+
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = sp;
                 cmd.Parameters.AddWithValue("@AppId", AppId);
                 cmd.Parameters.AddWithValue("@InterfaceCode", InterfaceCode);
                 cmd.Connection = con;
-                con.Open();                
+                con.Open();
                 SqlDataAdapter oAdapter = new SqlDataAdapter(cmd);
                 oAdapter.Fill(dt2);
-                con.Close();               
+                con.Close();
             }
             return dt2;
         }
@@ -1237,31 +2124,37 @@ namespace Interface_igrid
 
         public static void SendEmail(string from, string to, string subject, string body)
         {
-                using (MailMessage mailMsg = new MailMessage())
-                {
-                    mailMsg.From = new MailAddress(from);
-                    string[] tos = to.Split(';');
-                    foreach (string s in tos)
-                    {
-                        mailMsg.To.Add(new MailAddress(s.Trim()));
-                    }               
-                    mailMsg.Subject = ConfigurationManager.AppSettings["EnvironmentName"] + "-" + subject ;
-                    mailMsg.Body = body;
-                    mailMsg.IsBodyHtml = true;
 
-                    var smtp = new SmtpClient
-                    {
-                        Host = ConfigurationManager.AppSettings["SMTPServer"],
-                        Port = Convert.ToInt32(ConfigurationManager.AppSettings["SMTPPort"]),
-                        EnableSsl = false,
-                        DeliveryMethod = SmtpDeliveryMethod.Network,
-                        UseDefaultCredentials = false,
-                        Timeout = 20000
-                    };                 
-                    smtp.Send(mailMsg);
-                }            
+            using (MailMessage mailMsg = new MailMessage())
+            {
+                mailMsg.From = new MailAddress(from);
+                var testMail = ConfigurationManager.AppSettings["MailTest"];
+                if (testMail == "true")
+                {
+                    to = "thana.sinukit@iamconsulting.co.th;thanapong.tong-u-thai@iamconsulting.co.th";
+                }
+                string[] tos = to.Split(';');
+                foreach (string s in tos)
+                {
+                    mailMsg.To.Add(new MailAddress(s.Trim()));
+                }
+                mailMsg.Subject = ConfigurationManager.AppSettings["EnvironmentName"] + "-" + subject;
+                mailMsg.Body = body;
+                mailMsg.IsBodyHtml = true;
+
+                var smtp = new SmtpClient
+                {
+                    Host = ConfigurationManager.AppSettings["SMTPServer"],
+                    Port = Convert.ToInt32(ConfigurationManager.AppSettings["SMTPPort"]),
+                    EnableSsl = false,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Timeout = 20000
+                };
+                smtp.Send(mailMsg);
+            }
         }
-        
+
         public static void SendEmail(string MailTo, string MailCc, string _Body, string _Subject, string _Attachments)
         {
 
@@ -1308,7 +2201,7 @@ namespace Interface_igrid
 
             var smtp = new SmtpClient
             {
-              
+
                 Host = string.Format("{0}", ConfigurationManager.AppSettings["SMTPServer"]),
                 Port = Convert.ToInt32(ConfigurationManager.AppSettings["SMTPPort"]),
                 EnableSsl = true,
@@ -1331,40 +2224,40 @@ namespace Interface_igrid
             }
 
 
-                //    MailMessage msg = new MailMessage();
-                //    SmtpClient smtp = new SmtpClient();
-                //    if (string.IsNullOrEmpty(MailTo)) return;
-                //    string[] words = MailTo.Split(';');
-                //    foreach (string word in words)
-                //    {
-                //        if (!string.IsNullOrEmpty(word))
-                //            msg.To.Add(new MailAddress(word));
-                //    }
-                //    List<string> myList = new List<string>();
-                //    string[] c = MailCc.Split(';');
-                //    foreach (string s in c)
-                //        if (!string.IsNullOrEmpty(s))
-                //        {
-                //            msg.CC.Add(new MailAddress(s));
-                //            myList.Add(s);
-                //        }
-                //    msg.From = new MailAddress("wshuttleadm@thaiunion.com");
-                //    msg.Subject = string.Format("{0}", _Subject);
-                //    msg.Body = _Body;
-                //    if (!string.IsNullOrEmpty(_Attachments))
-                //    {
-                //        msg.Attachments.Add(new Attachment(_Attachments));
-                //    }
-                //    msg.IsBodyHtml = true;
+            //    MailMessage msg = new MailMessage();
+            //    SmtpClient smtp = new SmtpClient();
+            //    if (string.IsNullOrEmpty(MailTo)) return;
+            //    string[] words = MailTo.Split(';');
+            //    foreach (string word in words)
+            //    {
+            //        if (!string.IsNullOrEmpty(word))
+            //            msg.To.Add(new MailAddress(word));
+            //    }
+            //    List<string> myList = new List<string>();
+            //    string[] c = MailCc.Split(';');
+            //    foreach (string s in c)
+            //        if (!string.IsNullOrEmpty(s))
+            //        {
+            //            msg.CC.Add(new MailAddress(s));
+            //            myList.Add(s);
+            //        }
+            //    msg.From = new MailAddress("wshuttleadm@thaiunion.com");
+            //    msg.Subject = string.Format("{0}", _Subject);
+            //    msg.Body = _Body;
+            //    if (!string.IsNullOrEmpty(_Attachments))
+            //    {
+            //        msg.Attachments.Add(new Attachment(_Attachments));
+            //    }
+            //    msg.IsBodyHtml = true;
 
-                //    smtp.Host = string.Format("{0}", ConfigurationManager.AppSettings["SMTPServer"]);
-                //    smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["SMTPPort"]);
-                //    smtp.UseDefaultCredentials = false;
-                //    smtp.Send(msg);
-                //    smtp.Dispose();
+            //    smtp.Host = string.Format("{0}", ConfigurationManager.AppSettings["SMTPServer"]);
+            //    smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["SMTPPort"]);
+            //    smtp.UseDefaultCredentials = false;
+            //    smtp.Send(msg);
+            //    smtp.Dispose();
 
-                //    //insert to maildata
-                string ReternMsg = SendEmailInsertLog(MailTo, MailCc, _Body, _Subject);
+            //    //insert to maildata
+            string ReternMsg = SendEmailInsertLog(MailTo, MailCc, _Body, _Subject);
 
 
 
@@ -1393,7 +2286,7 @@ namespace Interface_igrid
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
             {
                 SqlCommand cmd = new SqlCommand();
-                cmd.CommandType = CommandType.Text;               
+                cmd.CommandType = CommandType.Text;
                 cmd.CommandText = "Insert into MailData values(@Sender,@To,@Cc,'',@Subject,@Body,getdate(),1,getdate(),'TEXT',1,0)";
                 cmd.Parameters.AddWithValue("@Sender", String.Format("{0}", 10));
                 cmd.Parameters.AddWithValue("@To", MailTo.ToString());
@@ -1514,7 +2407,7 @@ namespace Interface_igrid
                     MailMessage msg = new MailMessage();
                     msg.To.Add(new MailAddress("kriengkrai.ritthaphrom@thaiunion.com"));
                     List<string> li = new List<string>();
-                    li.Add("mes.support@thaiunion.com"); 
+                    li.Add("mes.support@thaiunion.com");
                     msg.CC.Add(string.Join<string>(",", li)); // Sending CC  
                     msg.From = new MailAddress("wshuttleadm@thaiunion.com");
                     msg.Subject = "[iGrid Support] Winshuttle down";
@@ -1543,28 +2436,28 @@ namespace Interface_igrid
                 case "Material Number RMMG1-MATNR":
                     header = header.Replace("Material Number RMMG1-MATNR", "MatNum");
                     break;
-                case "Material Description (Short Text) MAKT-MAKTX":    
+                case "Material Description (Short Text) MAKT-MAKTX":
                     header = header.Replace("Material Description (Short Text) MAKT-MAKTX", "MatDesc");
-                break;  
+                    break;
                 case "Reference material RMMG1_REF-MATNR":
                     header = header.Replace("Reference material RMMG1_REF-MATNR", "RefMat");
-                break;
+                    break;
                 case "IfColumn and Plant RMMG1-WERKS and Reference plant RMMG1_REF-WERKS":
                     header = header.Replace("IfColumn and Plant RMMG1-WERKS and Reference plant RMMG1_REF-WERKS", "Plant");
-                break;
+                    break;
                 case "IfColumn and Sales Organization RMMG1-VKORG and Reference sales organization RMMG1_REF-VKORG":
                     header = header.Replace("IfColumn and Sales Organization RMMG1-VKORG and Reference sales organization RMMG1_REF-VKORG", "Sales Org");
-                break;
+                    break;
                 case "Distribution Channel RMMG1-VTWEG and Reference distribution channel RMMG1_REF-VTWEG":
                     header = header.Replace("Distribution Channel RMMG1-VTWEG and Reference distribution channel RMMG1_REF-VTWEG", "Dist Channel");
-                break;
+                    break;
                 default:
                     // Handle other cases if necessary
                     break;
             }
             return header;
         }
-        public static string CreateEmailBody(string user, string title, string message, string system_name,DataTable dt)
+        public static string CreateEmailBody(string user, string title, string message, string system_name, DataTable dt)
         {
             string body = string.Empty;
             string header = string.Empty;
@@ -1580,7 +2473,7 @@ namespace Interface_igrid
                 {
                     row += "<td>" + myRow[myColumn.ColumnName].ToString() + "</td>";
                 }
-                row +=  "</tr>";
+                row += "</tr>";
             }
             var EmailTemplatepath = Directory.GetFiles(ConfigurationManager.AppSettings["EmailTemplatepath"], "HTMLTemplate.html");
             string EmailTemplate = EmailTemplatepath[0];
@@ -1588,7 +2481,7 @@ namespace Interface_igrid
             {
                 body = sr.ReadToEnd();
             }
-            body = body.Replace("{user}", user);  
+            body = body.Replace("{user}", user);
             body = body.Replace("{title}", title);
             body = body.Replace("{message}", message);
             body = body.Replace("{header}", header);
@@ -2296,7 +3189,7 @@ namespace Interface_igrid
         //    if (dtCT04Update.Rows.Count > 0)
         //    {
         //        string file = @"D:\SAPInterfaces\Outbound\CT04_Update_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-        //        CNService.ToCSV(dtCT04Update, file);
+        //        CNService.ToCSV(dtCT04Update, file);ฉ
         //    }
         //    if (dtCT04Remove.Rows.Count > 0)
         //    {
@@ -2816,3 +3709,11 @@ namespace Interface_igrid
     }
 }
 
+
+public partial class SQ01_OUTBOUND
+{
+    public string CHARACTERISTIC_NAME { get; set; }
+    public string TXTSP00003 { get; set; }
+    public string APPID { get; set; }
+
+}
