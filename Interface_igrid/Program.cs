@@ -36,7 +36,58 @@ namespace Interface_igrid
         {
             try
             {
+                #region Outbound
+                if (bool.Parse(ConfigurationManager.AppSettings["runFlageOutbound"]) == true) // flage for true run or false not run
+                {
+                    try
+                    {
+                        if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM01"]) == true) // flage for true run or false not run
+                        {
+                            //MM01,Create material
+                            DataSet dsspQuery = GetData("spQuery", "@Material", "X");
+                            MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
+                            await Task.Delay(30000);
+                            BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
+                            BAPI_BATCHCLASS(dsspQuery.Tables[0]);
+                        }
+                        if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM02"]) == true) // flage for true run or false not run
+                        {
+                            //MM02-Update material description
+                            DataSet dsspGetImpactmat = GetData("spGetImpactmat_desc", "@Active", "X");
+                            MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
+                            CLMM_ChangeMatClass(dsspGetImpactmat.Tables[0]);
+                        }
+                        if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_CT04"]) == true) // flage for true run or false not run
+                        {
+                            //CT04-Characteristic master (I, U, D, Inactive, Re-Active)
+                            DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
+                            CT04(dsspGetMasterData.Tables[0]);
+                            SQ01_ListMAT(dsspGetMasterData.Tables[0]);
+                        }
+                        Console.WriteLine("Outbound Completed");
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        Console.WriteLine("\nException Caught!");
+                        Console.WriteLine($"Message :{e.Message} ");
+                        Console.WriteLine("Outbound - Not success");
+                        //4.send email to IT //5.sent email insert log 
+                        if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
+                        {
+                            string from = ConfigurationManager.AppSettings["SMTPFrom"];
+                            string to = ConfigurationManager.AppSettings["ITEmailsNotify"];
+                            string subject = "Outbound Not success";
+                            string body = e.Message + e.StackTrace;
+                            SendEmail(from, to, subject, body);
+                            SendToLog(from, to, subject, body);
+                        }
+                    }
+                }
 
+                #endregion
+
+                //Delay Time 1 min
+                await Task.Delay(60000);
 
                 #region Inbound    
                 if (bool.Parse(ConfigurationManager.AppSettings["runFlageInbound"]) == true) // flage for true run or false not run
@@ -137,56 +188,6 @@ namespace Interface_igrid
                         }
                     }
                 }
-                #endregion
-
-
-                #region Outbound
-                if (bool.Parse(ConfigurationManager.AppSettings["runFlageOutbound"]) == true) // flage for true run or false not run
-                {
-                    try
-                    {
-                        if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM01"]) == true) // flage for true run or false not run
-                        {
-                            //MM01,Create material
-                            DataSet dsspQuery = GetData("spQuery", "@Material", "X");
-                            MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
-                            BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
-                            BAPI_BATCHCLASS(dsspQuery.Tables[0]);
-                        }
-                        if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM02"]) == true) // flage for true run or false not run
-                        {
-                            //MM02-Update material description
-                            DataSet dsspGetImpactmat = GetData("spGetImpactmat_desc", "@Active", "X");
-                            MM02_ImpactMatDesc(dsspGetImpactmat.Tables[0]);
-                            CLMM_ChangeMatClass(dsspGetImpactmat.Tables[0]);
-                        }
-                        if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_CT04"]) == true) // flage for true run or false not run
-                        {
-                            //CT04-Characteristic master (I, U, D, Inactive, Re-Active)
-                            DataSet dsspGetMasterData = GetData("spGetMasterData", "@Active", "X");
-                            CT04(dsspGetMasterData.Tables[0]);
-                            SQ01_ListMAT(dsspGetMasterData.Tables[0]);
-                        }
-                        Console.WriteLine("Outbound Completed");
-                    }
-                    catch (HttpRequestException e)
-                    {
-                        Console.WriteLine("\nException Caught!");
-                        Console.WriteLine($"Message :{e.Message} ");
-                        Console.WriteLine("Outbound - Not success");
-                        //4.send email to IT //5.sent email insert log 
-                        if (bool.Parse(ConfigurationManager.AppSettings["ITEmailsNotifySuccessImport"]) == true)
-                        {
-                            string from = ConfigurationManager.AppSettings["SMTPFrom"];
-                            string to = ConfigurationManager.AppSettings["ITEmailsNotify"];
-                            string subject = "Outbound Not success";
-                            string body = e.Message + e.StackTrace;
-                            SendEmail(from, to, subject, body);
-                            SendToLog(from, to, subject, body);
-                        }
-                    }
-                }
-
                 #endregion
             }
             catch (Exception ex)
@@ -410,8 +411,10 @@ namespace Interface_igrid
                 string resultMM02 = "";
                 string resultBAPI = "";
                 string material = "";
-                string getfileName = "";
+                List<string> getfileName = new List<string>();
                 string status = "";
+                List<DataTable> dtLstMM01 = new List<DataTable>();
+                List<DataTable> dtLstBAPI = new List<DataTable>();
                 bool tableMM02IsExist = false;
 
                 //Get Data จาก spQuery
@@ -419,8 +422,36 @@ namespace Interface_igrid
                 var table = dsspQuery.Tables[0];
                 if (table == null || table.Rows.Count == 0)
                 {
+                    await MoveFile("BAPI_UpdateMATCharacteristics");
+                    await MoveFile("MM02_ImpactMatDesc");
+                    await MoveFile("MM01_CreateMAT_ExtensionPlant");
+                    await MoveFile("MM01_ExtendSaleOrg");
                     return "No Data In spGetImpactmat";
                 }
+                var dtResult = await GetDataTableFromResult("MM02_ImpactMatDesc");
+                getfileName.Add(await GetFileName("MM02_ImpactMatDesc"));
+
+                List<string> listTableResult = new List<string> { "MM01_CreateMAT_ExtensionPlant", "MM01_ExtendSaleOrg" };
+                //Get ข้อมูล MM101 มาเก็บไว้ใน List
+                foreach (var tableResult in listTableResult)
+                {
+                    var dtResultMM01 = await GetDataTableFromResult(tableResult);
+                    dtLstMM01.Add(dtResultMM01);
+                    var fileName = await GetFileName(tableResult);
+                    if (!string.IsNullOrEmpty(fileName))
+                    {
+                        getfileName.Add(fileName);
+                    }
+                }
+                //Get ข้อมูล BAPI มาเก็บไว้ใน List
+                List<string> lstFileNameBapi = await GetAllFileName("BAPI_UpdateMATCharacteristics");
+                foreach (var fileName in lstFileNameBapi)
+                {
+                    DataTable dtResultMATCharacteristics = await GetDataTableFromResultBAPI(fileName);
+                    dtLstBAPI.Add(dtResultMATCharacteristics);
+                    getfileName.Add(fileName);
+                }
+                //วนตาม spQuery
                 foreach (DataRow row in table.Rows)
                 {
                     material = row["Material"].ToString();
@@ -431,14 +462,12 @@ namespace Interface_igrid
 
                     if (condition == "7")
                     {
-                        var dtResult = await GetDataTableFromResult("MM02_ChangeMATDesc");
                         if (dtResult != null)
                         {
                             foreach (DataRow rowChangeMATDesc in dtResult.Rows)
                             {
                                 if (rowChangeMATDesc != null && !string.IsNullOrEmpty(rowChangeMATDesc[0].ToString()))
                                 {
-
                                     var dataInRow = rowChangeMATDesc[0].ToString();
                                     if (!string.IsNullOrEmpty(dataInRow))
                                     {
@@ -470,10 +499,8 @@ namespace Interface_igrid
 
                         if (!statusup && extended_Plant.ToLower() == "true")
                         {
-                            List<string> listTableResult = new List<string> { "MM01_CreateMAT_ExtensionPlant", "MM01_ExtendSaleOrg" };
-                            foreach (var tableResult in listTableResult)
+                            foreach (var dtResultMM01 in dtLstMM01)
                             {
-                                var dtResultMM01 = await GetDataTableFromResult(tableResult);
                                 string resultStr = ReadMM01Result(statusup, material, dtResultMM01);
                                 if (resultStr.ToLower().Contains("material " + material.ToLower() + " has been created or extended"))
                                 {
@@ -483,87 +510,76 @@ namespace Interface_igrid
                             }
                         }
 
-                        List<string> lstFileNameBapi = await GetAllFileName("BAPI_UpdateMATCharacteristics");
-                        foreach (var fileName in lstFileNameBapi)
+                        foreach (var dtResultMATCharacteristics in dtLstBAPI)
                         {
-                            DataTable dtResultMATCharacteristics = await GetDataTableFromResultBAPI(fileName);
-                            foreach (var item in dtResultMATCharacteristics.Rows)
+                            foreach (DataRow rowMat in dtResultMATCharacteristics.Rows)
                             {
-                                foreach (DataRow rowMat in dtResultMATCharacteristics.Rows)
+                                var mat = rowMat["Material Number RMMG1-MATNR"].ToString();
+                                var resultMat = rowMat["Result"].ToString();
+                                if (mat == material)
                                 {
-                                    var mat = rowMat["Material Number RMMG1-MATNR"].ToString();
-                                    var resultMat = rowMat["Result"].ToString();
-                                    if (mat == material)
-                                    {
-                                        resultBAPI = resultMat;
-                                        getfileName = fileName;
-                                        //if (resultMat.ToLower().Contains("does not exist") && !statusup)
-                                        //{
-                                        //    statusup = false;
-                                        //}
-                                        ////else if (resultMat.Contains("Material") && !statusup) { statusup = true; }
-                                        //else if (resultMat.ToLower().Contains("material " + material.ToLower() + " has been created or extended") && !statusup)
-                                        //{
-                                        //    statusup = true;
-                                        //}
-                                        ////else if (resultMat.Contains("*Saving changes to assignments Assignment changed*") && !statusup) { statusup = true; }
-                                        //else if (resultMat.ToLower().Contains("assignment changed") && !statusup)
-                                        //{
-                                        //    statusup = true;
-                                        //}
-                                    }
+                                    resultBAPI = resultMat;
+                                    //if (resultMat.ToLower().Contains("does not exist") && !statusup)
+                                    //{
+                                    //    statusup = false;
+                                    //}
+                                    ////else if (resultMat.Contains("Material") && !statusup) { statusup = true; }
+                                    //else if (resultMat.ToLower().Contains("material " + material.ToLower() + " has been created or extended") && !statusup)
+                                    //{
+                                    //    statusup = true;
+                                    //}
+                                    ////else if (resultMat.Contains("*Saving changes to assignments Assignment changed*") && !statusup) { statusup = true; }
+                                    //else if (resultMat.ToLower().Contains("assignment changed") && !statusup)
+                                    //{
+                                    //    statusup = true;
+                                    //}
                                 }
                             }
                         }
-
                     }
                     else
                     {
-                        List<string> listTableResult = new List<string> { "MM01_CreateMAT_ExtensionPlant", "MM01_ExtendSaleOrg" };
-                        foreach (var tableResult in listTableResult)
-                        {
-                            var dtResultExtensionPlant = await GetDataTableFromResult(tableResult);
 
-                            if (dtResultExtensionPlant != null)
+                        foreach (var dtResultMM01 in dtLstMM01)
+                        {
+                            string resultStr = ReadMM01Result(statusup, material, dtResultMM01);
+                            if (resultStr.ToLower().Contains("material " + material.ToLower() + " has been created or extended"))
                             {
-                                var dtResultMM01 = await GetDataTableFromResult(tableResult);
-                                string resultStr = ReadMM01Result(statusup, material, dtResultMM01);
-                                if (resultStr.ToLower().Contains("material " + material.ToLower() + " has been created or extended"))
-                                {
-                                    statusup = true;
-                                    resultMM01 = resultStr;
-                                }
+                                statusup = true;
+                                resultMM01 = resultStr;
                             }
                         }
 
-                        List<string> lstFileNameBapi = await GetAllFileName("BAPI_UpdateMATCharacteristics");
-                        foreach (var fileName in lstFileNameBapi)
+
+                        foreach (var dtResultMATCharacteristics in dtLstBAPI)
                         {
-                            DataTable dtResultMATCharacteristics = await GetDataTableFromResultBAPI(fileName);
-                            foreach (var item in dtResultMATCharacteristics.Rows)
+                            foreach (DataRow rowMat in dtResultMATCharacteristics.Rows)
                             {
-                                foreach (DataRow rowMat in dtResultMATCharacteristics.Rows)
+                                var mat = rowMat["Material Number RMMG1-MATNR"].ToString();
+                                var resultMat = rowMat["Result"].ToString();
+                                if (material == mat)
                                 {
-                                    var mat = rowMat["Material Number RMMG1-MATNR"].ToString();
-                                    var resultMat = rowMat["Result"].ToString();
-                                    if (material == mat)
+                                    resultBAPI = resultMat;
+                                    if (resultMat.ToLower().Contains("material " + material.ToLower() + " has been created or extended") || resultMat.ToLower().Contains("assignment changed"))
                                     {
-                                        getfileName = fileName;
-                                        resultBAPI = resultMat;
-                                        if (resultMat.ToLower().Contains("material " + material.ToLower() + " has been created or extended") || resultMat.ToLower().Contains("assignment changed"))
-                                        {
-                                            statusup = true;
-                                        }
+                                        statusup = true;
                                     }
                                 }
                             }
                         }
                     }
+                    getfileName = getfileName.Distinct().ToList();
+                    //Move File To Process(Sent Mail)
+
+                    await MoveFile("BAPI_UpdateMATCharacteristics");
+                    await MoveFile("MM02_ImpactMatDesc");
+                    await MoveFile("MM01_CreateMAT_ExtensionPlant");
+                    await MoveFile("MM01_ExtendSaleOrg");
 
                     //Update DB
                     if (statusup)
                     {
-                        await MoveFile(getfileName);
+
                         //GenerateAttachedmentFile
                         if (condition == "7")
                         {
@@ -572,7 +588,7 @@ namespace Interface_igrid
                         else
                         {
                             //if (result.Contains("Material " + material + "  changed") || result.Contains("*Saving changes to assignments Assignment changed*"))
-                            if ((resultMM02.ToLower().Contains("material " + material.ToLower() + " has been created or extended") || 
+                            if ((resultMM02.ToLower().Contains("material " + material.ToLower() + " has been created or extended") ||
                                  resultMM01.ToLower().Contains("material " + material.ToLower() + " has been created or extended")) &&
                                 (resultBAPI.ToLower().Contains("material " + material.ToLower() + " has been created or extended") ||
                                  resultBAPI.ToLower().Contains("assignment changed")))
@@ -587,7 +603,6 @@ namespace Interface_igrid
                     }
                     else
                     {
-                        await MoveFile(getfileName);
                         //GenerateAttachedmentFile
                         if (condition == "7")
                         {
@@ -602,18 +617,13 @@ namespace Interface_igrid
                                 await updateDB("Z" + material, getfileName);
                             }
                         }
-                        else if (status == "X")
+                        else
                         {
                             await updateDB("X" + material, getfileName);
                         }
                     }
 
                 }
-
-                await MoveFile("BAPI_UpdateMATCharacteristics");
-                await MoveFile("MM02_ChangeMATDesc");
-                await MoveFile("MM01_CreateMAT_ExtensionPlant");
-                await MoveFile("MM01_ExtendSaleOrg");
                 return "success";
             }
             catch (Exception ex)
@@ -642,6 +652,8 @@ namespace Interface_igrid
                     var table = dsspGetMasterData.Tables[0];
                     if (table == null || table.Rows.Count == 0)
                     {
+                        await MoveFile("CT04_Insert");
+                        await MoveFile("SQ01_ListMat");
                         return "No Data In spGetImpactmat";
                     }
 
@@ -874,6 +886,8 @@ namespace Interface_igrid
                 var table = dsspGetImpactmat.Tables[0];
                 if (table == null || table.Rows.Count == 0)
                 {
+                    await MoveFile("MM02_ImpactMatDesc");
+                    await MoveFile("CLMM_ChangeMatClass");
                     return "No Data In spGetImpactmat";
                 }
                 DataTable dtImpactMatDesc = table.Clone();
@@ -1218,14 +1232,14 @@ namespace Interface_igrid
         }
 
 
-        private async static Task<string> updateDB(string name, string filename)
+        private async static Task<string> updateDB(string name, List<string> filename)
         {
             string servicePathUrl = ConfigurationManager.AppSettings["ServicePathUrl"];
             string apiResponse = "";
             using (var httpClient = new HttpClient())
             {
-
-                using (var response = await httpClient.GetAsync(servicePathUrl + "SendEmail3NewVer?_name=" + name + "&filename=" + filename))
+                string getFileName = string.Join("|", filename);
+                using (var response = await httpClient.GetAsync(servicePathUrl + "SendEmail3NewVer?_name=" + name + "&filename=" + getFileName))
                 {
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
