@@ -198,6 +198,204 @@ namespace Interface_igrid
 
         #region Macro 
         #region  MyQuery
+        //public async static Task<string> MyQueryMacro()
+        //{
+        //    try
+        //    {
+        //        string filePathResult = ConfigurationManager.AppSettings["FilePathResult"];
+        //        //Get Data From spQuery Store
+        //        //Parameter
+        //        string condition = "";
+        //        string extended_Plant = "";
+        //        bool statusup = false;
+        //        string result = "";
+        //        string material = "";
+        //        List<string> lstFileName = await GetAllFileName("BAPI_UpdateMATCharacteristics");
+        //        foreach (string fileName in lstFileName)
+        //        {
+        //            DataTable dtResultMATCharacteristics = await GetDataTableFromResult(fileName);
+        //            if (dtResultMATCharacteristics != null)
+        //            {
+        //                foreach (DataRow rowMat in dtResultMATCharacteristics.Rows)
+        //                {
+        //                    if (rowMat != null && !string.IsNullOrEmpty(rowMat["Result"].ToString()))
+        //                    {
+        //                        DataSet dsspQuery = GetData("spQuery", "@Material", "X");
+        //                        var table = dsspQuery.Tables[0];
+        //                        if (table == null || table.Rows.Count == 0)
+        //                        {
+        //                            return "No Data In spGetImpactmat";
+        //                        }
+        //                        var mat = rowMat["Material Number RMMG1-MATNR"].ToString();
+        //                        foreach (DataRow row in table.Rows)
+        //                        {
+        //                            if (row["Material"].ToString() == mat)
+        //                            {
+        //                                material = row["Material"].ToString();
+        //                                condition = row["Condition"].ToString();
+        //                                extended_Plant = row["Extended_Plant"].ToString();
+        //                                //string cellValue = row["DocumentNo"].ToString(); // Get the cell value as a string
+        //                            }
+        //                        }
+        //                        var resultMat = rowMat["Result"].ToString();
+        //                        result = resultMat;
+        //                        //Get StartUp For Update DB
+        //                        if (condition == "7")
+        //                        {
+        //                            //Run MM02_ChangeMATDesc2
+        //                            //Set StartUp
+        //                            if (resultMat.ToLower().Contains("does not exist") && !statusup) { statusup = false; }
+        //                            //else if (resultMat.Contains("Material") && !statusup) { statusup = true; }
+        //                            else if (resultMat.ToLower().Contains("material " + material.ToLower() + " has been created or extended") && !statusup) { statusup = true; }
+        //                            //else if (resultMat.Contains("*Saving changes to assignments Assignment changed*") && !statusup) { statusup = true; }
+        //                            else if (resultMat.ToLower().Contains("assignment changed") && !statusup) { statusup = true; }
+        //                            else
+        //                            {
+        //                                //Get DataFilePath From MM02_ChangeMATDesc
+        //                                var dtResultChangeMATDesc = await GetDataTableFromResult("MM02_ChangeMATDesc");
+        //                                if (dtResultChangeMATDesc != null)
+        //                                {
+        //                                    foreach (DataRow rowChangeMATDesc in dtResultChangeMATDesc.Rows)
+        //                                    {
+        //                                        //Split Data With ||
+        //                                        if (rowChangeMATDesc != null && rowChangeMATDesc[0] != null)
+        //                                        {
+        //                                            //Col Material Number RMMG1-MATNR
+        //                                            var dataInRow = rowChangeMATDesc[0].ToString();
+        //                                            if (!string.IsNullOrEmpty(dataInRow))
+        //                                            {
+        //                                                var getListResult = dataInRow.Split(new string[] { "||" }, StringSplitOptions.None).ToList();
+        //                                                if (getListResult != null && getListResult.Count > 0)
+        //                                                {
+        //                                                    if (getListResult.Count > 0 && mat == getListResult[0])
+        //                                                    {
+        //                                                        //Col Result
+        //                                                        string colResult = getListResult[getListResult.Count - 1];
+        //                                                        //if (colResult.Contains("Material")) { statusup = true; }
+        //                                                        result = colResult;
+        //                                                        if (colResult.ToLower().Contains("material " + material.ToLower() + " has been created or extended"))
+        //                                                        {
+        //                                                            result = "P_" + colResult;
+        //                                                            statusup = true;
+        //                                                        }
+        //                                                        else { statusup = false; }
+
+        //                                                    }
+        //                                                }
+        //                                            }
+        //                                        }
+        //                                    }
+        //                                }
+        //                            }
+        //                            //**** Wassana P. insert on 11.01.2018 (Not change class but extend plant)
+        //                            if (!statusup && extended_Plant.ToLower() == "true")
+        //                            {
+        //                                List<string> listTableResult = new List<string> { "MM01_CreateMAT_ExtensionPlant", "MM01_ExtendSaleOrg" };
+        //                                foreach (var tableResult in listTableResult)
+        //                                {
+        //                                    var dtResult = await GetDataTableFromResult(tableResult);
+        //                                    string resultStr = ReadMM01Result(statusup, mat, material, dtResult);
+        //                                    if (resultStr.ToLower().Contains("material " + material.ToLower() + " has been created or extended"))
+        //                                    {
+        //                                        statusup = true;
+        //                                        result = "P_" + resultStr;
+        //                                    }
+        //                                }
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            //Check BAPI_UpdateMATCharacteristics
+        //                            if (resultMat.ToLower().Contains("material " + material.ToLower() + " has been created or extended") && resultMat.ToLower().Contains("assignment changed"))
+        //                            {
+        //                                statusup = true;
+        //                                result = resultMat;
+        //                            }
+
+        //                            //MM01_CreateMAT_ExtensionPlant Col 11 MM01_ExtendSaleOrg Col 12
+
+        //                            List<string> listTableResult = new List<string> { "MM01_CreateMAT_ExtensionPlant", "MM01_ExtendSaleOrg" };
+        //                            foreach (var tableResult in listTableResult)
+        //                            {
+        //                                var dtResultExtensionPlant = await GetDataTableFromResult(tableResult);
+
+        //                                if (dtResultExtensionPlant != null)
+        //                                {
+        //                                    var dtResult = await GetDataTableFromResult(tableResult);
+        //                                    string resultStr = ReadMM01Result(statusup, mat, material, dtResult);
+        //                                    if (resultStr.ToLower().Contains("material " + material.ToLower() + " has been created or extended"))
+        //                                    {
+        //                                        statusup = true;
+        //                                        result = "P_" + resultStr;
+        //                                    }
+        //                                }
+        //                            }
+
+        //                            //if (resultMat.Contains("Material " + material + "  changed") || resultMat.Contains("*Saving changes to assignments Assignment changed*"))
+        //                            //if ( resultMat.ToLower().Contains("assignment changed"))
+        //                            //{
+        //                            //    statusup = true;
+        //                            //}
+        //                        }
+        //                        //Update DB
+        //                        if (statusup)
+        //                        {
+        //                            await MoveFile(fileName);
+        //                            //GenerateAttachedmentFile
+        //                            if (condition == "7")
+        //                            {
+        //                                await updateDB("U" + material, fileName);
+        //                            }
+        //                            else
+        //                            {
+        //                                //if (result.Contains("Material " + material + "  changed") || result.Contains("*Saving changes to assignments Assignment changed*"))
+        //                                if ((result.ToLower().Contains("material " + material.ToLower()) || result.ToLower().Contains("assignment changed")) && result.Substring(0, 2) != "P_")
+        //                                {
+        //                                    await updateDB("O" + material, fileName);
+        //                                }
+        //                                else
+        //                                {
+        //                                    await updateDB("P" + material, fileName);
+        //                                }
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            await MoveFile(fileName);
+        //                            //GenerateAttachedmentFile
+        //                            if (condition == "7")
+        //                            {
+        //                                //if (result.Contains("No changes made") || result.Contains("*Saving changes to assignments Assignment changed*"))
+        //                                if (result.ToLower().Contains("no changes made"))
+        //                                {
+        //                                    await updateDB("Y" + material, fileName);
+        //                                }
+        //                                else
+        //                                {
+        //                                    await updateDB("Z" + material, fileName);
+        //                                }
+        //                            }
+        //                            else
+        //                            {
+        //                                await updateDB("X" + material, fileName);
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        await MoveFile("BAPI_UpdateMATCharacteristics");
+        //        await MoveFile("MM02_ChangeMATDesc");
+        //        await MoveFile("MM01_CreateMAT_ExtensionPlant");
+        //        await MoveFile("MM01_ExtendSaleOrg");
+        //        return "success";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //WriteLog("MyQueryMacro : " + ex.ToString());
+        //        return ex.ToString();
+        //    }
+        //}
         public async static Task<string> MyQueryMacro()
         {
             try
@@ -208,186 +406,210 @@ namespace Interface_igrid
                 string condition = "";
                 string extended_Plant = "";
                 bool statusup = false;
-                string result = "";
+                string resultMM01 = "";
+                string resultMM02 = "";
+                string resultBAPI = "";
                 string material = "";
-                List<string> lstFileName = await GetAllFileName("BAPI_UpdateMATCharacteristics");
-                foreach (string fileName in lstFileName)
-                {
-                    DataTable dtResultMATCharacteristics = await GetDataTableFromResult(fileName);
-                    if (dtResultMATCharacteristics != null)
-                    {
-                        foreach (DataRow rowMat in dtResultMATCharacteristics.Rows)
-                        {
-                            if (rowMat != null && !string.IsNullOrEmpty(rowMat["Result"].ToString()))
-                            {
-                                DataSet dsspQuery = GetData("spQuery", "@Material", "X");
-                                var table = dsspQuery.Tables[0];
-                                if (table == null || table.Rows.Count == 0)
-                                {
-                                    return "No Data In spGetImpactmat";
-                                }
-                                var mat = rowMat["Material Number RMMG1-MATNR"].ToString();
-                                foreach (DataRow row in table.Rows)
-                                {
-                                    if (row["Material"].ToString() == mat)
-                                    {
-                                        material = row["Material"].ToString();
-                                        condition = row["Condition"].ToString();
-                                        extended_Plant = row["Extended_Plant"].ToString();
-                                        //string cellValue = row["DocumentNo"].ToString(); // Get the cell value as a string
-                                    }
-                                }
-                                var resultMat = rowMat["Result"].ToString();
-                                result = resultMat;
-                                //Get StartUp For Update DB
-                                if (condition == "7")
-                                {
-                                    //Run MM02_ChangeMATDesc2
-                                    //Set StartUp
-                                    if (resultMat.ToLower().Contains("does not exist") && !statusup) { statusup = false; }
-                                    //else if (resultMat.Contains("Material") && !statusup) { statusup = true; }
-                                    else if (resultMat.ToLower().Contains("material " + material.ToLower()) && !statusup) { statusup = true; }
-                                    //else if (resultMat.Contains("*Saving changes to assignments Assignment changed*") && !statusup) { statusup = true; }
-                                    else if (resultMat.ToLower().Contains("assignment changed") && !statusup) { statusup = true; }
-                                    else
-                                    {
-                                        //Get DataFilePath From MM02_ChangeMATDesc
-                                        var dtResultChangeMATDesc = await GetDataTableFromResult("MM02_ChangeMATDesc");
-                                        if (dtResultChangeMATDesc != null)
-                                        {
-                                            foreach (DataRow rowChangeMATDesc in dtResultChangeMATDesc.Rows)
-                                            {
-                                                //Split Data With ||
-                                                if (rowChangeMATDesc != null && rowChangeMATDesc[0] != null)
-                                                {
-                                                    //Col Material Number RMMG1-MATNR
-                                                    var dataInRow = rowChangeMATDesc[0].ToString();
-                                                    if (!string.IsNullOrEmpty(dataInRow))
-                                                    {
-                                                        var getListResult = dataInRow.Split(new string[] { "||" }, StringSplitOptions.None).ToList();
-                                                        if (getListResult != null && getListResult.Count > 0)
-                                                        {
-                                                            if (getListResult.Count > 0 && mat == getListResult[0])
-                                                            {
-                                                                //Col Result
-                                                                string colResult = getListResult[getListResult.Count - 1];
-                                                                //if (colResult.Contains("Material")) { statusup = true; }
-                                                                result = colResult;
-                                                                if (colResult.ToLower().Contains("material " + material.ToLower()))
-                                                                {
-                                                                    result = "P_" + colResult;
-                                                                    statusup = true;
-                                                                }
-                                                                else { statusup = false; }
+                string getfileName = "";
+                string status = "";
+                bool tableMM02IsExist = false;
 
-                                                            }
-                                                        }
+                //Get Data จาก spQuery
+                DataSet dsspQuery = GetData("spQuery", "@Material", "X");
+                var table = dsspQuery.Tables[0];
+                if (table == null || table.Rows.Count == 0)
+                {
+                    return "No Data In spGetImpactmat";
+                }
+                foreach (DataRow row in table.Rows)
+                {
+                    material = row["Material"].ToString();
+                    condition = row["Condition"].ToString();
+                    extended_Plant = row["Extended_Plant"].ToString();
+
+                    //วนตาม MM02_ChangeMATDesc เป็นหลัก
+
+                    if (condition == "7")
+                    {
+                        var dtResult = await GetDataTableFromResult("MM02_ChangeMATDesc");
+                        if (dtResult != null)
+                        {
+                            foreach (DataRow rowChangeMATDesc in dtResult.Rows)
+                            {
+                                if (rowChangeMATDesc != null && !string.IsNullOrEmpty(rowChangeMATDesc[0].ToString()))
+                                {
+
+                                    var dataInRow = rowChangeMATDesc[0].ToString();
+                                    if (!string.IsNullOrEmpty(dataInRow))
+                                    {
+                                        var getListResult = dataInRow.Split(new string[] { "||" }, StringSplitOptions.None).ToList();
+                                        if (getListResult != null && getListResult.Count > 0)
+                                        {
+                                            if (material == getListResult[0].ToString())
+                                            {
+                                                resultMM02 = getListResult[getListResult.Count - 1].ToString();
+
+                                                if (condition == "7")
+                                                {
+                                                    //ถ้า MM02 Success O 
+                                                    if (resultMM02.ToLower().Contains("material " + material.ToLower() + " has been created or extended"))
+                                                    {
+                                                        statusup = true;
+                                                    }
+                                                    else
+                                                    {
+                                                        statusup = false;
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                    //**** Wassana P. insert on 11.01.2018 (Not change class but extend plant)
-                                    if (!statusup && extended_Plant.ToLower() == "true")
+                                }
+                            }
+                        }
+
+                        if (!statusup && extended_Plant.ToLower() == "true")
+                        {
+                            List<string> listTableResult = new List<string> { "MM01_CreateMAT_ExtensionPlant", "MM01_ExtendSaleOrg" };
+                            foreach (var tableResult in listTableResult)
+                            {
+                                var dtResultMM01 = await GetDataTableFromResult(tableResult);
+                                string resultStr = ReadMM01Result(statusup, material, dtResultMM01);
+                                if (resultStr.ToLower().Contains("material " + material.ToLower() + " has been created or extended"))
+                                {
+                                    statusup = true;
+                                    resultMM01 = resultStr;
+                                }
+                            }
+                        }
+
+                        List<string> lstFileNameBapi = await GetAllFileName("BAPI_UpdateMATCharacteristics");
+                        foreach (var fileName in lstFileNameBapi)
+                        {
+                            DataTable dtResultMATCharacteristics = await GetDataTableFromResultBAPI(fileName);
+                            foreach (var item in dtResultMATCharacteristics.Rows)
+                            {
+                                foreach (DataRow rowMat in dtResultMATCharacteristics.Rows)
+                                {
+                                    var mat = rowMat["Material Number RMMG1-MATNR"].ToString();
+                                    var resultMat = rowMat["Result"].ToString();
+                                    if (mat == material)
                                     {
-                                        List<string> listTableResult = new List<string> { "MM01_CreateMAT_ExtensionPlant", "MM01_ExtendSaleOrg" };
-                                        foreach (var tableResult in listTableResult)
-                                        {
-                                            var dtResult = await GetDataTableFromResult(tableResult);
-                                            string resultStr = ReadMM01Result(statusup, mat, material, dtResult);
-                                            if (resultStr.ToLower().Contains("material " + material.ToLower()))
-                                            {
-                                                statusup = true;
-                                                result = "P_" + resultStr;
-                                            }
-                                            {
-                                                statusup = true;
-                                                result = resultStr;
-                                            }
-                                        }
+                                        resultBAPI = resultMat;
+                                        getfileName = fileName;
+                                        //if (resultMat.ToLower().Contains("does not exist") && !statusup)
+                                        //{
+                                        //    statusup = false;
+                                        //}
+                                        ////else if (resultMat.Contains("Material") && !statusup) { statusup = true; }
+                                        //else if (resultMat.ToLower().Contains("material " + material.ToLower() + " has been created or extended") && !statusup)
+                                        //{
+                                        //    statusup = true;
+                                        //}
+                                        ////else if (resultMat.Contains("*Saving changes to assignments Assignment changed*") && !statusup) { statusup = true; }
+                                        //else if (resultMat.ToLower().Contains("assignment changed") && !statusup)
+                                        //{
+                                        //    statusup = true;
+                                        //}
                                     }
                                 }
-                                else
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        List<string> listTableResult = new List<string> { "MM01_CreateMAT_ExtensionPlant", "MM01_ExtendSaleOrg" };
+                        foreach (var tableResult in listTableResult)
+                        {
+                            var dtResultExtensionPlant = await GetDataTableFromResult(tableResult);
+
+                            if (dtResultExtensionPlant != null)
+                            {
+                                var dtResultMM01 = await GetDataTableFromResult(tableResult);
+                                string resultStr = ReadMM01Result(statusup, material, dtResultMM01);
+                                if (resultStr.ToLower().Contains("material " + material.ToLower() + " has been created or extended"))
                                 {
-                                    //Check BAPI_UpdateMATCharacteristics
-                                    if (resultMat.ToLower().Contains("material " + material.ToLower()) && resultMat.ToLower().Contains("assignment changed"))
-                                    {
-                                        statusup = true;
-                                        result = resultMat;
-                                    }
-
-                                    //MM01_CreateMAT_ExtensionPlant Col 11 MM01_ExtendSaleOrg Col 12
-
-                                    List<string> listTableResult = new List<string> { "MM01_CreateMAT_ExtensionPlant", "MM01_ExtendSaleOrg" };
-                                    foreach (var tableResult in listTableResult)
-                                    {
-                                        var dtResultExtensionPlant = await GetDataTableFromResult(tableResult);
-
-                                        if (dtResultExtensionPlant != null)
-                                        {
-                                            var dtResult = await GetDataTableFromResult(tableResult);
-                                            string resultStr = ReadMM01Result(statusup, mat, material, dtResult);
-                                            if (resultStr.ToLower().Contains("material " + material.ToLower()))
-                                            {
-                                                statusup = true;
-                                                result = "P_" + resultStr;
-                                            }
-                                        }
-                                    }
-
-                                    //if (resultMat.Contains("Material " + material + "  changed") || resultMat.Contains("*Saving changes to assignments Assignment changed*"))
-                                    //if ( resultMat.ToLower().Contains("assignment changed"))
-                                    //{
-                                    //    statusup = true;
-                                    //}
+                                    statusup = true;
+                                    resultMM01 = resultStr;
                                 }
-                                //Update DB
-                                if (statusup)
+                            }
+                        }
+
+                        List<string> lstFileNameBapi = await GetAllFileName("BAPI_UpdateMATCharacteristics");
+                        foreach (var fileName in lstFileNameBapi)
+                        {
+                            DataTable dtResultMATCharacteristics = await GetDataTableFromResultBAPI(fileName);
+                            foreach (var item in dtResultMATCharacteristics.Rows)
+                            {
+                                foreach (DataRow rowMat in dtResultMATCharacteristics.Rows)
                                 {
-                                    await MoveFile(fileName);
-                                    //GenerateAttachedmentFile
-                                    if (condition == "7")
+                                    var mat = rowMat["Material Number RMMG1-MATNR"].ToString();
+                                    var resultMat = rowMat["Result"].ToString();
+                                    if (material == mat)
                                     {
-                                        await updateDB("U" + material, fileName);
-                                    }
-                                    else
-                                    {
-                                        //if (result.Contains("Material " + material + "  changed") || result.Contains("*Saving changes to assignments Assignment changed*"))
-                                        if ((result.ToLower().Contains("material " + material.ToLower()) || result.ToLower().Contains("assignment changed")) && result.Substring(0, 2) != "P_")
+                                        getfileName = fileName;
+                                        resultBAPI = resultMat;
+                                        if (resultMat.ToLower().Contains("material " + material.ToLower() + " has been created or extended") || resultMat.ToLower().Contains("assignment changed"))
                                         {
-                                            await updateDB("O" + material, fileName);
+                                            statusup = true;
                                         }
-                                        else
-                                        {
-                                            await updateDB("P" + material, fileName);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    await MoveFile(fileName);
-                                    //GenerateAttachedmentFile
-                                    if (condition == "7")
-                                    {
-                                        //if (result.Contains("No changes made") || result.Contains("*Saving changes to assignments Assignment changed*"))
-                                        if (result.ToLower().Contains("no changes made"))
-                                        {
-                                            await updateDB("Y" + material, fileName);
-                                        }
-                                        else
-                                        {
-                                            await updateDB("Z" + material, fileName);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        await updateDB("X" + material, fileName);
                                     }
                                 }
                             }
                         }
                     }
+
+                    //Update DB
+                    if (statusup)
+                    {
+                        await MoveFile(getfileName);
+                        //GenerateAttachedmentFile
+                        if (condition == "7")
+                        {
+                            await updateDB("U" + material, getfileName);
+                        }
+                        else
+                        {
+                            //if (result.Contains("Material " + material + "  changed") || result.Contains("*Saving changes to assignments Assignment changed*"))
+                            if ((resultMM02.ToLower().Contains("material " + material.ToLower() + " has been created or extended") || 
+                                 resultMM01.ToLower().Contains("material " + material.ToLower() + " has been created or extended")) &&
+                                (resultBAPI.ToLower().Contains("material " + material.ToLower() + " has been created or extended") ||
+                                 resultBAPI.ToLower().Contains("assignment changed")))
+                            {
+                                await updateDB("O" + material, getfileName);
+                            }
+                            else
+                            {
+                                await updateDB("P" + material, getfileName);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        await MoveFile(getfileName);
+                        //GenerateAttachedmentFile
+                        if (condition == "7")
+                        {
+                            //if (result.Contains("No changes made") || result.Contains("*Saving changes to assignments Assignment changed*"))
+                            if (resultBAPI.ToLower().Contains("material " + material.ToLower() + " has been created or extended") ||
+                                resultBAPI.ToLower().Contains("assignment changed"))
+                            {
+                                await updateDB("Y" + material, getfileName);
+                            }
+                            else
+                            {
+                                await updateDB("Z" + material, getfileName);
+                            }
+                        }
+                        else if (status == "X")
+                        {
+                            await updateDB("X" + material, getfileName);
+                        }
+                    }
+
                 }
+
                 await MoveFile("BAPI_UpdateMATCharacteristics");
                 await MoveFile("MM02_ChangeMATDesc");
                 await MoveFile("MM01_CreateMAT_ExtensionPlant");
@@ -758,7 +980,7 @@ namespace Interface_igrid
             }
         }
         #endregion
-        public static string ReadMM01Result(bool statusup, string mat, string material, DataTable dtResultExtensionPlant)
+        public static string ReadMM01Result(bool statusup, string mat, DataTable dtResultExtensionPlant)
         {
             if (dtResultExtensionPlant != null)
             {
@@ -940,7 +1162,17 @@ namespace Interface_igrid
             }
             return new DataTable();
         }
-
+        private async static Task<DataTable> GetDataTableFromResultBAPI(string name)
+        {
+            string filePathResult = ConfigurationManager.AppSettings["FilePathResult"];
+            string fileNameResult = await GetFileName(name);
+            if (!string.IsNullOrEmpty(fileNameResult))
+            {
+                DataTable dtResult = ConvertCSVtoDataTableBAPI(filePathResult + fileNameResult);
+                return dtResult;
+            }
+            return new DataTable();
+        }
         private async static Task<string> SaveImpactedMatDesc(string str_TabId, string reason, string status_ChgMatDesc)
         {
             string servicePathUrl = ConfigurationManager.AppSettings["ServicePathUrl"];
@@ -2022,6 +2254,36 @@ namespace Interface_igrid
                 sw.Write(sw.NewLine);
             }
             sw.Close();
+        }
+        public static DataTable ConvertCSVtoDataTableBAPI(string strFilePath)
+        {
+            DataTable dt = new DataTable();
+            using (StreamReader sr = new StreamReader(strFilePath))
+            {
+                string[] headers = sr.ReadLine().Split(',');
+                foreach (string header in headers)
+                {
+                    dt.Columns.Add(header);
+                }
+                while (!sr.EndOfStream)
+                {
+                    string[] rows = sr.ReadLine().Split(',');
+                    if (rows.Count() > 6)
+                    {
+                        for (int i = 7; i < rows.Count(); i++)
+                        {
+                            rows[6] = rows[6] + rows[i];
+                        }
+                    }
+                    DataRow dr = dt.NewRow();
+                    for (int i = 0; i < headers.Length; i++)
+                    {
+                        dr[i] = rows[i];
+                    }
+                    dt.Rows.Add(dr);
+                }
+            }
+            return dt;
         }
         public static DataTable ConvertCSVtoDataTable(string strFilePath)
         {
