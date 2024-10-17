@@ -24,6 +24,10 @@ using DocumentFormat.OpenXml.Math;
 using DocumentFormat.OpenXml.Office2013.Word;
 using System.Reflection;
 using System.Security.Policy;
+using CsvHelper;
+using CsvHelper.Configuration;
+using System.Globalization;
+using System.Runtime.Remoting.Messaging;
 //using DocumentFormat.OpenXml.Office2013.Excel;
 //using BLL.MemberService;
 
@@ -64,7 +68,6 @@ namespace Interface_igrid
                             CT04(dsspGetMasterData.Tables[0]);
                             SQ01_ListMAT(dsspGetMasterData.Tables[0]);
                         }
-                        Console.WriteLine("Outbound Completed");
                     }
                     catch (HttpRequestException e)
                     {
@@ -82,16 +85,18 @@ namespace Interface_igrid
                             SendToLog(from, to, subject, body);
                         }
                     }
+                    //Delay Time 2 min
+                    await Task.Delay(120000);
+                    Console.WriteLine("Outbound Completed");
                 }
 
                 #endregion
 
-                //Delay Time 1 min
-                await Task.Delay(60000);
 
                 #region Inbound    
                 if (bool.Parse(ConfigurationManager.AppSettings["runFlageInbound"]) == true) // flage for true run or false not run
                 {
+                    Console.WriteLine("Inbound Start");
                     if (bool.Parse(ConfigurationManager.AppSettings["runFileInbound_MM01"]) == true)
                     {
                         await MyQueryMacro();
@@ -104,6 +109,7 @@ namespace Interface_igrid
                     {
                         await MyQuery3Macro();
                     }
+                    await MoveFile(".csv");
                     string imported = "";
                     try
                     {
@@ -636,6 +642,7 @@ namespace Interface_igrid
         {
             try
             {
+                List<string> result = new List<string>();
                 string servicePathUrl = ConfigurationManager.AppSettings["ServicePathUrl"];
                 string filePath = ConfigurationManager.AppSettings["FilePath"];
 
@@ -835,25 +842,26 @@ namespace Interface_igrid
                                                 Str_Char_OldValue = "";
                                                 Str_Char_NewValue = "";
                                             }
-                                            await UpdateMaster("U" + changed_Id);
+                                            result.Add(await UpdateMaster("U" + changed_Id));
                                         }
                                         else
                                         {
                                             //Update Master C
-                                            await UpdateMaster("C" + changed_Id);
+                                            result.Add(await UpdateMaster("C" + changed_Id));
                                         }
                                     }
                                     else
                                     {
                                         //Update Master E
-                                        await UpdateMaster("E" + changed_Id);
+                                        result.Add(await UpdateMaster("E" + changed_Id));
                                     }
                                 }
                                 else
                                 {
                                     //Update Master C
-                                    await UpdateMaster("C" + changed_Id);
+                                    result.Add(await UpdateMaster("C" + changed_Id));
                                 }
+                                await Task.Delay(5000);
                             }
                         }
                     }
@@ -902,7 +910,9 @@ namespace Interface_igrid
                             scriptName = "MM02_ImpactMatDesc";
                             material = row["Material"].ToString();
                             getId = row["Id"].ToString();
-                            dtImpactMatDesc.Rows.Add(row);
+                            DataRow newRow = dtImpactMatDesc.NewRow();
+                            newRow.ItemArray = row.ItemArray;
+                            dtImpactMatDesc.Rows.Add(newRow);
                         }
                     }
                     else
@@ -910,7 +920,9 @@ namespace Interface_igrid
                         scriptName = "CLMM_ChangeMatClass";
                         material = row["Material"].ToString();
                         getId = row["Id"].ToString();
-                        dtChangeMatClass.Rows.Add(row);
+                        DataRow newRow = dtChangeMatClass.NewRow();
+                        newRow.ItemArray = row.ItemArray;
+                        dtChangeMatClass.Rows.Add(newRow);
                     }
                 }
 
@@ -1017,20 +1029,20 @@ namespace Interface_igrid
             }
             return "";
         }
-        public static void WriteLog(string message)
-        {
-            string logFile = ConfigurationManager.AppSettings["LogFile"];
-            string filePath = logFile + "example.txt";
+        //public static void WriteLog(string message)
+        //{
+        //    string logFile = ConfigurationManager.AppSettings["LogFile"];
+        //    string filePath = logFile + "example.txt";
 
-            string textToWrite = DateTime.Now.ToString() + message + Environment.NewLine;
+        //    string textToWrite = DateTime.Now.ToString() + message + Environment.NewLine;
 
-            using (StreamWriter writer = new StreamWriter(filePath, append: true))
-            {
-                writer.WriteLine(textToWrite);
-            }
+        //    using (StreamWriter writer = new StreamWriter(filePath, append: true))
+        //    {
+        //        writer.WriteLine(textToWrite);
+        //    }
 
-            Console.WriteLine("Text written to file successfully.");
-        }
+        //    Console.WriteLine("Text written to file successfully.");
+        //}
         public static List<string> getDataRow(DataRow row)
         {
             List<string> getListResult = new List<string>();
@@ -1202,7 +1214,7 @@ namespace Interface_igrid
                     else
                     {
                         apiResponse = await response.Content.ReadAsStringAsync();
-                        WriteLog("MyQuery3Macro : SaveImpactedMatDesc : " + apiResponse);
+                        //WriteLog("MyQuery3Macro : SaveImpactedMatDesc : " + apiResponse);
                     }
                 }
             }
@@ -1220,11 +1232,12 @@ namespace Interface_igrid
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
                         apiResponse = await response.Content.ReadAsStringAsync();
+                        return "Success";
                     }
                     else
                     {
                         apiResponse = await response.Content.ReadAsStringAsync();
-                        WriteLog("MyQuery2Macro : UpdateMaster : " + apiResponse);
+                        //WriteLog("MyQuery2Macro : UpdateMaster : " + apiResponse);
                     }
                 }
             }
@@ -1239,6 +1252,7 @@ namespace Interface_igrid
             using (var httpClient = new HttpClient())
             {
                 string getFileName = string.Join("|", filename);
+                await Task.Delay(5000);
                 using (var response = await httpClient.GetAsync(servicePathUrl + "SendEmail3NewVer?_name=" + name + "&filename=" + getFileName))
                 {
                     if (response.StatusCode == HttpStatusCode.OK)
@@ -1248,7 +1262,7 @@ namespace Interface_igrid
                     else
                     {
                         apiResponse = await response.Content.ReadAsStringAsync();
-                        WriteLog("MyQueryMacro : updateDB : " + apiResponse);
+                        //WriteLog("MyQueryMacro : updateDB : " + apiResponse);
                     }
                 }
             }
@@ -1902,6 +1916,8 @@ namespace Interface_igrid
 
         public static void MM01_CreateMAT_ExtensionPlant(DataTable Results)
         {
+            int index = 0;
+
             DataTable dt = new DataTable();
             dt.Columns.AddRange(new DataColumn[]
             {
@@ -1929,10 +1945,11 @@ namespace Interface_igrid
                             string.Format("{0}", row["Description"].ToString()),
                             string.Format("{0}", row["Ref"].ToString().Trim()),
                             string.Format("{0}", s.ToString().Trim()),
-                            string.Format("{0}", row["Plant"]).Substring(0, 3),
+                            string.Format("{0}", (row["Plant"]).ToString().Length > 3 ? row["Plant"].ToString().Substring(0, 3) : row["Plant"].ToString()),
                             string.Format("{0}", o),
                             string.Format("{0}", row["Id"])
                             );
+                            index++;
                         }
                     }
                 }
@@ -1942,6 +1959,7 @@ namespace Interface_igrid
                 string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "MM01_CreateMAT_ExtensionPlant_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
                 ToCSVWithPipe(dt, file);
             }
+
         }
         public static void BAPI_UpdateMATCharacteristics(DataTable Results)
         {
@@ -2268,6 +2286,25 @@ namespace Interface_igrid
                 sw.Write(sw.NewLine);
             }
             sw.Close();
+        }
+        public static DataTable ReadCsvFileToDataTable(string strFilePath)
+        {
+            DataTable dataTable = new DataTable();
+
+            using (var reader = new StreamReader(strFilePath))
+            {
+                List<string> listA = new List<string>();
+                List<string> listB = new List<string>();
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(';');
+
+                    listA.Add(values[0]);
+                    listB.Add(values[1]);
+                }
+            }
+            return dataTable;
         }
         public static DataTable ConvertCSVtoDataTableBAPI(string strFilePath)
         {
