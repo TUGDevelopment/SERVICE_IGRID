@@ -435,7 +435,7 @@ namespace Interface_igrid
                     return "No Data In spGetImpactmat";
                 }
                 var dtResult = await GetDataTableFromResult("MM02_ImpactMatDesc");
-                getfileName.Add(await GetFileName("MM02_ImpactMatDesc"));
+                //getfileName.Add(await GetFileName("MM02_ImpactMatDesc"));
 
                 List<string> listTableResult = new List<string> { "MM01_CreateMAT_ExtensionPlant", "MM01_ExtendSaleOrg" };
                 //Get ข้อมูล MM101 มาเก็บไว้ใน List
@@ -574,7 +574,7 @@ namespace Interface_igrid
                             }
                         }
                     }
-                    getfileName = getfileName.Distinct().ToList();
+                    getfileName = getfileName.Where(x => !string.IsNullOrEmpty(x)).Distinct().ToList();
                     //Move File To Process(Sent Mail)
 
                     await MoveFile("BAPI_UpdateMATCharacteristics");
@@ -1798,10 +1798,10 @@ namespace Interface_igrid
                     ifColumn = "U";
                 }
                 dtCT04Insert.Rows.Add(string.Format("{0}", ifColumn),
-                            string.Format("{0}", row["Changed_Charname"].ToString()),
+                            string.Format("{0}", row["Changed_Charname"].ToString().Replace(",", "_")),
                             string.Format("{0}", row["id"].ToString()),
-                            string.Format("{0}", row["Description"].ToString()),
-                            string.Format("{0}", row["Changed_Id"].ToString()));
+                            string.Format("{0}", row["Description"].ToString().Replace(",", "_")),
+                            string.Format("{0}", row["Changed_Id"].ToString().Replace(",", "_")));
 
                 //switch (row["Changed_Action"].ToString())
                 //{
@@ -1859,9 +1859,9 @@ namespace Interface_igrid
                 if ((row["Changed_Action"].ToString() != "Insert" || row["Changed_Action"].ToString() != "Remove") && !string.IsNullOrEmpty(row["Old_Description"].ToString()))
                 {
                     dtListMat.Rows.Add(
-                    string.Format("{0}", row["Changed_Charname"].ToString()),
-                    string.Format("{0}", row["Old_Description"].ToString()),
-                    string.Format("{0}", row["Changed_Id"].ToString()));
+                    string.Format("{0}", row["Changed_Charname"].ToString().Replace(",","_")),
+                    string.Format("{0}", row["Old_Description"].ToString().Replace(",", "_")),
+                    string.Format("{0}", row["Changed_Id"].ToString().Replace(",", "_")));
                 }
             }
             if (dtListMat.Rows.Count > 0)
@@ -1940,14 +1940,14 @@ namespace Interface_igrid
                         string[] splitSOOrg = "DM;EX".Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (string o in splitSOOrg)
                         {
-                            dt.Rows.Add(string.Format("{0}", row["DocumentNo"].ToString()),
-                            string.Format("{0}", row["Material"].ToString()),
-                            string.Format("{0}", row["Description"].ToString()),
-                            string.Format("{0}", row["Ref"].ToString().Trim()),
-                            string.Format("{0}", s.ToString().Trim()),
-                            string.Format("{0}", (row["Plant"]).ToString().Length > 3 ? row["Plant"].ToString().Substring(0, 3) : row["Plant"].ToString()),
-                            string.Format("{0}", o),
-                            string.Format("{0}", row["Id"])
+                            dt.Rows.Add(string.Format("{0}", row["DocumentNo"].ToString().Replace(",", "_")),
+                            string.Format("{0}", row["Material"].ToString().Replace(",", "_")),
+                            string.Format("{0}", row["Description"].ToString().Replace(",", "_")),
+                            string.Format("{0}", row["Ref"].ToString().Replace(",", "_").Trim()),
+                            string.Format("{0}", s.ToString().Replace(",", "_").Trim()),
+                            string.Format("{0}", (s).ToString().Length > 3 ? s.ToString().Substring(0, 3).Replace(",", "_") : s.ToString().Replace(",", "_")),
+                            string.Format("{0}", o.Replace(",", "_")),
+                            string.Format("{0}", row["Id"].ToString().Replace(",", "_"))
                             );
                             index++;
                         }
@@ -1974,12 +1974,12 @@ namespace Interface_igrid
             int i = 1;
             foreach (DataRow row in Results.Rows)
             {
-                dtClass.Rows.Add(string.Format("{0}", row["Material"].ToString()),
-                string.Format("{0}", row["ClassType"].ToString()),
+                dtClass.Rows.Add(string.Format("{0}", row["Material"].ToString().Replace(",", "_")),
+                string.Format("{0}", row["ClassType"].ToString().Replace(",", "_")),
                 string.Format("{0}", "H"),
                 string.Format("{0}", ""),
                 string.Format("{0}", ""),
-                string.Format("{0}", row["Id"].ToString())
+                string.Format("{0}", row["Id"].ToString().Replace(",", "_"))
                 );
                 DataTable dtCharacteristic = builditems(@"select * from MasCharacteristic where MaterialType  like '%" + row["Material"].ToString().Substring(1, 1) + "%' order by Id");
                 foreach (DataRow dr in dtCharacteristic.Rows)
@@ -1991,9 +1991,9 @@ namespace Interface_igrid
                         string.Format("{0}", ""),
                         string.Format("{0}", ""),
                         string.Format("{0}", "D"),
-                        string.Format("{0}", dr["Title"]),
-                        string.Format("{0}", row[value]),
-                        string.Format("{0}", dr["Id"])
+                        string.Format("{0}", dr["Title"].ToString().Replace(",", "_")),
+                        string.Format("{0}", row[value].ToString().Replace(",", "_")),
+                        string.Format("{0}", dr["Id"].ToString().Replace(",", "_"))
                         );
                     }
                     else
@@ -2005,9 +2005,9 @@ namespace Interface_igrid
                             string.Format("{0}", ""),
                             string.Format("{0}", ""),
                             string.Format("{0}", "D"),
-                            string.Format("{0}", dr["Title"]),
-                            string.Format("{0}", pl),
-                            string.Format("{0}", dr["Id"])
+                            string.Format("{0}", dr["Title"].ToString().Replace(",", "_")),
+                            string.Format("{0}", pl.ToString().Replace(",", "_")),
+                            string.Format("{0}", dr["Id"].ToString().Replace(",", "_"))
                             );
                         }
                     }
@@ -2034,12 +2034,12 @@ namespace Interface_igrid
             int i = 1;
             foreach (DataRow row in Results.Rows)
             {
-                dtClass.Rows.Add(string.Format("{0}", row["Material"].ToString()),
-                string.Format("{0}", row["BatchClass"].ToString()),
+                dtClass.Rows.Add(string.Format("{0}", row["Material"].ToString().Replace(",", "_")),
+                string.Format("{0}", row["BatchClass"].ToString().Replace(",", "_")),
                 string.Format("{0}", "H"),
                 string.Format("{0}", ""),
                 string.Format("{0}", ""),
-                string.Format("{0}", row["Id"].ToString())
+                string.Format("{0}", row["Id"].ToString().Replace(",", "_"))
                 );
 
                 if (dtClass.Rows.Count > 0)
@@ -2062,9 +2062,9 @@ namespace Interface_igrid
             foreach (DataRow row in Results.Rows)
             {
                 dt.Rows.Add(
-                string.Format("{0}", row["Material"].ToString()),
-                string.Format("{0}", row["Description"].ToString()),
-                string.Format("{0}", row["Id"].ToString()));
+                string.Format("{0}", row["Material"].ToString().Replace(",", "_")),
+                string.Format("{0}", row["Description"].ToString().Replace(",", "_")),
+                string.Format("{0}", row["Id"].ToString().Replace(",", "_")));
             }
             if (dt.Rows.Count > 0)
             {
@@ -2087,12 +2087,12 @@ namespace Interface_igrid
             int i = 1;
             foreach (DataRow row in Results.Rows)
             {
-                dt.Rows.Add(string.Format("{0}", row["Material"].ToString()),
-                string.Format("{0}", row["ClassType"].ToString()),
+                dt.Rows.Add(string.Format("{0}", row["Material"].ToString().Replace(",", "_")),
+                string.Format("{0}", row["ClassType"].ToString().Replace(",", "_")),
                 string.Format("{0}", "H"),
                 string.Format("{0}", ""),
                 string.Format("{0}", ""),
-                string.Format("{0}", row["Id"].ToString())
+                string.Format("{0}", row["Id"].ToString().Replace(",", "_"))
                 );
                 DataTable dtCharacteristic = builditems(@"select * from MasCharacteristic where MaterialType  like '%" + row["Material"].ToString().Substring(1, 1) + "%' order by Id");
                 foreach (DataRow dr in dtCharacteristic.Rows)
@@ -2113,9 +2113,9 @@ namespace Interface_igrid
                         string.Format("{0}", ""),
                         string.Format("{0}", ""),
                         string.Format("{0}", "D"),
-                        string.Format("{0}", dr["Title"]),
-                        string.Format("{0}", value),
-                        string.Format("{0}", dr["Id"])
+                        string.Format("{0}", dr["Title"].ToString().Replace(",", "_")),
+                        string.Format("{0}", value.Replace(",", "_")),
+                        string.Format("{0}", dr["Id"].ToString().Replace(",", "_"))
                         );
 
 
@@ -2129,9 +2129,9 @@ namespace Interface_igrid
                             string.Format("{0}", ""),
                             string.Format("{0}", ""),
                             string.Format("{0}", "D"),
-                            string.Format("{0}", dr["Title"]),
-                            string.Format("{0}", pl),
-                            string.Format("{0}", dr["Id"])
+                            string.Format("{0}", dr["Title"].ToString().Replace(",", "_")),
+                            string.Format("{0}", pl.Replace(",", "_")),
+                            string.Format("{0}", dr["Id"].ToString().Replace(",", "_"))
                             );
                         }
                     }
