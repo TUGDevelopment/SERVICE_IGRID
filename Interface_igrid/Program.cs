@@ -28,6 +28,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
 using System.Runtime.Remoting.Messaging;
+using Microsoft.SqlServer.Server;
 //using DocumentFormat.OpenXml.Office2013.Excel;
 //using BLL.MemberService;
 
@@ -50,8 +51,9 @@ namespace Interface_igrid
                             //MM01,Create material
                             DataSet dsspQuery = GetData("spQuery", "@Material", "X");
                             MM01_CreateMAT_ExtensionPlant(dsspQuery.Tables[0]);
-                            await Task.Delay(30000);
+                            await Task.Delay(15000);
                             BAPI_UpdateMATCharacteristics(dsspQuery.Tables[0]);
+                            await Task.Delay(10000);
                             BAPI_BATCHCLASS(dsspQuery.Tables[0]);
                         }
                         if (bool.Parse(ConfigurationManager.AppSettings["runFileOutbound_MM02"]) == true) // flage for true run or false not run
@@ -434,14 +436,14 @@ namespace Interface_igrid
                     await MoveFile("MM01_ExtendSaleOrg");
                     return "No Data In spGetImpactmat";
                 }
-                var dtResult = await GetDataTableFromResult("MM02_ImpactMatDesc");
+                var dtResult = await GetDataTableFromResultResult("MM02_ImpactMatDesc");
                 //getfileName.Add(await GetFileName("MM02_ImpactMatDesc"));
 
                 List<string> listTableResult = new List<string> { "MM01_CreateMAT_ExtensionPlant", "MM01_ExtendSaleOrg" };
                 //Get ข้อมูล MM101 มาเก็บไว้ใน List
                 foreach (var tableResult in listTableResult)
                 {
-                    var dtResultMM01 = await GetDataTableFromResult(tableResult);
+                    var dtResultMM01 = await GetDataTableFromResultResult(tableResult);
                     dtLstMM01.Add(dtResultMM01);
                     var fileName = await GetFileName(tableResult);
                     if (!string.IsNullOrEmpty(fileName))
@@ -453,7 +455,7 @@ namespace Interface_igrid
                 List<string> lstFileNameBapi = await GetAllFileName("BAPI_UpdateMATCharacteristics");
                 foreach (var fileName in lstFileNameBapi)
                 {
-                    DataTable dtResultMATCharacteristics = await GetDataTableFromResultBAPI(fileName);
+                    DataTable dtResultMATCharacteristics = await GetDataTableFromResultResult(fileName);
                     dtLstBAPI.Add(dtResultMATCharacteristics);
                     getfileName.Add(fileName);
                 }
@@ -477,7 +479,7 @@ namespace Interface_igrid
                                     var dataInRow = rowChangeMATDesc[0].ToString();
                                     if (!string.IsNullOrEmpty(dataInRow))
                                     {
-                                        var getListResult = dataInRow.Split(new string[] { "||" }, StringSplitOptions.None).ToList();
+                                        var getListResult = dataInRow.Split(new string[] { "|" }, StringSplitOptions.None).ToList();
                                         if (getListResult != null && getListResult.Count > 0)
                                         {
                                             if (material == getListResult[0].ToString())
@@ -520,25 +522,34 @@ namespace Interface_igrid
                         {
                             foreach (DataRow rowMat in dtResultMATCharacteristics.Rows)
                             {
-                                var mat = rowMat["Material Number RMMG1-MATNR"].ToString();
-                                var resultMat = rowMat["Result"].ToString();
-                                if (mat == material)
+                                if (rowMat != null && !string.IsNullOrEmpty(rowMat[0].ToString()))
                                 {
-                                    resultBAPI = resultMat;
-                                    //if (resultMat.ToLower().Contains("does not exist") && !statusup)
-                                    //{
-                                    //    statusup = false;
-                                    //}
-                                    ////else if (resultMat.Contains("Material") && !statusup) { statusup = true; }
-                                    //else if (resultMat.ToLower().Contains("material " + material.ToLower() + " has been created or extended") && !statusup)
-                                    //{
-                                    //    statusup = true;
-                                    //}
-                                    ////else if (resultMat.Contains("*Saving changes to assignments Assignment changed*") && !statusup) { statusup = true; }
-                                    //else if (resultMat.ToLower().Contains("assignment changed") && !statusup)
-                                    //{
-                                    //    statusup = true;
-                                    //}
+                                    var dataInRow = rowMat[0].ToString();
+                                    if (!string.IsNullOrEmpty(dataInRow))
+                                    {
+                                        var getListResult = dataInRow.Split(new string[] { "|" }, StringSplitOptions.None).ToList();
+
+                                        var mat = getListResult[0];
+                                        var resultMat = getListResult[getListResult.Count - 1].ToString();
+                                        if (mat == material)
+                                        {
+                                            resultBAPI = resultMat;
+                                            //if (resultMat.ToLower().Contains("does not exist") && !statusup)
+                                            //{
+                                            //    statusup = false;
+                                            //}
+                                            ////else if (resultMat.Contains("Material") && !statusup) { statusup = true; }
+                                            //else if (resultMat.ToLower().Contains("material " + material.ToLower() + " has been created or extended") && !statusup)
+                                            //{
+                                            //    statusup = true;
+                                            //}
+                                            ////else if (resultMat.Contains("*Saving changes to assignments Assignment changed*") && !statusup) { statusup = true; }
+                                            //else if (resultMat.ToLower().Contains("assignment changed") && !statusup)
+                                            //{
+                                            //    statusup = true;
+                                            //}
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -561,14 +572,22 @@ namespace Interface_igrid
                         {
                             foreach (DataRow rowMat in dtResultMATCharacteristics.Rows)
                             {
-                                var mat = rowMat["Material Number RMMG1-MATNR"].ToString();
-                                var resultMat = rowMat["Result"].ToString();
-                                if (material == mat)
+                                if (rowMat != null && !string.IsNullOrEmpty(rowMat[0].ToString()))
                                 {
-                                    resultBAPI = resultMat;
-                                    if (resultMat.ToLower().Contains("material " + material.ToLower() + " has been created or extended") || resultMat.ToLower().Contains("assignment changed"))
+                                    var dataInRow = rowMat[0].ToString();
+                                    if (!string.IsNullOrEmpty(dataInRow))
                                     {
-                                        statusup = true;
+                                        var getListResult = dataInRow.Split(new string[] { "|" }, StringSplitOptions.None).ToList();
+                                        var mat = getListResult[0];
+                                        var resultMat = getListResult[getListResult.Count - 1].ToString();
+                                        if (material == mat)
+                                        {
+                                            resultBAPI = resultMat;
+                                            if (resultMat.ToLower().Contains("material " + material.ToLower() + " has been created or extended") || resultMat.ToLower().Contains("assignment changed"))
+                                            {
+                                                statusup = true;
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -646,10 +665,21 @@ namespace Interface_igrid
                 string servicePathUrl = ConfigurationManager.AppSettings["ServicePathUrl"];
                 string filePath = ConfigurationManager.AppSettings["FilePath"];
 
-                DataTable dtResult = await GetDataTableFromResult("CT04_Insert");
+                DataTable dtResult = await GetDataTableFromResultResult("CT04_Insert");
                 foreach (DataRow rowResult in dtResult.Rows)
                 {
-                    var checkStatus = rowResult["Result"].ToString();
+                    string checkStatus = "";
+                    string appId = "";
+                    if (rowResult != null && !string.IsNullOrEmpty(rowResult[0].ToString()))
+                    {
+                        var dataInRow = rowResult[0].ToString();
+                        if (!string.IsNullOrEmpty(dataInRow))
+                        {
+                            var getListResult = dataInRow.Split(new string[] { "|" }, StringSplitOptions.None).ToList();
+                            checkStatus = getListResult[getListResult.Count - 1].ToString();
+                            appId = getListResult[4].ToString();
+                        }
+                    }
                     if (string.IsNullOrEmpty(checkStatus) || checkStatus == "Result")
                     {
                         continue;
@@ -666,14 +696,14 @@ namespace Interface_igrid
 
                     foreach (DataRow row in table.Rows)
                     {
-                        if (rowResult["AppId"].ToString() == row["Changed_Id"].ToString())
+                        if (appId == row["Changed_Id"].ToString())
                         {
                             // assign parameter
                             var action = row["Changed_Action"].ToString();
                             var changed_Id = row["Changed_Id"].ToString();
                             var char_name = row["Changed_Charname"].ToString();
                             var char_var = "";
-                            if (rowResult["AppId"].ToString() == changed_Id)
+                            if (appId == changed_Id)
                             {
                                 if (char_name == "ZPKG_SEC_BRAND")
                                 {
@@ -735,18 +765,27 @@ namespace Interface_igrid
                                         if (action == "Update" || action == "Inactive" || action == "Re-Active")
                                         {
                                             //Check FIle
-                                            DataTable dtResultListMat = await GetDataTableFromResult("SQ01_ListMat");
+                                            DataTable dtResultListMat = await GetDataTableFromResultResult("SQ01_ListMat");
                                             //Update Master
                                             //Row in File
                                             foreach (DataRow itemRow in dtResultListMat.Rows)
                                             {
                                                 //Column In File
 
-                                                Str_MaterialNo = itemRow[0].ToString();
-                                                Str_Class = itemRow[2].ToString();
-                                                Str_CharName = itemRow[3].ToString();
-                                                Str_CharValue = itemRow[4].ToString();
-                                                Str_MaterialDesc = itemRow[5].ToString();
+                                                if (itemRow != null && !string.IsNullOrEmpty(itemRow[0].ToString()))
+                                                {
+                                                    var dataInRow = itemRow[0].ToString();
+                                                    if (!string.IsNullOrEmpty(dataInRow))
+                                                    {
+                                                        var getListResult = dataInRow.Split(new string[] { "|" }, StringSplitOptions.None).ToList();
+
+                                                        Str_MaterialNo = getListResult[0].ToString();
+                                                        Str_Class = getListResult[2].ToString();
+                                                        Str_CharName = getListResult[3].ToString();
+                                                        Str_CharValue = getListResult[4].ToString();
+                                                        Str_MaterialDesc = getListResult[5].ToString();
+                                                    }
+                                                }
                                                 if (string.IsNullOrEmpty(Str_MaterialDesc))
                                                 {
                                                     Str_DMSno = Str_MaterialDesc.Substring(0, Str_MaterialDesc.IndexOf(","));
@@ -930,7 +969,7 @@ namespace Interface_igrid
 
                 if (scriptName == "MM02_ImpactMatDesc")
                 {
-                    DataTable dtResultImpactMatDesc = await GetDataTableFromResult("MM02_ImpactMatDesc");
+                    DataTable dtResultImpactMatDesc = await GetDataTableFromResultResult("MM02_ImpactMatDesc");
                     foreach (DataRow rowResult in dtResultImpactMatDesc.Rows)
                     {
                         var getListResult = getDataRow(rowResult);
@@ -962,7 +1001,7 @@ namespace Interface_igrid
                     foreach (string fileName in lstFileName)
                     {
                         if (isFoundData) { break; }
-                        DataTable dtResultChangeMatClass = await GetDataTableFromResult(fileName);
+                        DataTable dtResultChangeMatClass = await GetDataTableFromResultResult(fileName);
                         foreach (DataRow rowResultMatClass in dtResultChangeMatClass.Rows)
                         {
                             //Match With MM02_ImpactMatDesc
@@ -971,19 +1010,26 @@ namespace Interface_igrid
                                 isFoundData = true;
                                 foreach (DataRow rowChangeMatClass in table.Rows)
                                 {
-                                    if (!string.IsNullOrEmpty(rowChangeMatClass["Material"].ToString()) && rowChangeMatClass["Material"].ToString() == rowResultMatClass[0].ToString())
+
+                                    var dataInRow = rowResultMatClass[0].ToString();
+                                    if (!string.IsNullOrEmpty(dataInRow))
                                     {
-                                        var checkResult = rowResultMatClass[0].ToString();
-                                        if (checkResult.Contains("Material") || checkResult.Contains("No message is returned from SAP"))
+                                        var getListResult = dataInRow.Split(new string[] { "|" }, StringSplitOptions.None).ToList();
+
+                                        if (!string.IsNullOrEmpty(rowChangeMatClass["Material"].ToString()) && rowChangeMatClass["Material"].ToString() == getListResult[0].ToString())
                                         {
-                                            status_ChgMatDesc = "Completed";
-                                            tab_Id = rowChangeMatClass["Id"].ToString();
-                                            reason = "";
-                                            await SaveImpactedMatDesc(tab_Id, reason, status_ChgMatDesc);
-                                        }
-                                        else
-                                        {
-                                            status_ChgMatDesc = "Failed";
+                                            var checkResult = getListResult[getListResult.Count - 1].ToString();
+                                            if (checkResult.Contains("Material") || checkResult.Contains("No message is returned from SAP"))
+                                            {
+                                                status_ChgMatDesc = "Completed";
+                                                tab_Id = rowChangeMatClass["Id"].ToString();
+                                                reason = "";
+                                                await SaveImpactedMatDesc(tab_Id, reason, status_ChgMatDesc);
+                                            }
+                                            else
+                                            {
+                                                status_ChgMatDesc = "Failed";
+                                            }
                                         }
                                     }
                                 }
@@ -1176,6 +1222,17 @@ namespace Interface_igrid
 
             var fileResult = Files.Where(x => x.Name.Contains(name)).OrderByDescending(x => x.CreationTime).Select(x => x.Name).ToList();
             return fileResult;
+        }
+        private async static Task<DataTable> GetDataTableFromResultResult(string name)
+        {
+            string filePathResult = ConfigurationManager.AppSettings["FilePathResult"];
+            string fileNameResult = await GetFileName(name);
+            if (!string.IsNullOrEmpty(fileNameResult))
+            {
+                DataTable dtResult = ConvertCSVtoDataTableResult(filePathResult + fileNameResult);
+                return dtResult;
+            }
+            return new DataTable();
         }
         private async static Task<DataTable> GetDataTableFromResult(string name)
         {
@@ -1798,10 +1855,10 @@ namespace Interface_igrid
                     ifColumn = "U";
                 }
                 dtCT04Insert.Rows.Add(string.Format("{0}", ifColumn),
-                            string.Format("{0}", row["Changed_Charname"].ToString().Replace(",", "_")),
+                            string.Format("{0}", row["Changed_Charname"].ToString()),
                             string.Format("{0}", row["id"].ToString()),
-                            string.Format("{0}", row["Description"].ToString().Replace(",", "_")),
-                            string.Format("{0}", row["Changed_Id"].ToString().Replace(",", "_")));
+                            string.Format("{0}", row["Description"].ToString()),
+                            string.Format("{0}", row["Changed_Id"].ToString()));
 
                 //switch (row["Changed_Action"].ToString())
                 //{
@@ -1832,7 +1889,7 @@ namespace Interface_igrid
             if (dtCT04Insert.Rows.Count > 0)
             {
                 string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "CT04_Insert_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                ToCSV(dtCT04Insert, file);
+                ToCSVWithPipe(dtCT04Insert, file);
             }
             //if (dtCT04Update.Rows.Count > 0)
             //{
@@ -1859,15 +1916,15 @@ namespace Interface_igrid
                 if ((row["Changed_Action"].ToString() != "Insert" || row["Changed_Action"].ToString() != "Remove") && !string.IsNullOrEmpty(row["Old_Description"].ToString()))
                 {
                     dtListMat.Rows.Add(
-                    string.Format("{0}", row["Changed_Charname"].ToString().Replace(",","_")),
-                    string.Format("{0}", row["Old_Description"].ToString().Replace(",", "_")),
-                    string.Format("{0}", row["Changed_Id"].ToString().Replace(",", "_")));
+                    string.Format("{0}", row["Changed_Charname"].ToString()),
+                    string.Format("{0}", row["Old_Description"].ToString()),
+                    string.Format("{0}", row["Changed_Id"].ToString()));
                 }
             }
             if (dtListMat.Rows.Count > 0)
             {
                 string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "SQ01_ListMat" + "_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".csv";
-                ToCSV(dtListMat, file);
+                ToCSVWithPipe(dtListMat, file);
             }
             //Best Edit 28-09-2024
             //Add data to list
@@ -1940,14 +1997,14 @@ namespace Interface_igrid
                         string[] splitSOOrg = "DM;EX".Split(new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (string o in splitSOOrg)
                         {
-                            dt.Rows.Add(string.Format("{0}", row["DocumentNo"].ToString().Replace(",", "_")),
-                            string.Format("{0}", row["Material"].ToString().Replace(",", "_")),
-                            string.Format("{0}", row["Description"].ToString().Replace(",", "_")),
-                            string.Format("{0}", row["Ref"].ToString().Replace(",", "_").Trim()),
-                            string.Format("{0}", s.ToString().Replace(",", "_").Trim()),
-                            string.Format("{0}", (s).ToString().Length > 3 ? s.ToString().Substring(0, 3).Replace(",", "_") : s.ToString().Replace(",", "_")),
-                            string.Format("{0}", o.Replace(",", "_")),
-                            string.Format("{0}", row["Id"].ToString().Replace(",", "_"))
+                            dt.Rows.Add(string.Format("{0}", row["DocumentNo"].ToString()),
+                            string.Format("{0}", row["Material"].ToString()),
+                            string.Format("{0}", row["Description"].ToString()),
+                            string.Format("{0}", row["Ref"].ToString().Trim()),
+                            string.Format("{0}", s.ToString().Trim()),
+                            string.Format("{0}", (s).ToString().Length > 3 ? s.ToString().Substring(0, 3) : s.ToString()),
+                            string.Format("{0}", o),
+                            string.Format("{0}", row["Id"].ToString())
                             );
                             index++;
                         }
@@ -1974,12 +2031,12 @@ namespace Interface_igrid
             int i = 1;
             foreach (DataRow row in Results.Rows)
             {
-                dtClass.Rows.Add(string.Format("{0}", row["Material"].ToString().Replace(",", "_")),
-                string.Format("{0}", row["ClassType"].ToString().Replace(",", "_")),
+                dtClass.Rows.Add(string.Format("{0}", row["Material"].ToString()),
+                string.Format("{0}", row["ClassType"].ToString()),
                 string.Format("{0}", "H"),
                 string.Format("{0}", ""),
                 string.Format("{0}", ""),
-                string.Format("{0}", row["Id"].ToString().Replace(",", "_"))
+                string.Format("{0}", row["Id"].ToString())
                 );
                 DataTable dtCharacteristic = builditems(@"select * from MasCharacteristic where MaterialType  like '%" + row["Material"].ToString().Substring(1, 1) + "%' order by Id");
                 foreach (DataRow dr in dtCharacteristic.Rows)
@@ -1991,9 +2048,9 @@ namespace Interface_igrid
                         string.Format("{0}", ""),
                         string.Format("{0}", ""),
                         string.Format("{0}", "D"),
-                        string.Format("{0}", dr["Title"].ToString().Replace(",", "_")),
-                        string.Format("{0}", row[value].ToString().Replace(",", "_")),
-                        string.Format("{0}", dr["Id"].ToString().Replace(",", "_"))
+                        string.Format("{0}", dr["Title"].ToString()),
+                        string.Format("{0}", row[value].ToString()),
+                        string.Format("{0}", dr["Id"].ToString())
                         );
                     }
                     else
@@ -2005,9 +2062,9 @@ namespace Interface_igrid
                             string.Format("{0}", ""),
                             string.Format("{0}", ""),
                             string.Format("{0}", "D"),
-                            string.Format("{0}", dr["Title"].ToString().Replace(",", "_")),
-                            string.Format("{0}", pl.ToString().Replace(",", "_")),
-                            string.Format("{0}", dr["Id"].ToString().Replace(",", "_"))
+                            string.Format("{0}", dr["Title"].ToString()),
+                            string.Format("{0}", pl.ToString()),
+                            string.Format("{0}", dr["Id"].ToString())
                             );
                         }
                     }
@@ -2015,7 +2072,7 @@ namespace Interface_igrid
                 if (dtClass.Rows.Count > 0)
                 {
                     string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "BAPI_UpdateMATCharacteristics_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";
-                    ToCSV(dtClass, file);
+                    ToCSVWithPipe(dtClass, file);
                 }
                 dtClass.Clear();
                 i++;
@@ -2034,18 +2091,18 @@ namespace Interface_igrid
             int i = 1;
             foreach (DataRow row in Results.Rows)
             {
-                dtClass.Rows.Add(string.Format("{0}", row["Material"].ToString().Replace(",", "_")),
-                string.Format("{0}", row["BatchClass"].ToString().Replace(",", "_")),
+                dtClass.Rows.Add(string.Format("{0}", row["Material"].ToString()),
+                string.Format("{0}", row["BatchClass"].ToString()),
                 string.Format("{0}", "H"),
                 string.Format("{0}", ""),
                 string.Format("{0}", ""),
-                string.Format("{0}", row["Id"].ToString().Replace(",", "_"))
+                string.Format("{0}", row["Id"].ToString())
                 );
 
                 if (dtClass.Rows.Count > 0)
                 {
                     string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "BAPI_BATCHCLASS_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";
-                    ToCSV(dtClass, file);
+                    ToCSVWithPipe(dtClass, file);
                 }
                 dtClass.Clear();
                 i++;
@@ -2062,9 +2119,9 @@ namespace Interface_igrid
             foreach (DataRow row in Results.Rows)
             {
                 dt.Rows.Add(
-                string.Format("{0}", row["Material"].ToString().Replace(",", "_")),
-                string.Format("{0}", row["Description"].ToString().Replace(",", "_")),
-                string.Format("{0}", row["Id"].ToString().Replace(",", "_")));
+                string.Format("{0}", row["Material"].ToString()),
+                string.Format("{0}", row["Description"].ToString()),
+                string.Format("{0}", row["Id"].ToString()));
             }
             if (dt.Rows.Count > 0)
             {
@@ -2087,12 +2144,12 @@ namespace Interface_igrid
             int i = 1;
             foreach (DataRow row in Results.Rows)
             {
-                dt.Rows.Add(string.Format("{0}", row["Material"].ToString().Replace(",", "_")),
-                string.Format("{0}", row["ClassType"].ToString().Replace(",", "_")),
+                dt.Rows.Add(string.Format("{0}", row["Material"].ToString()),
+                string.Format("{0}", row["ClassType"].ToString()),
                 string.Format("{0}", "H"),
                 string.Format("{0}", ""),
                 string.Format("{0}", ""),
-                string.Format("{0}", row["Id"].ToString().Replace(",", "_"))
+                string.Format("{0}", row["Id"].ToString())
                 );
                 DataTable dtCharacteristic = builditems(@"select * from MasCharacteristic where MaterialType  like '%" + row["Material"].ToString().Substring(1, 1) + "%' order by Id");
                 foreach (DataRow dr in dtCharacteristic.Rows)
@@ -2113,9 +2170,9 @@ namespace Interface_igrid
                         string.Format("{0}", ""),
                         string.Format("{0}", ""),
                         string.Format("{0}", "D"),
-                        string.Format("{0}", dr["Title"].ToString().Replace(",", "_")),
-                        string.Format("{0}", value.Replace(",", "_")),
-                        string.Format("{0}", dr["Id"].ToString().Replace(",", "_"))
+                        string.Format("{0}", dr["Title"].ToString()),
+                        string.Format("{0}", value),
+                        string.Format("{0}", dr["Id"].ToString())
                         );
 
 
@@ -2129,9 +2186,9 @@ namespace Interface_igrid
                             string.Format("{0}", ""),
                             string.Format("{0}", ""),
                             string.Format("{0}", "D"),
-                            string.Format("{0}", dr["Title"].ToString().Replace(",", "_")),
-                            string.Format("{0}", pl.Replace(",", "_")),
-                            string.Format("{0}", dr["Id"].ToString().Replace(",", "_"))
+                            string.Format("{0}", dr["Title"].ToString()),
+                            string.Format("{0}", pl),
+                            string.Format("{0}", dr["Id"].ToString())
                             );
                         }
                     }
@@ -2139,7 +2196,7 @@ namespace Interface_igrid
                 if (dt.Rows.Count > 0)
                 {
                     string file = ConfigurationManager.AppSettings["InterfacePathOutbound"] + "CLMM_ChangeMatClass_" + DateTime.Now.ToString("yyyyMMddhhmm") + "_" + i + ".csv";
-                    ToCSV(dt, file);
+                    ToCSVWithPipe(dt, file);
                 }
                 dt.Clear();
                 i++;
@@ -2339,23 +2396,59 @@ namespace Interface_igrid
         public static DataTable ConvertCSVtoDataTable(string strFilePath)
         {
             DataTable dt = new DataTable();
-            using (StreamReader sr = new StreamReader(strFilePath))
+            try
             {
-                string[] headers = sr.ReadLine().Split(',');
-                foreach (string header in headers)
+                using (StreamReader sr = new StreamReader(strFilePath))
                 {
-                    dt.Columns.Add(header);
-                }
-                while (!sr.EndOfStream)
-                {
-                    string[] rows = sr.ReadLine().Split(',');
-                    DataRow dr = dt.NewRow();
-                    for (int i = 0; i < headers.Length; i++)
+                    string[] headers = sr.ReadLine().Split(',');
+                    foreach (string header in headers)
                     {
-                        dr[i] = rows[i];
+                        dt.Columns.Add(header);
                     }
-                    dt.Rows.Add(dr);
+                    while (!sr.EndOfStream)
+                    {
+                        string[] rows = sr.ReadLine().Split(',');
+                        DataRow dr = dt.NewRow();
+                        for (int i = 0; i < headers.Length; i++)
+                        {
+                            dr[i] = rows[i];
+                        }
+                        dt.Rows.Add(dr);
+                    }
                 }
+
+            }
+            catch (Exception ex)
+            {
+
+
+            }
+            return dt;
+        }
+        public static DataTable ConvertCSVtoDataTableResult(string strFilePath)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (StreamReader sr = new StreamReader(strFilePath))
+                {
+
+                    dt.Columns.Add(sr.ReadLine());
+
+                    while (!sr.EndOfStream)
+                    {
+                        DataRow dr = dt.NewRow();
+
+                        dr[0] = sr.ReadLine();
+                        dt.Rows.Add(dr);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+
             }
             return dt;
         }
